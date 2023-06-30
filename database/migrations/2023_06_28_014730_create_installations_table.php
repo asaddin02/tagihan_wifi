@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreign('package_id')->references('id')->on('packages');
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('teknisi_id');
+            $table->foreign('teknisi_id')->references('id')->on('technisians');
             $table->date('tanggal_pemasangan');
             $table->string('alamat_pemasangan');
             $table->enum('status_pemasangan', ['Belum Terpasang', 'Dalam Proses', 'Terpasang'])->default('Belum Terpasang');
