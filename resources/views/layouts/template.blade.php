@@ -36,7 +36,6 @@
 
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('template/plugins/summernote/summernote-bs4.min.css') }}">
-    @include('sweetalert::alert')
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -69,8 +68,6 @@
     </div>
 
     <!-- ./wrapper -->
-    {{-- Sweet Alert --}}
-    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
 
     <!-- jQuery -->
     <script src="{{ asset('template/plugins/jquery/jquery.min.js') }}"></script>

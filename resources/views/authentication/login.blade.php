@@ -53,8 +53,6 @@
     </div>
     
     <!-- REQUIRED SCRIPTS -->
-    {{-- sweet alert --}}
-    @include('sweetalert::alert')
     <!-- jQuery -->
     <script src="{{ asset('template/plugins/jquery/jquery.min.js/') }}"></script>
     <!-- Bootstrap -->
