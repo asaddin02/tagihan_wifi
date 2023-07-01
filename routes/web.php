@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PackageController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,8 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('homepage');
-});
 
-Route::resource('package', PackageController::class);
+Route::get('login', function () {
+    return view('authentication.login');
+})->name('login');
+Route::post('login', [UserController::class, 'login'])->name('user.login');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('homepage');
+    });
+    Route::resource('user', UserController::class);
+    Route::resource('package', PackageController::class);
+});
