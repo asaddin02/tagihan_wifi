@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
-use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
@@ -19,7 +18,7 @@ class UserController extends Controller
     public function index()
     {
         $user = User::where(Auth::user());
-        return view('profile',compact('user'));
+        // return view('profile',compact('user'));
     }
 
     /**
@@ -95,10 +94,8 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            Alert::success('Login Sukses','Anda berhasil login');
             return redirect()->intended('/');
         }
-        Alert::error('Login Gagal', 'Email atau Password salah');
         return back()->onlyInput('email');
     }
 }
