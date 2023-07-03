@@ -132,8 +132,8 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/');
+            return redirect()->intended('/')->with('success', 'Selamat datang');
         }
-        return back();
+        return back()->with('error', 'Pastikan email dan password benar');
     }
 }
