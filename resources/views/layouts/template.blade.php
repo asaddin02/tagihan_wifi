@@ -17,7 +17,8 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{{ asset('template/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('template/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('template/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
@@ -36,6 +37,9 @@
 
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('template/plugins/summernote/summernote-bs4.min.css') }}">
+
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{{ asset('template/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -43,8 +47,8 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="{{ asset('template/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo" height="60"
-                width="60">
+            <img class="animation__shake" src="{{ asset('template/dist/img/AdminLTELogo.png') }}" alt="AdminLTELogo"
+                height="60" width="60">
         </div>
 
         @include('layouts.navbar')
@@ -113,10 +117,40 @@
     <script src="{{ asset('template/dist/js/adminlte.js') }}"></script>
 
     <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('template/dist/js/demo.js') }}"></script>
+    {{-- <script src="{{ asset('template/dist/js/demo.js') }}"></script> --}}
 
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('template/dist/js/pages/dashboard.js') }}"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="{{ asset('template/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
+    <script>
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 4000
+        });
+    </script>
+
+    @if (Session('success'))
+        <script>
+            Toast.fire({
+                icon: 'success',
+                title: "Pesan,\n {{ Session('success') }}"
+            })
+        </script>
+    @endif
+
+    @if (Session('error'))
+        <script>
+            Toast.fire({
+                icon: 'error',
+                title: "Pesan,\n {{ Session('error') }}"
+            })
+        </script>
+    @endif
 </body>
 
 </html>
