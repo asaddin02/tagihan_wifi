@@ -7,18 +7,18 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan informasi tentang user yang login
      */
     public function index()
     {
-        $user = User::where(Auth::user());
-        // return view('profile',compact('user'));
+        $user = User::find(Auth::user()->id);
+        return view('profile.userprofile', compact('user'));
     }
 
     /**
@@ -30,7 +30,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menambah data Customer Service
      */
     public function store(Request $request)
     {
@@ -58,7 +58,6 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-
     }
 
     /**
@@ -70,11 +69,49 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update data user yang login
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::find($id);
+        if ($request->file('photo_profile')) {
+            // Update gambar
+            $gambar = $request->validate([
+                'file' => 'required|mimes:jpg,png,jpeg|max:5120'
+            ], [
+                'file.required' => 'tidak ada foto yang diunggah',
+                'file.mimes' => 'format foto harus jpg,png atau jpeg',
+                'file.max' => 'ukuran maksimal 5MB'
+            ]);
+            $user['photo_profile'] = Storage::put('photo_profile', $gambar);
+            $user['photo_profile']->update($gambar);
+        } elseif ($request->input('password')) {
+            // Update password
+            $validate = Validator::make($request->all(),[
+                'password' => ['required', 'confirmed'],
+            ]);
+            if ($validate->fails()) {
+                dd($validate);
+                return redirect()->back();
+            }
+            $user->update([
+                'password' => Hash::make($request->input('password'))
+            ]);
+            session()->flush();
+            return redirect('login');
+        } else {
+            // Update data normal
+            $validate = Validator::make($request->all(), [
+                'name' => ['required', 'string'],
+                'email' => ['required', 'string', 'email', 'unique:users'],
+                'no_telepon' => ['required', 'numeric'],
+            ]);
+            if ($validate->fails()) {
+                return redirect()->back();
+            }
+            $user->update($request->all());
+            return redirect()->back();
+        }
     }
 
     /**
@@ -85,6 +122,7 @@ class UserController extends Controller
         //
     }
 
+    // Login User
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
@@ -96,6 +134,6 @@ class UserController extends Controller
 
             return redirect()->intended('/');
         }
-        return back()->onlyInput('email');
+        return back();
     }
 }
