@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InstallationController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\TechnisianController;
@@ -41,6 +42,10 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     // Route Package
     Route::resource('package', PackageController::class);
+
+    // Route Package
+    Route::resource('customer', CustomerController::class);
+    Route::get('customer/detail/{id}', [CustomerController::class, 'detail']);
 
     // Route Technisian
     Route::get('technic', [TechnisianController::class, 'index']);
