@@ -11,7 +11,7 @@ class TechnisianController extends Controller
     public function index()
     {
         $technisians = Technisian::all();
-        return view('/',compact('technisians'));
+        return view('employee.technisi',compact('technisians'));
     }
 
     // Menambah data teknisi

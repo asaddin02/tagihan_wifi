@@ -45,6 +45,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Route Technisian
     Route::get('technic', [TechnisianController::class, 'index']);
     Route::post('technic', [TechnisianController::class, 'create'])->name('create.teknisi');
-    Route::post('technic/{$id}', [TechnisianController::class, 'edit'])->name('edit.teknisi');
-    Route::get('technic/{$id}', [TechnisianController::class, 'delete'])->name('delete.teknisi');
+    Route::post('technic/{id}', [TechnisianController::class, 'edit'])->name('edit.teknisi');
+    Route::get('technic/{id}', [TechnisianController::class, 'delete'])->name('delete.teknisi');
 });
