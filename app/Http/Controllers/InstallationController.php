@@ -16,7 +16,7 @@ class InstallationController extends Controller
         $installations = Installation::all();
         $packages = Package::all();
         $technisians = Technisian::all();
-        return view('/',compact('installations'));
+        return view('installation.index',compact('installations','packages','technisians'));
     }
 
     // Menambah proses installasi
