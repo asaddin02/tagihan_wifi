@@ -139,8 +139,7 @@ class UserController extends Controller
 
     public function logout()
     {
-        $user = Auth::user()->id;
-        $user->session()->flush();
+        session()->flush();
         return redirect('login');
     }
 }
