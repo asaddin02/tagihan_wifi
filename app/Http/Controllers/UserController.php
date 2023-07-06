@@ -36,10 +36,10 @@ class UserController extends Controller
     {
         $validate = Validator::make($request, [
             'user_id' => ['required', 'number'],
-            'name' => ['required', 'string'],
-            'no_telepon' => ['required', 'number'],
-            'email' => ['required', 'string', 'email', 'unique:users'],
-            'password' => ['required', 'string'],
+            'name' => ['required'],
+            'no_telepon' => ['required', 'numeric'],
+            'email' => ['required', 'email', 'unique:users'],
+            'password' => ['required'],
             'role' => ['required'],
         ]);
         User::create([
