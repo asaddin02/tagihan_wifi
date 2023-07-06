@@ -50,7 +50,7 @@
                                     <b>NO HP</b> <a class="float-right">{{ $user->no_telepon }}</a>
                                 </li>
                             </ul>
-                            <a href="#" class="btn btn-danger btn-block"><b>Log Out</b></a>
+                            <a href="{{ url('logout') }}" class="btn btn-danger btn-block"><b>Log Out</b></a>
                         </div>
                         <!-- /.card-body -->
                     </div>

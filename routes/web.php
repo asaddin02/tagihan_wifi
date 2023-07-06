@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Route User
     Route::resource('user', UserController::class);
+    Route::get('logout',[UserController::class,'logout']);
 
     // Route Installation
     Route::get('installation', [InstallationController::class, 'getInstallation']);
