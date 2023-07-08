@@ -148,4 +148,10 @@ class UserController extends Controller
         }
         return back()->with('error', 'Pastikan email dan password benar');
     }
+
+    public function logout()
+    {
+        session()->flush();
+        return redirect('login');
+    }
 }
