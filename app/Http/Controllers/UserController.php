@@ -34,22 +34,34 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validate = Validator::make($request, [
-            'user_id' => ['required', 'number'],
+        // dd($request);
+        $validate = $request->validate([
+            'user_id' => ['required'],
             'name' => ['required'],
             'no_telepon' => ['required', 'numeric'],
             'email' => ['required', 'email', 'unique:users'],
             'password' => ['required'],
             'role' => ['required'],
         ]);
-        User::create([
-            'user_id' => $validate['user_id'],
-            'name' => $validate['name'],
-            'no_telepon' => $validate['no_telepon'],
-            'email' => $validate['email'],
-            'password' => Hash::make($validate['password']),
-            'role' => $validate['role'],
-        ]);
+        $hash = Hash::make($validate['password']);
+        $validate['password'] = $hash;
+        // $validate = Validator::make($request, [
+        //     'user_id' => ['required', 'number'],
+        //     'name' => ['required'],
+        //     'no_telepon' => ['required', 'numeric'],
+        //     'email' => ['required', 'email', 'unique:users'],
+        //     'password' => ['required'],
+        //     'role' => ['required'],
+        // ]);
+        // User::create([
+        //     'user_id' => $validate['user_id'],
+        //     'name' => $validate['name'],
+        //     'no_telepon' => $validate['no_telepon'],
+        //     'email' => $validate['email'],
+        //     'password' => Hash::make($validate['password']),
+        //     'role' => $validate['role'],
+        // ]);
+        User::create($validate);    
         return redirect()->back();
     }
 
