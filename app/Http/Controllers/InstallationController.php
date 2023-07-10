@@ -6,6 +6,7 @@ use App\Models\Installation;
 use App\Models\Package;
 use App\Models\Technisian;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class InstallationController extends Controller
@@ -16,7 +17,8 @@ class InstallationController extends Controller
         $installations = Installation::all();
         $packages = Package::all();
         $technisians = Technisian::all();
-        return view('installation.index',compact('installations','packages','technisians'));
+        $date = Carbon::now();
+        return view('installation.table',compact('installations','packages','technisians','date'));
     }
 
     // Menambah proses installasi
@@ -32,9 +34,9 @@ class InstallationController extends Controller
             'status_pemasangan' => 'Belum Terpasang'
         ]);
         if($installation){
-            return redirect()->back();
+            return redirect()->back()->with('success', 'User dan Instalasi berhasil ditambahkan!');
         }else{
-            dd($installation->fails());
+            return redirect()->back()->with('error', 'User dan Instalasi gagal ditambahkan!');
         }
     }
 

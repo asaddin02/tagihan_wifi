@@ -46,13 +46,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url('/package') }}" class="nav-link">
-                        <p>
-                            Paket Wifi
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-table"></i>
                         <p>
@@ -76,17 +69,23 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url('/customer') }}" class="nav-link">
+                    <a href="{{ url('/package') }}" class="nav-link">
                         <p>
-                            Customer
+                            Paket Wifi
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ url('/installation') }}" class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Installation
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url('/customer') }}" class="nav-link">
+                        <p>
+                            Customer
                         </p>
                     </a>
                 </li>

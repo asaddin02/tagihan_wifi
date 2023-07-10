@@ -9,6 +9,10 @@ class Technisian extends Model
 {
     use HasFactory;
 
-    protected $table = 'technisians';
     protected $guarded = ['id'];
+
+    public function installation()
+    {
+        return $this->hasMany(Installation::class);
+    }
 }

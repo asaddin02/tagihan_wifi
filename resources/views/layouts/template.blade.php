@@ -40,6 +40,9 @@
 
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="{{ asset('template/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
+    {{-- BS5 --}}
+    <link rel="stylesheet" href="{{ asset('template/bs/css/bootstrap.min.css') }}">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -70,8 +73,10 @@
         </aside>
         <!-- /.control-sidebar -->
     </div>
-
     <!-- ./wrapper -->
+
+    {{-- BS5 --}}
+    <script src="{{ asset('template/bs/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- jQuery -->
     <script src="{{ asset('template/plugins/jquery/jquery.min.js') }}"></script>
@@ -151,6 +156,15 @@
             })
         </script>
     @endif
+
+    @if (Session('user_created'))
+        <script>
+            $(document).ready(function() {
+                $('#tambah-instalasi').modal('show');
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>

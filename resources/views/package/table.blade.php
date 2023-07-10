@@ -9,12 +9,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Package</h1>
+                    <h1 class="m-0">Paket Wifi</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Package</li>
+                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item active">Paket</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -28,8 +28,9 @@
             <div class="row">
                 <div class="col-12">
                     <div class="mb-2">
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#tambah-paket">
-                            Tambah Paket
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-paket">
+                            <i class="fas fa-plus"></i>
+                            <span>Tambah Paket</span>
                         </button>
                         <div class="modal fade" id="tambah-paket">
                             <div class="modal-dialog">
@@ -46,7 +47,7 @@
                                             <div class="form-group">
                                                 <label for="jenis-paket">Jenis Paket</label>
                                                 <input type="text" class="form-control" id="jenis-paket"
-                                                    placeholder="Ex: paket_1" name="jenis_paket" autofocus required>
+                                                    placeholder="ex : paket_1" name="jenis_paket" autofocus required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="keunggulan">Keunggulan</label>
@@ -56,16 +57,16 @@
                                             <div class="form-group">
                                                 <label for="harga-paket">Harga Paket</label>
                                                 <input type="number" class="form-control" id="harga-paket"
-                                                    name="harga_paket" required>
+                                                placeholder="ex : 100000" name="harga_paket" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="harga-pemasangan">Harga Pemasangan</label>
                                                 <input type="number" class="form-control" id="harga-pemasangan"
-                                                    name="harga_pemasangan" required>
+                                                placeholder="ex : 100000" name="harga_pemasangan" required>
                                             </div>
                                         </div>
                                         <div class="modal-footer justify-content-between">
-                                            <button type="button" class="btn btn-default"
+                                            <button type="button" class="btn btn-danger"
                                                 data-dismiss="modal">Tutup</button>
                                             <button type="submit" class="btn btn-primary">Simpan</button>
                                         </div>
@@ -82,7 +83,7 @@
                                 <form action="" method="GET">
                                     <div class="input-group input-group-sm" style="width: 150px;">
                                         <input type="text" name="package_search" class="form-control float-right"
-                                            placeholder="Search">
+                                            placeholder="Cari">
                                         <div class="input-group-append">
                                             <button type="submit" class="btn btn-default">
                                                 <i class="fas fa-search"></i>
@@ -116,7 +117,7 @@
                                             <td class="d-flex flex-wrap ">
                                                 <button type="button" class="btn btn-primary mx-1" data-toggle="modal"
                                                     data-target="#edit-paket{{ $data->id }}">
-                                                    Edit Paket
+                                                    <i class="fas fa-pen"></i>
                                                 </button>
                                                 <div class="modal fade" id="edit-paket{{ $data->id }}">
                                                     <div class="modal-dialog">
@@ -165,7 +166,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer justify-content-between">
-                                                                    <button type="button" class="btn btn-default"
+                                                                    <button type="button" class="btn btn-danger"
                                                                         data-dismiss="modal">Tutup</button>
                                                                     <button type="submit"
                                                                         class="btn btn-primary">Simpan</button>
@@ -178,7 +179,7 @@
                                                 </div>
                                                 <button type="button" class="btn btn-danger" data-toggle="modal"
                                                     data-target="#hapus-paket{{ $data->id }}">
-                                                    Hapus
+                                                    <i class="fas fa-trash"></i>
                                                 </button>
                                                 <div class="modal fade" id="hapus-paket{{ $data->id }}">
                                                     <div class="modal-dialog">
@@ -192,7 +193,7 @@
                                                                 </div>
                                                                 <div class="modal-footer justify-content-between">
                                                                     <button type="button" class="btn btn-light"
-                                                                        data-dismiss="modal">Close</button>
+                                                                        data-dismiss="modal">Batal</button>
                                                                     <button type="submit"
                                                                         class="btn btn-light">Hapus</button>
                                                                 </div>

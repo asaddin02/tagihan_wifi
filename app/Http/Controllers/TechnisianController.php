@@ -17,23 +17,35 @@ class TechnisianController extends Controller
     // Menambah data teknisi
     public function create(Request $request)
     {
-        Technisian::create($request->all());
-        return redirect()->back();
+        $alert = Technisian::create($request->all());
+        if ($alert) {
+            return redirect()->back()->with('success', 'Teknisi baru telah ditambahkan!');
+        } else {
+            return redirect()->back()->with('error', 'Teknisi baru gagal ditambahkan!');
+        }
     }
 
     // Edit data teknisi
     public function edit(Request $request,$id)
     {
         $technisians = Technisian::find($id);
-        $technisians->update($request->all());
-        return redirect()->back();
+        $alert = $technisians->update($request->all());
+        if ($alert) {
+            return redirect()->back()->with('success', 'Teknisi baru telah diupdate!');
+        } else {
+            return redirect()->back()->with('error', 'Teknisi baru gagal diupdate!');
+        }
     }
 
     // Menghapus data teknisi
     public function delete($id)
     {
         $technisians = Technisian::find($id);
-        $technisians->delete();
-        return redirect()->back();
+        $alert = $technisians->delete();
+        if ($alert) {
+            return redirect()->back()->with('success', 'Teknisi baru telah dihapus!');
+        } else {
+            return redirect()->back()->with('error', 'Teknisi baru gagal dihapus!');
+        }
     }
 }
