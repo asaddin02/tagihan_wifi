@@ -23,7 +23,7 @@ class Installation extends Model
 
     public function technisian()
     {
-        return $this->belongsTo(Technisian::class);
+        return $this->belongsTo(Technisian::class,'teknisi_id');
     }
 
     public function invoice()
