@@ -71,7 +71,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $installation->package->jenis_paket }}</td>
                                                 <td>{{ $installation->user->name }}</td>
-                                                <td>{{ $installation->teknisi_id }}</td>
+                                                <td>{{ $installation->technisian->nama_teknisi }}</td>
                                                 <td>{{ date('d M Y', strToTime($installation->tanggal_pemasangan)) }}</td>
                                                 <td>{{ $installation->alamat_pemasangan }}</td>
                                                 <td>{{ $installation->status_pemasangan }}</td>
