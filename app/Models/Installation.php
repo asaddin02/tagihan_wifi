@@ -25,4 +25,9 @@ class Installation extends Model
     {
         return $this->belongsTo(Technisian::class);
     }
+
+    public function invoice()
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }

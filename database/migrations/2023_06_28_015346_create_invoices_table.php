@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('installation_id');
             $table->foreign('installation_id')->references('id')->on('installations');
-            $table->date('tanggal_tagihan');
+            $table->string('hari');
+            $table->string('bulan');
+            $table->string('tahun');
             $table->double('total_tagihan', 15, 2);
-            $table->enum('status_tagihan', ['Belum Dibayar', 'Dalam Proses','Lunas'])->default('Belum Dibayar');
+            $table->enum('status_tagihan', ['Belum Dibayar', 'Dalam Proses', 'Lunas'])->default('Belum Dibayar');
             $table->timestamps();
         });
     }

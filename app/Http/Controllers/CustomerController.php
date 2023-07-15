@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Installation;
 use App\Models\Invoice;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -13,7 +15,18 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $datas = Invoice::all();
+        if (isset($_GET['customer_search'])) {
+            $user = User::where('name', 'LIKE', '%'. $_GET['customer_search'] .'%')
+                    ->orWhere('user_id', $_GET['customer_search'])
+                    ->first();
+            if (isset($user)) {
+                $datas = Installation::where('user_id', $user->id)->get();
+            } else {
+                $datas = [];
+            }
+        } else {
+            $datas = Installation::all();
+        }
         return view('customer.table', compact('datas'));
     }
 
@@ -21,6 +34,14 @@ class CustomerController extends Controller
     {
         $user = User::find($id);
         return view('customer.detail', compact('user'));
+    }
+
+    public function invoice($id)
+    {
+        $datas = Invoice::where('installation_id', $id)->get();
+        $installation = Installation::find($id);
+        $carbon = Carbon::now();
+        return view('customer.invoice', compact('datas', 'installation', 'carbon'));
     }
 
     /**
@@ -60,7 +81,13 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $installation = Installation::find($id);
+        $alert = $installation->update($request->all());
+        if ($alert) {
+            return back()->with('success', 'Data berhasil diedit!');
+        } else {
+            return back()->with('error', 'Data gagal diedit!');
+        }
     }
 
     /**

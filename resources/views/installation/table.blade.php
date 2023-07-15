@@ -33,62 +33,13 @@
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-user">
                                 <i class="fas fa-plus"></i> Tambah Data
                             </button>
-                            <div class="modal fade" id="tambah-teknisi">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Tambah Data Teknisi</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form class="form-horizontal" action="{{ route('create.teknisi') }}"
-                                                method="post">
-                                                @csrf
-                                                <div class="form-group row">
-                                                    <label for="namaTeknisi" class="col-sm-4 col-form-label">Nama
-                                                        Teknisi</label>
-                                                    <div class="col-sm-8">
-                                                        <input type="text" name="nama_teknisi" class="form-control"
-                                                            id="namaTeknisi" placeholder="Nama Teknisi">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label for="alamatTeknisi" class="col-sm-4 col-form-label">Alamat
-                                                        Teknisi</label>
-                                                    <div class="col-sm-8">
-                                                        <input type="text" name="alamat" class="form-control"
-                                                            id="alamatTeknisi" placeholder="Alamat Teknisi">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label for="notelp" class="col-sm-4 col-form-label">Nomor
-                                                        Telepon</label>
-                                                    <div class="col-sm-8">
-                                                        <input type="number" name="no_telepon" class="form-control"
-                                                            id="notelp" placeholder="ex : 08**********">
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class="modal-footer justify-content-between">
-                                            <button type="button" class="btn btn-danger"
-                                                data-dismiss="modal">Tutup</button>
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
-                                        </div>
-                                        </form>
-                                    </div>
-                                    <!-- /.modal-content -->
-                                </div>
-                                <!-- /.modal-dialog -->
-                            </div>
                         </div>
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="package_search" class="form-control float-right"
+                                            <input type="text" name="installation_search" class="form-control float-right"
                                                 placeholder="Cari">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default">
@@ -108,10 +59,10 @@
                                             <th>Jenis Paket</th>
                                             <th>Nama User</th>
                                             <th>Nama Teknisi</th>
+                                            <th>Tanggal Pemasangan</th>
                                             <th>Alamat</th>
                                             <th>Nomor Telepon</th>
                                             <th>Harga Pemasangan</th>
-                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -121,9 +72,12 @@
                                                 <td>{{ $installation->package->jenis_paket }}</td>
                                                 <td>{{ $installation->user->name }}</td>
                                                 <td>{{ $installation->teknisi_id }}</td>
+                                                <td>{{ date('d M Y', strToTime($installation->tanggal_pemasangan)) }}</td>
                                                 <td>{{ $installation->alamat_pemasangan }}</td>
                                                 <td>{{ $installation->status_pemasangan }}</td>
-                                                <td>Rp. {{ number_format($installation->package->harga_pemasangan, 0, ',', '.'); }}</td>
+                                                <td>Rp.
+                                                    {{ number_format($installation->package->harga_pemasangan, 0, ',', '.') }}
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -139,7 +93,10 @@
         <!-- /.content -->
     @else
         <div class="text-center">
-            <p>Tidak Ada Installasi yang dilakukan</p>
+            <div class="alert alert-warning" role="alert">
+                Tidak ada data yang bisa ditampilkan!
+            </div>
+            <a href="{{ url('package') }}" class="btn btn-primary">Kembali</a>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-user">
                 <i class="fas fa-plus"></i> Tambah Data
             </button>
@@ -150,51 +107,61 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Data User</h4>
+                    <h4 class="modal-title">Tambah Data</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form class="form-horizontal" action="{{ route('user.store') }}" method="post">
-                        @csrf
+                <form class="form-horizontal" action="{{ route('user.store') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
                         <div class="form-group row">
-                            <label for="id_user" class="col-sm-4 col-form-label">ID User</label>
+                            <label for="tambah-id-user" class="col-sm-4 col-form-label">ID User</label>
                             <div class="col-sm-8">
-                                <input type="number" name="user_id" class="form-control" id="id_user"
-                                    placeholder="ex : 0000" required autofocus>
-                                <span class="text-danger">Nomor harus 4 digit</span>
+                                <input type="number" name="user_id" class="form-control" id="tambah-id-user"
+                                    placeholder="ex : 0000" required autofocus max="9999">
+                                <p class="text-danger mt-1 ms-3 d-none" id="tambah-id-user-alert">Nomor maksimal
+                                    4 karakter</p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="name" class="col-sm-4 col-form-label">Nama Lengkap</label>
+                            <label for="tambah-nama-user" class="col-sm-4 col-form-label">Nama Lengkap</label>
                             <div class="col-sm-8">
-                                <input type="text" name="name" class="form-control" id="name"
-                                    placeholder="Name" required>
+                                <input type="text" name="name" class="form-control" id="tambah-nama-user"
+                                    placeholder="ex : Nama User" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="no_telp" class="col-sm-4 col-form-label">No Telepon</label>
+                            <label for="tambah-nomor-user" class="col-sm-4 col-form-label">No Telepon</label>
                             <div class="col-sm-8">
-                                <input type="number" name="no_telepon" class="form-control" id="no_telp"
-                                    placeholder="ex : 08**********" required>
+                                <input type="number" name="no_telepon" class="form-control" id="tambah-nomor-user"
+                                    placeholder="ex : 08**********" required max="99999999999">
+                                <p class="text-danger mt-1 ms-3 d-none" id="tambah-nomor-user-alert">Nomor hp maksimal
+                                    12 karakter</p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="email" class="col-sm-4 col-form-label">Email</label>
+                            <label for="tambah-email-user" class="col-sm-4 col-form-label">Email</label>
                             <div class="col-sm-8">
-                                <input type="email" name="email" class="form-control" id="email"
-                                    placeholder="ex : a@gmail.com" required>
+                                <input type="email" name="email" class="form-control" id="tambah-email-user"
+                                    placeholder="ex : example@gmail.com" required>
                             </div>
                         </div>
                         <input type="hidden" name="password" value="user1234">
                         <input type="hidden" name="role" value="Customer">
                         <p class="mb-2">Note :</p>
-                        <p class="mb-2">Masukkan user terlebih dahulu sebelum melakukan instalasi.</p>
-                </div>
-                <div class="modal-footer justify-content-end">
-                    <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Simpan</button>
-                </div>
+                        <ul>
+                            <li>
+                                <p class="mb-2">Tambahkan user terlebih dahulu sebelum melakukan instalasi.</p>
+                            </li>
+                            <li>
+                                <p class="mb-2">Pastikan data yang di inputkan benar.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer justify-content-end">
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>

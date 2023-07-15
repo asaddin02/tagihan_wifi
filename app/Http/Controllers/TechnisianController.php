@@ -10,7 +10,20 @@ class TechnisianController extends Controller
     // Menampilan data teknisi
     public function index()
     {
-        $technisians = Technisian::all();
+        if (isset($_GET['technisian_search'])) {
+            if ($_GET['technisian_search'] == '') {
+                $technisians = [];
+            } else {
+                $check = Technisian::where('nama_teknisi', 'LIKE', '%'.$_GET['technisian_search'].'%')->get();
+                if (isset($check)) {
+                    $technisians = $check;
+                } else {
+                    $technisians = [];
+                }
+            }
+        } else {
+            $technisians = Technisian::all();   
+        }
         return view('employee.technisi',compact('technisians'));
     }
 
@@ -19,9 +32,9 @@ class TechnisianController extends Controller
     {
         $alert = Technisian::create($request->all());
         if ($alert) {
-            return redirect()->back()->with('success', 'Teknisi baru telah ditambahkan!');
+            return redirect('technic')->with('success', 'Teknisi berhasil ditambahkan!');
         } else {
-            return redirect()->back()->with('error', 'Teknisi baru gagal ditambahkan!');
+            return redirect('technic')->with('error', 'Teknisi gagal ditambahkan!');
         }
     }
 
@@ -31,9 +44,9 @@ class TechnisianController extends Controller
         $technisians = Technisian::find($id);
         $alert = $technisians->update($request->all());
         if ($alert) {
-            return redirect()->back()->with('success', 'Teknisi baru telah diupdate!');
+            return redirect('technic')->with('success', 'Teknisi berhasil diupdate!');
         } else {
-            return redirect()->back()->with('error', 'Teknisi baru gagal diupdate!');
+            return redirect('technic')->with('error', 'Teknisi gagal diupdate!');
         }
     }
 
@@ -43,9 +56,9 @@ class TechnisianController extends Controller
         $technisians = Technisian::find($id);
         $alert = $technisians->delete();
         if ($alert) {
-            return redirect()->back()->with('success', 'Teknisi baru telah dihapus!');
+            return redirect('technic')->with('success', 'Teknisi berhasil dihapus!');
         } else {
-            return redirect()->back()->with('error', 'Teknisi baru gagal dihapus!');
+            return redirect('technic')->with('error', 'Teknisi gagal dihapus!');
         }
     }
 }

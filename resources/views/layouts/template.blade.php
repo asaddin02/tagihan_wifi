@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
@@ -165,6 +166,58 @@
         </script>
     @endif
 
+    {{-- Alert Form --}}
+    <script>
+        $(document).ready(function() {
+            let addPhoneNumber = $("#tambah-nomor-teknisi");
+            let addPhoneNumberAlert = $("#tambah-nomor-teknisi-alert");
+
+            let editPhoneNumber = $("#edit-nomor-teknisi");
+            let editPhoneNumberAlert = $("#edit-nomor-teknisi-alert");
+
+            let addUserId = $("#tambah-id-user");
+            let addUserIdAlert = $("#tambah-id-user-alert");
+
+            let addUserPhone = $("#tambah-nomor-user");
+            let addUserPhoneAlert = $("#tambah-nomor-user-alert");
+
+            addPhoneNumber.on("input", function() {
+                let addPhoneNumberValue = addPhoneNumber.val().toString();
+                if (addPhoneNumberValue.length > 12) {
+                    addPhoneNumberAlert.removeClass("d-none");
+                } else {
+                    addPhoneNumberAlert.addClass("d-none");
+                }
+            });
+
+            editPhoneNumber.on("input", function() {
+                let editPhoneNumberValue = editPhoneNumber.val().toString();
+                if (editPhoneNumberValue.length > 12) {
+                    editPhoneNumberAlert.removeClass("d-none");
+                } else {
+                    editPhoneNumberAlert.addClass("d-none");
+                }
+            });
+
+            addUserId.on("input", function() {
+                let addUserIdValue = addUserId.val().toString();
+                if (addUserIdValue.length > 4) {
+                    addUserIdAlert.removeClass("d-none");
+                } else {
+                    addUserIdAlert.addClass("d-none");
+                }
+            });
+
+            addUserPhone.on("input", function() {
+                let addUserPhoneValue = addUserPhone.val().toString();
+                if (addUserPhoneValue.length > 12) {
+                    addUserPhoneAlert.removeClass("d-none");
+                } else {
+                    addUserPhoneAlert.addClass("d-none");
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

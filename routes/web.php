@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InstallationController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\TechnisianController;
 use App\Http\Controllers\UserController;
@@ -46,6 +47,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Route Package
     Route::resource('customer', CustomerController::class);
+    Route::get('customer/invoice/{id}', [CustomerController::class, 'invoice']);
     Route::get('customer/detail/{id}', [CustomerController::class, 'detail']);
 
     // Route Technisian
@@ -53,4 +55,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('technic', [TechnisianController::class, 'create'])->name('create.teknisi');
     Route::post('technic/{id}', [TechnisianController::class, 'edit'])->name('edit.teknisi');
     Route::get('technic/{id}', [TechnisianController::class, 'delete'])->name('delete.teknisi');
+
+    // Route Invoice
+    Route::resource('invoice', InvoiceController::class);
 });

@@ -13,7 +13,11 @@ class PackageController extends Controller
     public function index()
     {
         if (isset($_GET['package_search'])) {
-            $datas = Package::where('jenis_paket', 'LIKE', '%' . $_GET['package_search'] . '%')->get();
+            if ($_GET['package_search'] == '') {
+                $datas = [];
+            } else {
+                $datas = Package::where('jenis_paket', 'LIKE', '%' . $_GET['package_search'] . '%')->get();
+            }
         } else {
             $datas = Package::all();
         }

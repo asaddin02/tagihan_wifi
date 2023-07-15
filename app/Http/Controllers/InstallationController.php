@@ -18,7 +18,7 @@ class InstallationController extends Controller
         $packages = Package::all();
         $technisians = Technisian::all();
         $date = Carbon::now();
-        return view('installation.table',compact('installations','packages','technisians','date'));
+        return view('installation.table',compact('installations', 'packages', 'technisians', 'date'));
     }
 
     // Menambah proses installasi
