@@ -201,23 +201,23 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group">
-                            <label for="edit-jenis-paket">Jenis Paket</label>
-                            <input type="text" class="form-control" id="edit-jenis-paket" placeholder="ex : paket_1"
+                            <label for="tambah-jenis-paket">Jenis Paket</label>
+                            <input type="text" class="form-control" id="tambah-jenis-paket" placeholder="ex : paket_1"
                                 name="jenis_paket" autofocus required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-keunggulan-paket">Keunggulan</label>
-                            <input type="text" class="form-control" id="edit-keunggulan-paket"
+                            <label for="tambah-keunggulan-paket">Keunggulan</label>
+                            <input type="text" class="form-control" id="tambah-keunggulan-paket"
                                 placeholder="Input Keunggulan Paket" name="keunggulan" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-harga-paket">Harga Paket</label>
-                            <input type="number" class="form-control" id="edit-harga-paket" placeholder="ex : 100000"
+                            <label for="tambah-harga-paket">Harga Paket</label>
+                            <input type="number" class="form-control" id="tambah-harga-paket" placeholder="ex : 100000"
                                 name="harga_paket" required>
                         </div>
                         <div class="form-group">
-                            <label for="edit-harga-pemasangan">Harga Pemasangan</label>
-                            <input type="number" class="form-control" id="edit-harga-pemasangan" placeholder="ex : 100000"
+                            <label for="tambah-harga-pemasangan">Harga Pemasangan</label>
+                            <input type="number" class="form-control" id="tambah-harga-pemasangan" placeholder="ex : 100000"
                                 name="harga_pemasangan" required>
                         </div>
                     </div>

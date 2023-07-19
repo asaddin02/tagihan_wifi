@@ -14,7 +14,17 @@ class InstallationController extends Controller
     // Menunjukkan data installation
     public function getInstallation()
     {
-        $installations = Installation::all();
+        if (isset($_GET['installation_search'])) {
+            if ($_GET['installation_search'] == '') {
+                $installations = [];
+            } else {
+                $installations = Installation::whereHas('user', function($query) {
+                    $query->where('name', 'LIKE', '%'.$_GET['installation_search'].'%');
+                })->get();
+            }
+        } else {
+            $installations = Installation::all();
+        }
         $packages = Package::all();
         $technisians = Technisian::all();
         $date = Carbon::now();
@@ -34,9 +44,9 @@ class InstallationController extends Controller
             'status_pemasangan' => 'Belum Terpasang'
         ]);
         if($installation){
-            return redirect()->back()->with('success', 'User dan Instalasi berhasil ditambahkan!');
+            return redirect('installation')->with('success', 'User dan Instalasi berhasil ditambahkan!');
         }else{
-            return redirect()->back()->with('error', 'User dan Instalasi gagal ditambahkan!');
+            return redirect('installation')->with('error', 'User dan Instalasi gagal ditambahkan!');
         }
     }
 

@@ -16,13 +16,12 @@ class CustomerController extends Controller
     public function index()
     {
         if (isset($_GET['customer_search'])) {
-            $user = User::where('name', 'LIKE', '%'. $_GET['customer_search'] .'%')
-                    ->orWhere('user_id', $_GET['customer_search'])
-                    ->first();
-            if (isset($user)) {
-                $datas = Installation::where('user_id', $user->id)->get();
-            } else {
+            if ($_GET['customer_search'] == '') {
                 $datas = [];
+            } else {
+                $datas = Installation::whereHas('user', function ($query) {
+                    $query->where('name', 'LIKE', '%' . $_GET['customer_search'] . '%')->orWhere('user_id', $_GET['customer_search']);
+                })->get();
             }
         } else {
             $datas = Installation::all();
@@ -32,13 +31,26 @@ class CustomerController extends Controller
 
     public function detail($id)
     {
-        $user = User::find($id);
-        return view('customer.detail', compact('user'));
+        $installation = Installation::find($id);
+        $invoices = Invoice::where('installation_id', $id)->where('status_tagihan', 'Belum Dibayar')->get();
+        return view('customer.detail', compact('installation', 'invoices'));
     }
 
     public function invoice($id)
     {
-        $datas = Invoice::where('installation_id', $id)->get();
+        if (isset($_GET['invoice_month']) && isset($_GET['invoice_year'])) {
+            if ($_GET['invoice_month'] == '' || $_GET['invoice_year'] == '') {
+                $datas = [];
+            } elseif ($_GET['invoice_month'] == 'all' || $_GET['invoice_year'] == 'all') {
+                $datas = Invoice::where('installation_id', $id)->get();
+            } else {
+                $datas = Invoice::where('installation_id', $id)
+                    ->where('bulan', $_GET['invoice_month'])
+                    ->where('tahun', $_GET['invoice_year'])->get();
+            }
+        } else {
+            $datas = Invoice::where('installation_id', $id)->get();
+        }
         $installation = Installation::find($id);
         $carbon = Carbon::now();
         return view('customer.invoice', compact('datas', 'installation', 'carbon'));

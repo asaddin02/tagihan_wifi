@@ -39,8 +39,8 @@
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="installation_search" class="form-control float-right"
-                                                placeholder="Cari">
+                                            <input type="text" name="installation_search"
+                                                class="form-control float-right" placeholder="Cari Nama User">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default">
                                                     <i class="fas fa-search"></i>
@@ -61,7 +61,7 @@
                                             <th>Nama Teknisi</th>
                                             <th>Tanggal Pemasangan</th>
                                             <th>Alamat</th>
-                                            <th>Nomor Telepon</th>
+                                            <th>Status</th>
                                             <th>Harga Pemasangan</th>
                                         </tr>
                                     </thead>
@@ -96,7 +96,7 @@
             <div class="alert alert-warning" role="alert">
                 Tidak ada data yang bisa ditampilkan!
             </div>
-            <a href="{{ url('package') }}" class="btn btn-primary">Kembali</a>
+            <a href="{{ url('installation') }}" class="btn btn-primary">Kembali</a>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-user">
                 <i class="fas fa-plus"></i> Tambah Data
             </button>
@@ -177,9 +177,9 @@
                     <div class="modal-body">
                         @csrf
                         <div class="form-group row">
-                            <label for="package_id" class="col-sm-4 col-form-label">Paket WiFi</label>
+                            <label for="tambah-paket-id" class="col-sm-4 col-form-label">Paket WiFi</label>
                             <div class="col-sm-8">
-                                <select name="package_id" class="form-control" id="package_id">
+                                <select name="package_id" class="form-control" id="tambah-paket-id">
                                     @foreach ($packages as $package)
                                         <option value="{{ $package->id }}">{{ $package->jenis_paket }}</option>
                                     @endforeach
@@ -187,9 +187,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="technision_id" class="col-sm-4 col-form-label">Teknisi</label>
+                            <label for="tambah-teknisi-id" class="col-sm-4 col-form-label">Teknisi</label>
                             <div class="col-sm-8">
-                                <select name="technision_id" class="form-control" id="technision_id">
+                                <select name="technision_id" class="form-control" id="tambah-teknisi-id">
                                     @foreach ($technisians as $teknisi)
                                         <option value="{{ $teknisi->id }}">{{ $teknisi->nama_teknisi }}</option>
                                     @endforeach
@@ -197,17 +197,20 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tanggal_pemasangan" class="col-sm-4 col-form-label">Tanggal Pemasangan</label>
+                            <label for="tambah-tanggal-pemasangan" class="col-sm-4 col-form-label">Tanggal
+                                Pemasangan</label>
                             <div class="col-sm-8">
-                                <input type="text" name="tanggal_pemasangan" class="form-control"
-                                    id="tanggal_pemasangan" value="{{ $date }}" readonly>
+                                <span>{{ date('d M Y', strToTime($date)) }}</span>
+                                <input type="hidden" name="tanggal_pemasangan" class="form-control"
+                                    id="tambah-tanggal-pemasangan" value="{{ $date }}" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="alamat" class="col-sm-4 col-form-label">Alamat Pemasangan</label>
+                            <label for="tambah-alamat-pemasangan" class="col-sm-4 col-form-label">Alamat
+                                Pemasangan</label>
                             <div class="col-sm-8">
-                                <input type="text" name="alamat_pemasangan" class="form-control" id="alamat"
-                                    placeholder="Masukkan alamat">
+                                <input type="text" name="alamat_pemasangan" class="form-control"
+                                    id="tambah-alamat-pemasangan" placeholder="Masukkan alamat">
                             </div>
                         </div>
                     </div>

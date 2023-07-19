@@ -30,7 +30,9 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        $invoice = Invoice::where('installation_id', $request->installation_id)->where('bulan', $request->bulan)->first();
+        $invoice = Invoice::where('installation_id', $request->installation_id)
+            ->where('bulan', $request->bulan)
+            ->where('tahun', $request->tahun)->first();
         if (isset($invoice)) {
             return back()->with('error', 'Tagihan bulan ini sudah ada!');
         } else {

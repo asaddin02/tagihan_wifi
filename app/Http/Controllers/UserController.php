@@ -34,6 +34,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $checkId = User::where('user_id', $request->user_id)->first();
+        $checkEmail = User::where('email', $request->email)->first();
         $validate = $request->validate([
             'user_id' => ['required'],
             'name' => ['required'],
@@ -45,7 +47,9 @@ class UserController extends Controller
         $hash = Hash::make($validate['password']);
         $validate['password'] = $hash;
         $alert = User::create($validate);
-        if ($alert) {
+        if (isset($checkId) || isset($checkEmail)) {
+            return redirect()->back()->with('error', 'User Id dan Email tidak boleh sama!');
+        } elseif ($alert) { 
             return redirect()->back()->with('user_created', true);
         } else {
             return redirect()->back()->with('error', 'Isi data user dengan benar!');

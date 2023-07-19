@@ -63,7 +63,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $data->user->user_id }}</td>
                                                 <td>
-                                                    <a href=""
+                                                    <a href="{{ url('customer/detail/'.$data->id) }}"
                                                         class="text-decoration-none">{{ $data->user->name }}</a>
                                                 </td>
                                                 <td>{{ $data->package->jenis_paket }}</td>
