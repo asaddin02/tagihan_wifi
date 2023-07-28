@@ -16,10 +16,10 @@ class PackageController extends Controller
             if ($_GET['package_search'] == '') {
                 $datas = [];
             } else {
-                $datas = Package::where('jenis_paket', 'LIKE', '%' . $_GET['package_search'] . '%')->get();
+                $datas = Package::where('jenis_paket', 'LIKE', '%' . $_GET['package_search'] . '%')->paginate(10);
             }
         } else {
-            $datas = Package::all();
+            $datas = Package::paginate(10);
         }
         return view('package.table', compact('datas'));
     }
@@ -39,15 +39,18 @@ class PackageController extends Controller
     {
         $check = Package::where('jenis_paket', $request->jenis_paket)->first();
         if ($check) {
-            return back()->with('error', 'Nama paket tidak boleh sama!');
+            return redirect('package')->with('error', 'Nama paket tidak boleh sama!');
         } else {
-            $alert = Package::create($request->all());
+            $create = Package::create($request->all());
         }
-        if ($alert) {
-            return back()->with('success', 'Paket baru telah ditambahkan!');
+        if ($create) {
+            $status = 'success';
+            $message = 'Data berhasil ditambahkan';
         } else {
-            return back()->with('error', 'Paket baru gagal ditambahkan!');
+            $status = 'error';
+            $message = 'Data gagal ditambahkan';
         }
+        return redirect('package')->with($status, $message);
     }
 
     /**
@@ -75,17 +78,20 @@ class PackageController extends Controller
         $check_1 = Package::where('jenis_paket', $request->jenis_paket)->where('id', $id)->first();
         $check_2 = Package::where('jenis_paket', $request->jenis_paket)->first();
         if (isset($check_1)) {
-            $alert = $package->update($request->all());
+            $update = $package->update($request->all());
         } elseif ($check_2) {
-            return back()->with('error', 'Nama tidak boleh sama!');
+            return redirect('package')->with('error', 'Nama tidak boleh sama!');
         } else {
-            $alert = $package->update($request->all());
+            $update = $package->update($request->all());
         }
-        if ($alert) {
-            return back()->with('success', 'Paket telah diupdate!');
+        if ($update) {
+            $status = 'success';
+            $message = 'Data berhasil diupdate!';
         } else {
-            return back()->with('error', 'Paket gagal diupdate!');
+            $status = 'error';
+            $message = 'Data gagal diupdate!';
         }
+        return redirect('package')->with($status, $message);
     }
 
     /**
@@ -94,11 +100,14 @@ class PackageController extends Controller
     public function destroy($id)
     {
         $package = Package::find($id);
-        $alert = $package->delete();
-        if ($alert) {
-            return back()->with('success', 'Paket telah dihapus!');
+        $delete = $package->delete();
+        if ($delete) {
+            $status = 'success';
+            $message = 'Data berhasil dihapus!';
         } else {
-            return back()->with('error', 'Paket gagal dihapus!');
+            $status = 'error';
+            $message = 'Data gagal dihapus!';
         }
+        return redirect('package')->with($status, $message);
     }
 }

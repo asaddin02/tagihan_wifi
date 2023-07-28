@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Income;
 use App\Models\Installation;
 use App\Models\Invoice;
+use App\Models\Package;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -30,19 +32,31 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        $invoice = Invoice::where('installation_id', $request->installation_id)
-            ->where('bulan', $request->bulan)
+        $installations = Installation::all();
+        $invoice = Invoice::where('bulan', $request->bulan)
             ->where('tahun', $request->tahun)->first();
         if (isset($invoice)) {
             return back()->with('error', 'Tagihan bulan ini sudah ada!');
         } else {
-            $alert = Invoice::create($request->all());
+            foreach ($installations as $installation) {
+                $create = Invoice::create([
+                    'installation_id' => $installation->id,
+                    'hari' => $request->hari,
+                    'bulan' => $request->bulan,
+                    'tahun' => $request->tahun,
+                    'total_tagihan' => $installation->package->harga_paket,
+                    'status_tagihan' => $request->status_tagihan,
+                ]);
+            }
         }
-        if ($alert) {
-            return back()->with('success', 'Tagihan berhasil ditambahkan!');
+        if ($create) {
+            $status = 'success';
+            $message = 'Tagihan berhasil ditambahkan!';
         } else {
-            return back()->with('error', 'Tagihan gagal ditambahkan!');
+            $status = 'error';
+            $message = 'Tagihan gagal ditambahkan!';
         }
+        return redirect('customer')->with($status, $message);
     }
 
     /**
@@ -67,12 +81,23 @@ class InvoiceController extends Controller
     public function update(Request $request, string $id)
     {
         $invoice = Invoice::find($id);
-        $alert = $invoice->update($request->all());
-        if ($alert) {
-            return back()->with('success', 'Pembayaran sukses!');
+        $date = Carbon::now();
+        Income::create([
+            'total_pendapatan' => $request->total_pendapatan,
+            'hari' => date('d', strToTime($date)),
+            'bulan' => date('m', strToTime($date)),
+            'tahun' => date('Y', strToTime($date)),
+            'keterangan' => 'Pembayaran Tagihan Bulanan',
+        ]);
+        $update = $invoice->update($request->all());
+        if ($update) {
+            $status = 'success';
+            $message = 'Pembayaran sukses!';
         } else {
-            return back()->with('error', 'Pembayaran gagal!');
+            $status = 'error';
+            $message = 'Pembayaran gagal!';
         }
+        return back()->with($status, $message);
     }
 
     /**

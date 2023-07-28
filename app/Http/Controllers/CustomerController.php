@@ -15,18 +15,22 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        if (isset($_GET['customer_search'])) {
-            if ($_GET['customer_search'] == '') {
-                $datas = [];
-            } else {
-                $datas = Installation::whereHas('user', function ($query) {
-                    $query->where('name', 'LIKE', '%' . $_GET['customer_search'] . '%')->orWhere('user_id', $_GET['customer_search']);
-                })->get();
-            }
+        $datas = Installation::paginate(10);
+        $carbon = Carbon::now();
+        return view('customer.table', compact('datas', 'carbon'));
+    }
+
+    public function search(Request $request)
+    {
+        $carbon = Carbon::now();
+        if ($request->customer_search == '') {
+            $datas = [];
         } else {
-            $datas = Installation::all();
+            $datas = Installation::whereHas('user', function ($query) use($request) {
+                $query->where('name', 'LIKE', '%' . $request->customer_search . '%')->orWhere('user_id', $request->customer_search);
+            })->get();
         }
-        return view('customer.table', compact('datas'));
+        return view('customer.table', compact('datas', 'carbon'));
     }
 
     public function detail($id)
@@ -49,7 +53,7 @@ class CustomerController extends Controller
                     ->where('tahun', $_GET['invoice_year'])->get();
             }
         } else {
-            $datas = Invoice::where('installation_id', $id)->get();
+            $datas = Invoice::where('installation_id', $id)->paginate(10);
         }
         $installation = Installation::find($id);
         $carbon = Carbon::now();
@@ -93,13 +97,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $installation = Installation::find($id);
-        $alert = $installation->update($request->all());
-        if ($alert) {
-            return back()->with('success', 'Data berhasil diedit!');
-        } else {
-            return back()->with('error', 'Data gagal diedit!');
-        }
+        //
     }
 
     /**

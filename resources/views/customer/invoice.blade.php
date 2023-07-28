@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Invoice Table')
+@section('title', 'Tabel Tagihan')
 
 @section('main')
 
@@ -34,12 +34,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="mb-2">
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target="#tambah-tagihan-customer">
-                            <i class="fas fa-plus"></i> Tambah Data
-                        </button>
-                    </div>
                     <div class="card">
                         <div class="card-header">
                             <div class="card-tools">
@@ -98,19 +92,45 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($datas as $data)
+                                    @foreach ($datas as $index => $data)
                                         <tr class="text-center">
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $index + $datas->firstItem() }}</td>
                                             <td>{{ $data->installation_id }}</td>
                                             <td>{{ $data->installation->user->name }}</td>
-                                            <td>{{ $data->bulan }}</td>
+                                            <td>
+                                                @if ($data->bulan == '01')
+                                                Januari
+                                                @elseif ($data->bulan == '02')
+                                                Februari
+                                                @elseif ($data->bulan == '03')
+                                                Maret
+                                                @elseif ($data->bulan == '04')
+                                                April
+                                                @elseif ($data->bulan == '05')
+                                                Mei
+                                                @elseif ($data->bulan == '06')
+                                                Juni
+                                                @elseif ($data->bulan == '07')
+                                                Juli
+                                                @elseif ($data->bulan == '08')
+                                                Agustus
+                                                @elseif ($data->bulan == '09')
+                                                September
+                                                @elseif ($data->bulan == '10')
+                                                Oktober
+                                                @elseif ($data->bulan == '11')
+                                                November
+                                                @elseif ($data->bulan == '12')
+                                                Desember
+                                                @endif
+                                            </td>
                                             <td>Rp. {{ number_format($data->total_tagihan, 0, ',', '.') }}</td>
                                             @if ($data->status_tagihan == 'Belum Dibayar')
-                                                <td><span class="text-danger">{{ $data->status_tagihan }}</span></td>
+                                                <td><span class="fw-bold text-danger">{{ $data->status_tagihan }}</span></td>
                                             @elseif ($data->status_tagihan == 'Dalam Proses')
-                                                <td><span class="text-warning">{{ $data->status_tagihan }}</span></td>
+                                                <td><span class="fw-bold text-warning">{{ $data->status_tagihan }}</span></td>
                                             @else
-                                                <td><span class="text-success">{{ $data->status_tagihan }}</span></td>
+                                                <td><span class="fw-bold text-success">{{ $data->status_tagihan }}</span></td>
                                             @endif
                                             <td>
                                                 @if ($data->status_tagihan != 'Lunas')
@@ -119,70 +139,73 @@
                                                         Bayar Cash
                                                     </button>
                                                 @endif
-                                                <div class="modal fade" id="bayar-tagihan-customer{{ $data->id }}">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h4 class="modal-title">Pembayaran</h4>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <form class="form-horizontal"
-                                                                action="{{ route('invoice.update', $data->id) }}"
-                                                                method="post">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                <div class="modal-body text-start">
-                                                                    <div class="form-group row">
-                                                                        <div class="col-sm-4">
-                                                                            <p class="fw-bold">Id Instalasi</p>
-                                                                        </div>
-                                                                        <div class="col-sm-8">
-                                                                            <p>: {{ $installation->id }}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <div class="col-sm-4">
-                                                                            <p class="fw-bold">Customer</p>
-                                                                        </div>
-                                                                        <div class="col-sm-8">
-                                                                            <p>: {{ $installation->user->name }}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <div class="col-sm-4">
-                                                                            <p class="fw-bold">Pembayaran Bulan</p>
-                                                                        </div>
-                                                                        <div class="col-sm-8">
-                                                                            <p>: {{ date('M', strToTime($carbon)) }}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <div class="col-sm-4">
-                                                                            <p class="fw-bold">Tagihan
-                                                                            </p>
-                                                                        </div>
-                                                                        <div class="col-sm-8">
-                                                                            <p>: Rp.
-                                                                                {{ number_format($installation->package->harga_paket, 0, ',', '.') }}
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <input type="hidden" name="status_tagihan"
-                                                                        value="Lunas" required>
-                                                                </div>
-                                                                <div class="modal-footer justify-content-end">
-                                                                    <button type="submit"
-                                                                        class="btn btn-sm btn-primary">Bayar</button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </td>
                                         </tr>
+                                        <div class="modal fade" id="bayar-tagihan-customer{{ $data->id }}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Pembayaran</h4>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form class="form-horizontal"
+                                                        action="{{ route('invoice.update', $data->id) }}"
+                                                        method="post">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="modal-body text-start">
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-4">
+                                                                    <p class="fw-bold">Id Instalasi</p>
+                                                                </div>
+                                                                <div class="col-sm-8">
+                                                                    <p>: {{ $data->installation_id }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-4">
+                                                                    <p class="fw-bold">Customer</p>
+                                                                </div>
+                                                                <div class="col-sm-8">
+                                                                    <p>: {{ $data->installation->user->name }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-4">
+                                                                    <p class="fw-bold">Pembayaran Bulan</p>
+                                                                </div>
+                                                                <div class="col-sm-8">
+                                                                    <p>: {{ date('m', strToTime($carbon)) }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <div class="col-sm-4">
+                                                                    <p class="fw-bold">Tagihan
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-sm-8">
+                                                                    <p>: Rp.
+                                                                        {{ number_format($data->installation->package->harga_paket, 0, ',', '.') }}
+                                                                    </p>
+                                                                </div>
+                                                                <input type="hidden" name="total_pendapatan"
+                                                                    value="{{ $data->installation->package->harga_paket }}"
+                                                                    required>
+                                                            </div>
+                                                            <input type="hidden" name="status_tagihan"
+                                                                value="Lunas" required>
+                                                        </div>
+                                                        <div class="modal-footer justify-content-end">
+                                                            <button type="submit"
+                                                                class="btn btn-sm btn-primary">Bayar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -190,69 +213,52 @@
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
+                    @if ($datas->firstItem() != $datas->lastItem())
+                            <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
+                                {{ $datas->total() }} data</p>
+                        @endif
+                        
+                        @if ($datas->total() > 10)
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    @if ($datas->onFirstPage())
+                                        <li class="page-item disabled">
+                                            <a class="page-link">Previous</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $datas->previousPageUrl() }}">Previous</a>
+                                        </li>
+                                    @endif
+
+                                    @foreach ($datas->getUrlRange(1, $datas->lastPage()) as $page => $url)
+                                        @if ($page == $datas->currentPage())
+                                            <li class="page-item active" aria-current="page">
+                                                <a class="page-link">{{ $page }}</a>
+                                            </li>
+                                        @else
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+
+                                    @if ($datas->hasMorePages())
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $datas->nextPageUrl() }}">Next</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item disabled">
+                                            <a class="page-link">Next</a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </nav>
+                        @endif
                 </div>
             </div>
         </div>
     </section>
     <!-- /.content -->
-    <div class="modal fade" id="tambah-tagihan-customer">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Tambah Data</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form class="form-horizontal" action="{{ route('invoice.store') }}" method="post">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <p class="fw-bold">Id Instalasi</p>
-                            </div>
-                            <div class="col-sm-8">
-                                <p>: {{ $installation->id }}</p>
-                            </div>
-                            <input type="hidden" name="installation_id" value="{{ $installation->id }}">
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <p class="fw-bold">Customer</p>
-                            </div>
-                            <div class="col-sm-8">
-                                <p>: {{ $installation->user->name }}</p>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <p class="fw-bold">Bulan</p>
-                            </div>
-                            <div class="col-sm-8">
-                                <p>: {{ date('M', strToTime($carbon)) }}</p>
-                            </div>
-                            <input type="hidden" name="hari" value="{{ date('d', strToTime($carbon)) }}">
-                            <input type="hidden" name="bulan" value="{{ date('m', strToTime($carbon)) }}">
-                            <input type="hidden" name="tahun" value="{{ date('Y', strToTime($carbon)) }}">
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <p class="fw-bold">Total Tagihan</p>
-                            </div>
-                            <div class="col-sm-8">
-                                <p>: Rp. {{ number_format($installation->package->harga_paket, 0, ',', '.') }}</p>
-                            </div>
-                            <input type="hidden" name="total_tagihan"
-                                value="{{ $installation->package->harga_paket }}">
-                        </div>
-                        <input type="hidden" name="status_tagihan" value="Belum Dibayar" required>
-                    </div>
-                    <div class="modal-footer justify-content-end">
-                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 @endsection

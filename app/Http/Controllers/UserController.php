@@ -46,14 +46,18 @@ class UserController extends Controller
         ]);
         $hash = Hash::make($validate['password']);
         $validate['password'] = $hash;
-        $alert = User::create($validate);
+        $create = User::create($validate);
         if (isset($checkId) || isset($checkEmail)) {
-            return redirect()->back()->with('error', 'User Id dan Email tidak boleh sama!');
-        } elseif ($alert) { 
-            return redirect()->back()->with('user_created', true);
+            $status = 'error';
+            $message = 'User Id dan Email tidak boleh sama!';
+        } elseif ($create) { 
+            $status = 'user_created';
+            $message = true;
         } else {
-            return redirect()->back()->with('error', 'Isi data user dengan benar!');
+            $status = 'error';
+            $message = 'Isi data user dengan benar!';
         }
+        return redirect('installation')->with($status, $message);
     }
 
     /**

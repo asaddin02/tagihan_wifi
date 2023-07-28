@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Tabel Paket')
+@section('title', 'Tabel Pengeluaran')
 
 @section('main')
 
@@ -9,12 +9,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Paket Wifi</h1>
+                    <h1 class="m-0">Pengeluaran</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
-                        <li class="breadcrumb-item active">Paket Wifi</li>
+                        <li class="breadcrumb-item active">Pengeluaran</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -29,18 +29,47 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-2">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-paket">
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#tambah-pengeluaran">
                                 <i class="fas fa-plus"></i>
-                                <span>Tambah Paket</span>
+                                <span>Tambah Pengeluaran</span>
                             </button>
                         </div>
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
-                                    <form action="" method="GET">
+                                    <form action="{{ route('spending.filter') }}" method="POST">
+                                        @csrf
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="package_search" class="form-control float-right"
-                                                placeholder="Cari Nama Paket">
+                                            <select name="month" class="form-control float-right">
+                                                <option value="All">Bulan</option>
+                                                <option value="01">Januari</option>
+                                                <option value="02">Februari</option>
+                                                <option value="03">Maret</option>
+                                                <option value="04">April</option>
+                                                <option value="05">Mei</option>
+                                                <option value="06">Juni</option>
+                                                <option value="07">Juli</option>
+                                                <option value="08">Agustus</option>
+                                                <option value="09">September</option>
+                                                <option value="10">Oktober</option>
+                                                <option value="11">November</option>
+                                                <option value="12">Desember</option>
+                                            </select>
+                                            <select name="year" class="form-control float-right">
+                                                <option value="All">Tahun</option>
+                                                <option value="2020">2020</option>
+                                                <option value="2021">2021</option>
+                                                <option value="2022">2022</option>
+                                                <option value="2023">2023</option>
+                                                <option value="2024">2024</option>
+                                                <option value="2025">2025</option>
+                                                <option value="2026">2026</option>
+                                                <option value="2027">2027</option>
+                                                <option value="2028">2028</option>
+                                                <option value="2029">2029</option>
+                                                <option value="2030">2030</option>
+                                            </select>
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default">
                                                     <i class="fas fa-search"></i>
@@ -56,10 +85,11 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Jenis Paket</th>
-                                            <th>Keunggulan</th>
-                                            <th>Harga Paket</th>
-                                            <th>Harga Pemasangan</th>
+                                            <th>Total Pengeluaran</th>
+                                            <th>Hari</th>
+                                            <th>Bulan</th>
+                                            <th>Tahun</th>
+                                            <th>Keterangan</th>
                                             <th class="text-start">Aksi</th>
                                         </tr>
                                     </thead>
@@ -67,66 +97,82 @@
                                         @foreach ($datas as $index => $data)
                                             <tr>
                                                 <td>{{ $index + $datas->firstItem() }}</td>
-                                                <td>{{ $data->jenis_paket }}</td>
-                                                <td>{{ $data->keunggulan }}</td>
-                                                <td>Rp. {{ number_format($data->harga_paket, 0, ',', '.') }}</td>
-                                                <td>Rp. {{ number_format($data->harga_pemasangan, 0, ',', '.') }}</td>
+                                                <td>
+                                                    <span class="text-danger fw-bold">Rp.
+                                                    {{ number_format($data->total_pengeluaran, '0', ',', '.') }}
+                                                    --</span>
+                                                </td>
+                                                <td>{{ $data->hari }}</td>
+                                                <td>
+                                                    @if ($data->bulan == '01')
+                                                        Januari
+                                                    @elseif ($data->bulan == '02')
+                                                        Februari
+                                                    @elseif ($data->bulan == '03')
+                                                        Maret
+                                                    @elseif ($data->bulan == '04')
+                                                        April
+                                                    @elseif ($data->bulan == '05')
+                                                        Mei
+                                                    @elseif ($data->bulan == '06')
+                                                        Juni
+                                                    @elseif ($data->bulan == '07')
+                                                        Juli
+                                                    @elseif ($data->bulan == '08')
+                                                        Agustus
+                                                    @elseif ($data->bulan == '09')
+                                                        September
+                                                    @elseif ($data->bulan == '10')
+                                                        Oktober
+                                                    @elseif ($data->bulan == '11')
+                                                        November
+                                                    @elseif ($data->bulan == '12')
+                                                        Desember
+                                                    @endif
+                                                </td>
+                                                <td>{{ $data->tahun }}</td>
+                                                <td>{{ $data->keterangan }}</td>
                                                 <td class="d-flex flex-wrap ">
                                                     <button type="button" class="btn btn-primary mx-1" data-toggle="modal"
-                                                        data-target="#edit-paket{{ $data->id }}">
+                                                        data-target="#edit-pengeluaran{{ $data->id }}">
                                                         <i class="fas fa-pen"></i>
                                                     </button>
                                                     <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                        data-target="#hapus-paket{{ $data->id }}">
+                                                        data-target="#hapus-pengeluaran{{ $data->id }}">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="edit-paket{{ $data->id }}">
+                                            <div class="modal fade" id="edit-pengeluaran{{ $data->id }}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Edit Data</h4>
-                                                            <button type="button" class="close"
-                                                                data-dismiss="modal" aria-label="Close">
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <form action="{{ route('package.update', $data->id) }}"
+                                                        <form action="{{ route('spending.update', $data->id) }}"
                                                             method="POST">
                                                             <div class="modal-body">
                                                                 @csrf
                                                                 @method('PUT')
                                                                 <div class="form-group">
-                                                                    <label for="edit-jenis-paket">Jenis Paket</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="edit-jenis-paket" placeholder="ex: paket_1"
-                                                                        name="jenis_paket"
-                                                                        value="{{ $data->jenis_paket }}" autofocus
+                                                                    <label for="edit-total-pengeluaran">Total
+                                                                        Pengeluaran</label>
+                                                                    <input type="number" class="form-control"
+                                                                        id="edit-total-pengeluaran"
+                                                                        name="total_pengeluaran"
+                                                                        value="{{ $data->total_pengeluaran }}" autofocus
                                                                         required>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="edit-keunggulan-paket">Keunggulan</label>
+                                                                    <label
+                                                                        for="edit-keterangan-pengeluaran">Keterangan</label>
                                                                     <input type="text" class="form-control"
-                                                                        id="edit-keunggulan-paket"
-                                                                        placeholder="Input Keunggulan Paket"
-                                                                        name="keunggulan"
-                                                                        value="{{ $data->keunggulan }}" required>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="edit-harga-paket">Harga Paket</label>
-                                                                    <input type="number" class="form-control"
-                                                                        id="edit-harga-paket" name="harga_paket"
-                                                                        value="{{ $data->harga_paket }}" required>
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="edit-harga-pemasangan">Harga
-                                                                        Pemasangan</label>
-                                                                    <input type="number" class="form-control"
-                                                                        id="edit-harga-pemasangan"
-                                                                        name="harga_pemasangan"
-                                                                        value="{{ $data->harga_pemasangan }}"
-                                                                        required>
+                                                                        id="edit-keterangan-pengeluaran" name="keterangan"
+                                                                        value="{{ $data->keterangan }}" required>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
@@ -141,10 +187,10 @@
                                                 </div>
                                                 <!-- /.modal-dialog -->
                                             </div>
-                                            <div class="modal fade" id="hapus-paket{{ $data->id }}">
+                                            <div class="modal fade" id="hapus-pengeluaran{{ $data->id }}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content bg-danger">
-                                                        <form action="{{ route('package.destroy', $data->id) }}"
+                                                        <form action="{{ route('spending.destroy', $data->id) }}"
                                                             method="POST">
                                                             @csrf
                                                             @method('DELETE')
@@ -222,44 +268,61 @@
             <div class="alert alert-warning" role="alert">
                 Tidak ada data yang bisa ditampilkan!
             </div>
-            <a href="{{ url('package') }}" class="btn btn-primary">Kembali</a>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-paket">
-                <i class="fas fa-plus"></i> Tambah Paket
+            <a href="{{ url('spending') }}" class="btn btn-primary">Kembali</a>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-pengeluaran">
+                <i class="fas fa-plus"></i> Tambah Pengeluaran
             </button>
         </div>
     @endif
 
-    <div class="modal fade" id="tambah-paket">
+    <div class="modal fade" id="tambah-pengeluaran">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Peket</h4>
+                    <h4 class="modal-title">Tambah Pengeluaran</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('package.store') }}" method="POST">
+                <form action="{{ route('spending.store') }}" method="POST">
                     <div class="modal-body">
                         @csrf
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <p class="fw-bold">Hari</p>
+                            </div>
+                            <div class="col-sm-8">
+                                <p>: {{ date('d', strToTime($carbon)) }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <p class="fw-bold">Bulan</p>
+                            </div>
+                            <div class="col-sm-8">
+                                <p>: {{ date('m', strToTime($carbon)) }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <p class="fw-bold">Tahun</p>
+                            </div>
+                            <div class="col-sm-8">
+                                <p>: {{ date('Y', strToTime($carbon)) }}</p>
+                            </div>
+                        </div>
+                        <input type="hidden" name="hari" value="{{ date('d', strToTime($carbon)) }}" required>
+                        <input type="hidden" name="bulan" value="{{ date('m', strToTime($carbon)) }}" required>
+                        <input type="hidden" name="tahun" value="{{ date('Y', strToTime($carbon)) }}" required>
                         <div class="form-group">
-                            <label for="tambah-jenis-paket">Jenis Paket</label>
-                            <input type="text" class="form-control" id="tambah-jenis-paket" placeholder="ex : paket_1"
-                                name="jenis_paket" autofocus required>
+                            <label for="edit-total-pengeluaran">Total Pengeluaran</label>
+                            <input type="number" class="form-control" id="edit-total-pengeluaran"
+                                name="total_pengeluaran" autofocus required>
                         </div>
                         <div class="form-group">
-                            <label for="tambah-keunggulan-paket">Keunggulan</label>
-                            <input type="text" class="form-control" id="tambah-keunggulan-paket"
-                                placeholder="Input Keunggulan Paket" name="keunggulan" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tambah-harga-paket">Harga Paket</label>
-                            <input type="number" class="form-control" id="tambah-harga-paket" placeholder="ex : 100000"
-                                name="harga_paket" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tambah-harga-pemasangan">Harga Pemasangan</label>
-                            <input type="number" class="form-control" id="tambah-harga-pemasangan" placeholder="ex : 100000"
-                                name="harga_pemasangan" required>
+                            <label for="edit-keterangan-pengeluaran">Keterangan</label>
+                            <input type="text" class="form-control" id="edit-keterangan-pengeluaran"
+                                name="keterangan" required>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">

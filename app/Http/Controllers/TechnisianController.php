@@ -12,53 +12,62 @@ class TechnisianController extends Controller
     {
         if (isset($_GET['technisian_search'])) {
             if ($_GET['technisian_search'] == '') {
-                $technisians = [];
+                $datas = [];
             } else {
-                $check = Technisian::where('nama_teknisi', 'LIKE', '%'.$_GET['technisian_search'].'%')->get();
+                $check = Technisian::where('nama_teknisi', 'LIKE', '%'.$_GET['technisian_search'].'%')->paginate(10);
                 if (isset($check)) {
-                    $technisians = $check;
+                    $datas = $check;
                 } else {
-                    $technisians = [];
+                    $datas = [];
                 }
             }
         } else {
-            $technisians = Technisian::all();   
+            $datas = Technisian::paginate(10);   
         }
-        return view('employee.technisi',compact('technisians'));
+        return view('employee.technisi',compact('datas'));
     }
 
     // Menambah data teknisi
     public function create(Request $request)
     {
-        $alert = Technisian::create($request->all());
-        if ($alert) {
-            return redirect('technic')->with('success', 'Teknisi berhasil ditambahkan!');
+        $create = Technisian::create($request->all());
+        if ($create) {
+            $status = 'success';
+            $message = 'Data berhasil ditambahkan';
         } else {
-            return redirect('technic')->with('error', 'Teknisi gagal ditambahkan!');
+            $status = 'error';
+            $message = 'Data gagal ditambahkan';
         }
+        return redirect('technic')->with($status, $message);
     }
 
     // Edit data teknisi
     public function edit(Request $request,$id)
     {
-        $technisians = Technisian::find($id);
-        $alert = $technisians->update($request->all());
-        if ($alert) {
-            return redirect('technic')->with('success', 'Teknisi berhasil diupdate!');
+        $technisian = Technisian::find($id);
+        $update = $technisian->update($request->all());
+        if ($update) {
+            $status = 'success';
+            $message = 'Data berhasil diupdate';
         } else {
-            return redirect('technic')->with('error', 'Teknisi gagal diupdate!');
+            $status = 'error';
+            $message = 'Data gagal diupdate';
         }
+        return redirect('technic')->with($status, $message);
     }
 
     // Menghapus data teknisi
     public function delete($id)
     {
-        $technisians = Technisian::find($id);
-        $alert = $technisians->delete();
-        if ($alert) {
-            return redirect('technic')->with('success', 'Teknisi berhasil dihapus!');
+        $technisian = Technisian::find($id);
+        $delete = $technisian->delete();
+        if ($delete) {
+            $status = 'success';
+            $message = 'Data berhasil dihapus';
         } else {
-            return redirect('technic')->with('error', 'Teknisi gagal dihapus!');
+            $status = 'error';
+            $message = 'Data gagal dihapus';
         }
+        return redirect('technic')->with($status, $message);
     }
 }

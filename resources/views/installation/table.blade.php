@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Instalation Table')
+@section('title', 'Tabel Instalasi')
 
 @section('main')
 
@@ -22,8 +22,7 @@
         </div><!-- /.container-fluid -->
     </section>
 
-    @if (count($installations) > 0)
-
+    @if (count($datas) > 0)
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
@@ -31,14 +30,20 @@
                     <div class="col-12">
                         <div class="mb-2">
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-user">
-                                <i class="fas fa-plus"></i> Tambah Data
+                                <i class="fas fa-plus"></i> Tambah User
                             </button>
                         </div>
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
-                                    <form action="" method="GET">
+                                    <form action="" method="GET">   
                                         <div class="input-group input-group-sm" style="width: 150px;">
+                                            <select name="installation_filter" class="form-control float-right">
+                                                <option value="All">Status</option>
+                                                <option value="Terpasang">Terpasang</option>
+                                                <option value="Dalam Proses">Dalam Proses</option>
+                                                <option value="Belum Terpasang">Belum Terpasang</option>
+                                            </select>
                                             <input type="text" name="installation_search"
                                                 class="form-control float-right" placeholder="Cari Nama User">
                                             <div class="input-group-append">
@@ -55,7 +60,7 @@
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                         <tr class="text-center">
-                                            <th>NO</th>
+                                            <th>No</th>
                                             <th>Jenis Paket</th>
                                             <th>Nama User</th>
                                             <th>Nama Teknisi</th>
@@ -63,22 +68,134 @@
                                             <th>Alamat</th>
                                             <th>Status</th>
                                             <th>Harga Pemasangan</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($installations as $installation)
+                                        @foreach ($datas as $index => $data)
                                             <tr class="text-center">
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $installation->package->jenis_paket }}</td>
-                                                <td>{{ $installation->user->name }}</td>
-                                                <td>{{ $installation->technisian->nama_teknisi }}</td>
-                                                <td>{{ date('d M Y', strToTime($installation->tanggal_pemasangan)) }}</td>
-                                                <td>{{ $installation->alamat_pemasangan }}</td>
-                                                <td>{{ $installation->status_pemasangan }}</td>
+                                                <td>{{ $index + $datas->firstItem() }}</td>
+                                                <td>{{ $data->package->jenis_paket }}</td>
+                                                <td>{{ $data->user->name }}</td>
+                                                <td>{{ $data->technisian->nama_teknisi }}</td>
+                                                <td>{{ date('d M Y', strToTime($data->tanggal_pemasangan)) }}</td>
+                                                <td>{{ $data->alamat_pemasangan }}</td>
+                                                <td>
+                                                    @if ($data->status_pemasangan == 'Belum Terpasang')
+                                                        <span
+                                                            class="fw-bold text-danger">{{ $data->status_pemasangan }}</span>
+                                                    @elseif ($data->status_pemasangan == 'Dalam Proses')
+                                                        <span
+                                                            class="fw-bold text-warning">{{ $data->status_pemasangan }}</span>
+                                                    @else
+                                                        <span
+                                                            class="fw-bold text-success">{{ $data->status_pemasangan }}</span>
+                                                    @endif
+                                                </td>
                                                 <td>Rp.
-                                                    {{ number_format($installation->package->harga_pemasangan, 0, ',', '.') }}
+                                                    {{ number_format($data->package->harga_pemasangan, 0, ',', '.') }}
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                        data-target="#edit-alamat-instalasi{{ $data->id }}">
+                                                        <i class="fas fa-pen"></i>
+                                                    </button>
+                                                    @if ($data->status_pemasangan == 'Belum Terpasang')
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#instalasi-dalam-proses{{ $data->id }}">
+                                                            Ubah Status
+                                                        </button>
+                                                    @elseif ($data->status_pemasangan == 'Dalam Proses')
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#instalasi-terpasang{{ $data->id }}">
+                                                            Ubah Status
+                                                        </button>
+                                                    @endif
                                                 </td>
                                             </tr>
+                                            <div class="modal fade" id="edit-alamat-instalasi{{ $data->id }}"
+                                                data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Edit Data</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form action="{{ route('edit.alamat', $data->id) }}"
+                                                            method="POST">
+                                                            <div class="modal-body">
+                                                                @csrf
+                                                                <div class="form-group">
+                                                                    <label for="edit-alamat-pemasangan">Alamat Instalasi</label>
+                                                                    <input type="text" class="form-control"
+                                                                        id="edit-alamat-pemasangan"
+                                                                        name="alamat_pemasangan"
+                                                                        value="{{ $data->alamat_pemasangan }}" autofocus
+                                                                        required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Tutup</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Simpan</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="instalasi-dalam-proses{{ $data->id }}"
+                                                data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content bg-yellow">
+                                                        <form action="{{ route('edit.pemasangan', $data->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <h4 class="modal-title">Mau mengubah status
+                                                                    menjadi Dalam Proses ?</h4>
+                                                                <input type="hidden" name="status_pemasangan"
+                                                                    value="Dalam Proses" required>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-light"
+                                                                    data-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-light">Ubah</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="instalasi-terpasang{{ $data->id }}"
+                                                data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content bg-yellow">
+                                                        <form action="{{ route('edit.pemasangan', $data->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <h4 class="modal-title">Mau mengubah status
+                                                                    menjadi Terpasang ?</h4>
+                                                                <input type="hidden" name="package_id"
+                                                                    value="{{ $data->package_id }}" required>
+                                                                <input type="hidden" name="status_pemasangan"
+                                                                    value="Terpasang" required>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-light"
+                                                                    data-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-light">Ubah</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -86,6 +203,48 @@
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
+                        @if ($datas->firstItem() != $datas->lastItem())
+                            <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
+                                {{ $datas->total() }} data</p>
+                        @endif
+                        
+                        @if ($datas->total() > 10)
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    @if ($datas->onFirstPage())
+                                        <li class="page-item disabled">
+                                            <a class="page-link">Previous</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $datas->previousPageUrl() }}">Previous</a>
+                                        </li>
+                                    @endif
+
+                                    @foreach ($datas->getUrlRange(1, $datas->lastPage()) as $page => $url)
+                                        @if ($page == $datas->currentPage())
+                                            <li class="page-item active" aria-current="page">
+                                                <a class="page-link">{{ $page }}</a>
+                                            </li>
+                                        @else
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+
+                                    @if ($datas->hasMorePages())
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $datas->nextPageUrl() }}">Next</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item disabled">
+                                            <a class="page-link">Next</a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </nav>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -98,7 +257,7 @@
             </div>
             <a href="{{ url('installation') }}" class="btn btn-primary">Kembali</a>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-user">
-                <i class="fas fa-plus"></i> Tambah Data
+                <i class="fas fa-plus"></i> Tambah User
             </button>
         </div>
     @endif
@@ -107,7 +266,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Data</h4>
+                    <h4 class="modal-title">Tambah User</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -213,6 +372,12 @@
                                     id="tambah-alamat-pemasangan" placeholder="Masukkan alamat">
                             </div>
                         </div>
+                        <p class="mb-2">Note :</p>
+                        <ul>
+                            <li>
+                                <p class="mb-2">Pastikan data alamat yang di inputkan benar.</p>
+                            </li>
+                        </ul>
                     </div>
                     <div class="modal-footer justify-content-end">
                         <button type="submit" class="btn btn-sm btn-secondary"><i class="fas fa-save"></i> Simpan
@@ -222,4 +387,5 @@
             </div>
         </div>
     </div>
+
 @endsection

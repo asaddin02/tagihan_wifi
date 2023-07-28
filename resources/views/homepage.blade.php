@@ -9,11 +9,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Dashboard</h1>
+                    <h1 class="m-0">Dasbor</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -24,21 +24,20 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            
             <!-- Small boxes (Stat box) -->
             <div class="row">
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>150</h3>
-
+                            <h3>{{ count($customers) }}</h3>
                             <p>Pelanggan</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ url('/customer') }}" class="small-box-footer">Cek Pelanggan <i
+                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -46,14 +45,56 @@
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>55<sup style="font-size: 20px">%</sup></h3>
-
-                            <p>Keuntungan</p>
+                            <h3>{{ number_format($incomePerMonth, 0, ',', '.') }}</h3>
+                            <p>Pendapatan Bulan Ini</p>
+                            <div class="collapse" id="cek-pendapatan-per-tahun">
+                                <h3>{{ number_format($incomePerYear, 0, ',', '.') }}</h3>
+                                <p>Pendapatan Tahun Ini</p>
+                                <a href="{{ url('/income') }}" class="text-white text-decoration-none">Cek Tabel Pendapatan <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a class="small-box-footer" data-bs-toggle="collapse" href="#cek-pendapatan-per-tahun" role="button"
+                            aria-expanded="false" aria-controls="collapseExample">
+                            Cek Pendapatan <i class="fas fa-arrow-circle-down"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>{{ number_format($spendingPerMonth, 0, ',', '.') }}</h3>
+                            <p>Pengeluaran Bulan Ini</p>
+                            <div class="collapse" id="cek-pengeluaran-per-tahun">
+                                <h3>{{ number_format($spendingPerYear, 0, ',', '.') }}</h3>
+                                <p>Pengeluaran Tahun Ini</p>
+                                <a href="{{ url('/spending') }}" class="text-white text-decoration-none">Cek Tabel Pengeluaran <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a class="small-box-footer" data-bs-toggle="collapse" href="#cek-pengeluaran-per-tahun" role="button"
+                            aria-expanded="false" aria-controls="collapseExample">
+                            Cek Pengeluaran <i class="fas fa-arrow-circle-down"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3>{{ number_format($loss, 0, ',', '.') }}</h3>
+                            <p>Kerugian</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="{{ url('/income') }}" class="small-box-footer">Cek Pengeluaran <i
+                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -94,7 +135,6 @@
                         </div><!-- /.card-body -->
                     </div>
                     <!-- /.card -->
-
                     <!-- Map card -->
                     <div class="card bg-gradient-primary">
                         <div class="card-header border-0">
@@ -140,31 +180,25 @@
                         </div>
                     </div>
                     <!-- /.card -->
-
                 </section>
                 <!-- /.Left col -->
                 <!-- right col (We are only adding the ID to make the widgets sortable)-->
                 <section class="col-lg-6 connectedSortable">
-
                     <!-- solid sales graph -->
                     <div class="card bg-gradient-info">
                         <div class="card-header border-0">
                             <h3 class="card-title">
                                 <i class="fas fa-th mr-1"></i>
-                                kecepatan Internet
+                                Pendapatan Bulanan
                             </h3>
-
                             <div class="card-tools">
                                 <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-                                <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                                    <i class="fas fa-times"></i>
-                                </button>
                             </div>
                         </div>
                         <div class="card-body">
-                            <canvas class="chart" id="line-chart"
+                            <canvas class="chart" id="grafik-pendapatan-bulanan"
                                 style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                         </div>
                         <!-- /.card-body -->
@@ -173,21 +207,18 @@
                                 <div class="col-4 text-center">
                                     <input type="text" class="knob" data-readonly="true" value="20"
                                         data-width="60" data-height="60" data-fgColor="#39CCCC">
-
                                     <div class="text-white">Mail-Orders</div>
                                 </div>
                                 <!-- ./col -->
                                 <div class="col-4 text-center">
                                     <input type="text" class="knob" data-readonly="true" value="50"
                                         data-width="60" data-height="60" data-fgColor="#39CCCC">
-
                                     <div class="text-white">Online</div>
                                 </div>
                                 <!-- ./col -->
                                 <div class="col-4 text-center">
                                     <input type="text" class="knob" data-readonly="true" value="30"
                                         data-width="60" data-height="60" data-fgColor="#39CCCC">
-
                                     <div class="text-white">In-Store</div>
                                 </div>
                                 <!-- ./col -->
@@ -197,11 +228,9 @@
                         <!-- /.card-footer -->
                     </div>
                     <!-- /.card -->
-
                     <!-- Calendar -->
                     <div class="card bg-gradient-success">
                         <div class="card-header border-0">
-
                             <h3 class="card-title">
                                 <i class="far fa-calendar-alt"></i>
                                 Kalender
