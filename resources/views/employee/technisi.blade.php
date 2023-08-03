@@ -38,10 +38,10 @@
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="technisian_search" class="form-control float-right"
+                                            <input type="text" name="technisian_filter_name" class="form-control float-right"
                                                 placeholder="Cari Nama">
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
+                                                <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -58,7 +58,7 @@
                                             <th>Nama</th>
                                             <th>Alamat</th>
                                             <th>Nomor Telepon</th>
-                                            <th class="text-start">Aksi</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -77,6 +77,10 @@
                                                         data-target="#hapus-teknisi{{ $data->id }}" title="Hapus">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
+                                                    <button type="button" class="btn btn-success" data-toggle="modal"
+                                                        data-target="#whatsapp-teknisi{{ $data->id }}" title="Whatsapp">
+                                                        <i class="fas fa-phone"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="edit-teknisi{{ $data->id }}">
@@ -84,14 +88,13 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Edit Data</h4>
-                                                            <button type="button" class="close"
-                                                                data-dismiss="modal" aria-label="Close">
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <form class="form-horizontal"
-                                                            action="{{ route('edit.teknisi', $data->id) }}"
-                                                            method="post">
+                                                            action="{{ route('edit.teknisi', $data->id) }}" method="post">
                                                             @csrf
                                                             <div class="modal-body">
                                                                 <div class="form-group row">
@@ -100,9 +103,8 @@
                                                                         Teknisi</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="text" name="nama_teknisi"
-                                                                            class="form-control"
-                                                                            id="edit-nama-teknisi"
-                                                                            value="{{ $data->nama_teknisi }}">
+                                                                            class="form-control" id="edit-nama-teknisi"
+                                                                            value="{{ $data->nama_teknisi }}" autofocus required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
@@ -111,9 +113,8 @@
                                                                         Teknisi</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="text" name="alamat"
-                                                                            class="form-control"
-                                                                            id="edit-alamat-teknisi"
-                                                                            value="{{ $data->alamat }}">
+                                                                            class="form-control" id="edit-alamat-teknisi"
+                                                                            value="{{ $data->alamat }}" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
@@ -122,10 +123,9 @@
                                                                         Telepon</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="number" name="no_telepon"
-                                                                            class="form-control"
-                                                                            id="edit-nomor-teknisi"
+                                                                            class="form-control" id="edit-nomor-teknisi"
                                                                             value="{{ $data->no_telepon }}"
-                                                                            max="99999999999">
+                                                                            max="99999999999" required>
                                                                         <p class="text-danger mt-1 ms-3 d-none"
                                                                             id="edit-nomor-teknisi-alert">Nomor hp
                                                                             maksimal
@@ -148,8 +148,7 @@
                                             <div class="modal fade" id="hapus-teknisi{{ $data->id }}">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content bg-danger">
-                                                        <form
-                                                            action="{{ route('delete.teknisi', $data->id) }}">
+                                                        <form action="{{ route('delete.teknisi', $data->id) }}">
                                                             @csrf
                                                             <div class="modal-body">
                                                                 <h4 class="modal-title">Yakin mau hapus?
@@ -160,6 +159,29 @@
                                                                     data-dismiss="modal">Batal</button>
                                                                 <button type="submit"
                                                                     class="btn btn-light">Hapus</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <div class="modal fade" id="whatsapp-teknisi{{ $data->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="{{ route('whatsapp.teknisi') }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <h4 class="modal-title">Ini akan mengarahkan ke Whatsapp <br>
+                                                                    {{ $data->nama_teknisi }}</h4>
+                                                                <input type="hidden" name="no_telepon"
+                                                                    value="{{ $data->no_telepon }}">
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Ya</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -178,7 +200,7 @@
                             <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
                                 {{ $datas->total() }} data</p>
                         @endif
-                        
+
                         @if ($datas->total() > 10)
                             <nav aria-label="...">
                                 <ul class="pagination">
@@ -237,7 +259,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Teknisi</h4>
+                    <h4 class="modal-title">Form Tambah Teknisi</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -250,7 +272,7 @@
                                 Teknisi</label>
                             <div class="col-sm-8">
                                 <input type="text" name="nama_teknisi" class="form-control" id="tambah-nama-teknisi"
-                                    placeholder="ex : Nama Teknisi">
+                                    placeholder="ex : Nama Teknisi" autofocus required>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -258,7 +280,7 @@
                                 Teknisi</label>
                             <div class="col-sm-8">
                                 <input type="text" name="alamat" class="form-control" id="tambah-alamat-teknisi"
-                                    placeholder="Alamat detail">
+                                    placeholder="Alamat detail" required>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -266,7 +288,7 @@
                                 Telepon</label>
                             <div class="col-sm-8">
                                 <input type="number" name="no_telepon" class="form-control" id="tambah-nomor-teknisi"
-                                    placeholder="ex : 08**********" max="99999999999">
+                                    placeholder="ex : 08**********" max="99999999999" required>
                                 <p class="text-danger mt-1 ms-3 d-none" id="tambah-nomor-teknisi-alert">Nomor hp maksimal
                                     12 karakter</p>
                             </div>

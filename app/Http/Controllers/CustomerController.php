@@ -10,29 +10,26 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Baca data dari tabel
     public function index()
     {
-        $datas = Installation::paginate(10);
-        $carbon = Carbon::now();
-        return view('customer.table', compact('datas', 'carbon'));
-    }
+        $name = request('customer_filter_name');
 
-    public function search(Request $request)
-    {
+        $query = Installation::query();
         $carbon = Carbon::now();
-        if ($request->customer_search == '') {
-            $datas = [];
-        } else {
-            $datas = Installation::whereHas('user', function ($query) use($request) {
-                $query->where('name', 'LIKE', '%' . $request->customer_search . '%')->orWhere('user_id', $request->customer_search);
-            })->get();
+
+        if ($name != '') {
+            $query->whereHas('user', function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%' . $name . '%')->orwhere('user_id', $name);
+            });
         }
+
+        $datas = $query->paginate(10);
+
         return view('customer.table', compact('datas', 'carbon'));
     }
 
+    // Detail customer
     public function detail($id)
     {
         $installation = Installation::find($id);
@@ -40,71 +37,43 @@ class CustomerController extends Controller
         return view('customer.detail', compact('installation', 'invoices'));
     }
 
+    // Detail invoice
     public function invoice($id)
     {
-        if (isset($_GET['invoice_month']) && isset($_GET['invoice_year'])) {
-            if ($_GET['invoice_month'] == '' || $_GET['invoice_year'] == '') {
-                $datas = [];
-            } elseif ($_GET['invoice_month'] == 'all' || $_GET['invoice_year'] == 'all') {
-                $datas = Invoice::where('installation_id', $id)->get();
-            } else {
-                $datas = Invoice::where('installation_id', $id)
-                    ->where('bulan', $_GET['invoice_month'])
-                    ->where('tahun', $_GET['invoice_year'])->get();
-            }
-        } else {
-            $datas = Invoice::where('installation_id', $id)->paginate(10);
-        }
-        $installation = Installation::find($id);
+        $month = request('invoice_filter_month');
+        $year = request('invoice_filter_year');
+        $status = request('invoice_filter_status');
+
+        $query = Invoice::query();
         $carbon = Carbon::now();
-        return view('customer.invoice', compact('datas', 'installation', 'carbon'));
+
+        if ($month != '' && $month != 'All') {
+            $query->where('bulan', $month);
+        }
+
+        if ($year != '' && $year != 'All') {
+            $query->where('tahun', $year);
+        }
+
+        if ($status != '' && $status != 'All') {
+            $query->where('status_tagihan', $status);
+        }
+
+        $query->where('installation_id', $id);
+
+        $datas = $query->paginate(10);
+
+        return view('customer.invoice', compact('datas', 'carbon'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Whatsapp
+    public function whatsapp(Request $request)
     {
-        //
-    }
+        $country = '62';
+        $phone_number = ltrim($request->no_telepon, '0');
+        $message = 'Halo pelanggan, Anda belum membayar tagihan bulan ini';
+        $whatsappURL = 'https://wa.me/' . $country . $phone_number . '?text=' . $message;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->away($whatsappURL);
     }
 }

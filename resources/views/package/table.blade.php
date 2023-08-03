@@ -13,7 +13,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-decoration-none">Home</a></li>
                         <li class="breadcrumb-item active">Paket Wifi</li>
                     </ol>
                 </div><!-- /.col -->
@@ -39,10 +39,10 @@
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="package_search" class="form-control float-right"
+                                            <input type="text" name="package_filter_name" class="form-control float-right"
                                                 placeholder="Cari Nama Paket">
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
+                                                <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -60,7 +60,7 @@
                                             <th>Keunggulan</th>
                                             <th>Harga Paket</th>
                                             <th>Harga Pemasangan</th>
-                                            <th class="text-start">Aksi</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -71,13 +71,13 @@
                                                 <td>{{ $data->keunggulan }}</td>
                                                 <td>Rp. {{ number_format($data->harga_paket, 0, ',', '.') }}</td>
                                                 <td>Rp. {{ number_format($data->harga_pemasangan, 0, ',', '.') }}</td>
-                                                <td class="d-flex flex-wrap ">
+                                                <td>
                                                     <button type="button" class="btn btn-primary mx-1" data-toggle="modal"
-                                                        data-target="#edit-paket{{ $data->id }}">
+                                                        data-target="#edit-paket{{ $data->id }}" title="Edit">
                                                         <i class="fas fa-pen"></i>
                                                     </button>
                                                     <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                        data-target="#hapus-paket{{ $data->id }}">
+                                                        data-target="#hapus-paket{{ $data->id }}" title="Hapus">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
@@ -149,7 +149,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <div class="modal-body">
-                                                                <h4 class="modal-title">Yakin mau hapus?</h4>
+                                                                <h4 class="modal-title">Yakin mau hapus {{ $data->jenis_paket }} ?</h4>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-light"
@@ -233,7 +233,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Peket</h4>
+                    <h4 class="modal-title">Form Tambah Paket</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

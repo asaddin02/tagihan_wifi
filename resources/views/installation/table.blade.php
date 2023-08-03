@@ -36,18 +36,21 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
-                                    <form action="" method="GET">   
+                                    <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <select name="installation_filter" class="form-control float-right">
-                                                <option value="All">Status</option>
-                                                <option value="Terpasang">Terpasang</option>
-                                                <option value="Dalam Proses">Dalam Proses</option>
-                                                <option value="Belum Terpasang">Belum Terpasang</option>
-                                            </select>
-                                            <input type="text" name="installation_search"
-                                                class="form-control float-right" placeholder="Cari Nama User">
+                                            <input class="form-control float-right" list="filter-status-instalasi"
+                                                id="input-filter-status-instalasi" placeholder="Status"
+                                                name="installation_filter_status">
+                                            <datalist id="filter-status-instalasi">
+                                                <option value="All">
+                                                <option value="Terpasang">
+                                                <option value="Dalam Proses">
+                                                <option value="Belum Terpasang">
+                                            </datalist>
+                                            <input type="text" name="installation_filter_name"
+                                                class="form-control float-right" placeholder="Nama" title="Nama Customer">
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
+                                                <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -67,6 +70,7 @@
                                             <th>Tanggal Pemasangan</th>
                                             <th>Alamat</th>
                                             <th>Status</th>
+                                            <th>Harga Paket</th>
                                             <th>Harga Pemasangan</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -93,22 +97,28 @@
                                                     @endif
                                                 </td>
                                                 <td>Rp.
+                                                    {{ number_format($data->package->harga_paket, 0, ',', '.') }}
+                                                </td>
+                                                <td>Rp.
                                                     {{ number_format($data->package->harga_pemasangan, 0, ',', '.') }}
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                        data-target="#edit-alamat-instalasi{{ $data->id }}">
+                                                        data-target="#edit-alamat-instalasi{{ $data->id }}"
+                                                        title="Edit Alamat Instalasi">
                                                         <i class="fas fa-pen"></i>
                                                     </button>
                                                     @if ($data->status_pemasangan == 'Belum Terpasang')
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                            data-target="#instalasi-dalam-proses{{ $data->id }}">
-                                                            Ubah Status
+                                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                                            data-target="#instalasi-dalam-proses{{ $data->id }}"
+                                                            title="Ubah Status">
+                                                            <i class="fa fa-box-open"></i>
                                                         </button>
                                                     @elseif ($data->status_pemasangan == 'Dalam Proses')
-                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                            data-target="#instalasi-terpasang{{ $data->id }}">
-                                                            Ubah Status
+                                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                                            data-target="#instalasi-terpasang{{ $data->id }}"
+                                                            title="Ubah Status">
+                                                            <i class="fa fa-check"></i>
                                                         </button>
                                                     @endif
                                                 </td>
@@ -130,10 +140,10 @@
                                                             <div class="modal-body">
                                                                 @csrf
                                                                 <div class="form-group">
-                                                                    <label for="edit-alamat-pemasangan">Alamat Instalasi</label>
+                                                                    <label for="edit-alamat-pemasangan">Alamat
+                                                                        Instalasi</label>
                                                                     <input type="text" class="form-control"
-                                                                        id="edit-alamat-pemasangan"
-                                                                        name="alamat_pemasangan"
+                                                                        id="edit-alamat-pemasangan" name="alamat_pemasangan"
                                                                         value="{{ $data->alamat_pemasangan }}" autofocus
                                                                         required>
                                                                 </div>
@@ -158,7 +168,7 @@
                                                             @csrf
                                                             <div class="modal-body">
                                                                 <h4 class="modal-title">Mau mengubah status
-                                                                    menjadi Dalam Proses ?</h4>
+                                                                    menjadi <br> Dalam Proses ?</h4>
                                                                 <input type="hidden" name="status_pemasangan"
                                                                     value="Dalam Proses" required>
                                                             </div>
@@ -181,7 +191,7 @@
                                                             @csrf
                                                             <div class="modal-body">
                                                                 <h4 class="modal-title">Mau mengubah status
-                                                                    menjadi Terpasang ?</h4>
+                                                                    menjadi <br> Terpasang ?</h4>
                                                                 <input type="hidden" name="package_id"
                                                                     value="{{ $data->package_id }}" required>
                                                                 <input type="hidden" name="status_pemasangan"
@@ -207,7 +217,7 @@
                             <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
                                 {{ $datas->total() }} data</p>
                         @endif
-                        
+
                         @if ($datas->total() > 10)
                             <nav aria-label="...">
                                 <ul class="pagination">
@@ -266,7 +276,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah User</h4>
+                    <h4 class="modal-title">Form Tambah User</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -359,7 +369,7 @@
                             <label for="tambah-tanggal-pemasangan" class="col-sm-4 col-form-label">Tanggal
                                 Pemasangan</label>
                             <div class="col-sm-8">
-                                <span>{{ date('d M Y', strToTime($date)) }}</span>
+                                <span>{{ date('d m Y', strToTime($date)) }}</span>
                                 <input type="hidden" name="tanggal_pemasangan" class="form-control"
                                     id="tambah-tanggal-pemasangan" value="{{ $date }}" readonly>
                             </div>
@@ -380,7 +390,7 @@
                         </ul>
                     </div>
                     <div class="modal-footer justify-content-end">
-                        <button type="submit" class="btn btn-sm btn-secondary"><i class="fas fa-save"></i> Simpan
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Simpan
                             Data</button>
                     </div>
                 </form>

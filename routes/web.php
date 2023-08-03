@@ -51,11 +51,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('customer', CustomerController::class);
     Route::get('customer/invoice/{id}', [CustomerController::class, 'invoice']);
     Route::get('customer/detail/{id}', [CustomerController::class, 'detail']);
+    Route::post('customer/whatsapp', [CustomerController::class, 'whatsapp'])->name('whatsapp.customer');
     Route::post('customer/search', [CustomerController::class, 'search'])->name('customer.search');
 
     // Route Technisian
     Route::get('technic', [TechnisianController::class, 'index']);
     Route::post('technic/create', [TechnisianController::class, 'create'])->name('create.teknisi');
+    Route::post('technic/whatsapp', [TechnisianController::class, 'whatsapp'])->name('whatsapp.teknisi');
     Route::post('technic/{id}', [TechnisianController::class, 'edit'])->name('edit.teknisi');
     Route::get('technic/{id}', [TechnisianController::class, 'delete'])->name('delete.teknisi');
 

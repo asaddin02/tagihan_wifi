@@ -15,22 +15,30 @@ class InstallationController extends Controller
     // Menunjukkan data installation
     public function getInstallation()
     {
-        if (isset($_GET['installation_filter']) || isset($_GET['installation_search'])) {
-            if ($_GET['installation_filter'] == 'All' && $_GET['installation_search'] == '') {
-                return redirect('installation');
-            } elseif ($_GET['installation_search'] != '') {
-                $datas = Installation::whereHas('user', function ($query) {
-                    $query->where('name', 'LIKE', '%' . $_GET['installation_search'] . '%');
-                })->orWhere('status_pemasangan', $_GET['installation_filter'])->paginate(10);
-            } elseif ($_GET['installation_filter'] != 'All') {
-                $datas = [];
-            }
-        } else {
-            $datas = Installation::paginate(10);
-        }
+        $status = request('installation_filter_status');
+        $name = request('installation_filter_name');
+
+        $query = Installation::query();
         $packages = Package::paginate(10);
         $technisians = Technisian::paginate(10);
         $date = Carbon::now();
+
+        if ($status != '') {
+            if ($status == 'All') {
+                $query->paginate(10);
+            } else {
+                $query->where('status_pemasangan', $status);
+            }
+        } 
+        
+        if ($name != '') {
+            $query->whereHas('user', function ($query) use ($name) {
+                $query->where('name', 'LIKE', '%' . $name . '%');
+            });
+        }
+
+        $datas = $query->paginate(10);
+
         return view('installation.table', compact('datas', 'packages', 'technisians', 'date'));
     }
 
@@ -38,6 +46,7 @@ class InstallationController extends Controller
     public function createInstallation(Request $request)
     {
         $latestUser = User::where('role', 'Customer')->latest()->first();
+
         $create = Installation::create([
             'package_id' => $request->package_id,
             'user_id' => $latestUser->id,
@@ -46,6 +55,7 @@ class InstallationController extends Controller
             'alamat_pemasangan' => $request->alamat_pemasangan,
             'status_pemasangan' => 'Belum Terpasang',
         ]);
+
         if ($create) {
             $status = 'success';
             $message = 'User dan Instalasi berhasil ditambahkan!';
@@ -53,6 +63,7 @@ class InstallationController extends Controller
             $status = 'error';
             $message = 'User dan Instalasi gagal ditambahkan!';
         }
+
         return redirect('installation')->with($status, $message);
     }
 
@@ -62,6 +73,7 @@ class InstallationController extends Controller
         $installation = Installation::find($id);
         $package = Package::find($request->package_id);
         $date = Carbon::now();
+
         if ($request->status_pemasangan == 'Dalam Proses') {
             $installation->update([
                 'status_pemasangan' => $request->status_pemasangan
@@ -78,6 +90,7 @@ class InstallationController extends Controller
                 'keterangan' => 'Pembayaran instalasi',
             ]);
         }
+
         return back()->with('success', 'Status berhasil di ubah!');
     }
 
@@ -85,9 +98,11 @@ class InstallationController extends Controller
     public function updateInstallationAddress(Request $request, $id)
     {
         $installation = Installation::find($id);
+
         $update = $installation->update([
             'alamat_pemasangan' => $request->alamat_pemasangan,
         ]);
+
         if ($update) {
             $status = 'success';
             $message = 'Alamat instalasi berhasil diupdate!';
@@ -95,6 +110,7 @@ class InstallationController extends Controller
             $status = 'error';
             $message = 'Alamat instalasi gagal diupdate!';
         }
+        
         return redirect('installation')->with($status, $message);
     }
 }

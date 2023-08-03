@@ -44,6 +44,7 @@
 
     {{-- BS5 --}}
     <link rel="stylesheet" href="{{ asset('template/bs/css/bootstrap.min.css') }}">
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -218,7 +219,6 @@
             });
         });
     </script>
-
 </body>
 
 </html>

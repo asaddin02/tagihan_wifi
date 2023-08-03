@@ -50,14 +50,15 @@
                             <div class="collapse" id="cek-pendapatan-per-tahun">
                                 <h3>{{ number_format($incomePerYear, 0, ',', '.') }}</h3>
                                 <p>Pendapatan Tahun Ini</p>
-                                <a href="{{ url('/income') }}" class="text-white text-decoration-none">Cek Tabel Pendapatan <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="{{ url('/income') }}" class="text-white text-decoration-none">Cek Tabel Pendapatan
+                                    <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a class="small-box-footer" data-bs-toggle="collapse" href="#cek-pendapatan-per-tahun" role="button"
-                            aria-expanded="false" aria-controls="collapseExample">
+                        <a class="small-box-footer" data-bs-toggle="collapse" href="#cek-pendapatan-per-tahun"
+                            role="button" aria-expanded="false" aria-controls="collapseExample">
                             Cek Pendapatan <i class="fas fa-arrow-circle-down"></i>
                         </a>
                     </div>
@@ -71,14 +72,15 @@
                             <div class="collapse" id="cek-pengeluaran-per-tahun">
                                 <h3>{{ number_format($spendingPerYear, 0, ',', '.') }}</h3>
                                 <p>Pengeluaran Tahun Ini</p>
-                                <a href="{{ url('/spending') }}" class="text-white text-decoration-none">Cek Tabel Pengeluaran <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="{{ url('/spending') }}" class="text-white text-decoration-none">Cek Tabel
+                                    Pengeluaran <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a class="small-box-footer" data-bs-toggle="collapse" href="#cek-pengeluaran-per-tahun" role="button"
-                            aria-expanded="false" aria-controls="collapseExample">
+                        <a class="small-box-footer" data-bs-toggle="collapse" href="#cek-pengeluaran-per-tahun"
+                            role="button" aria-expanded="false" aria-controls="collapseExample">
                             Cek Pengeluaran <i class="fas fa-arrow-circle-down"></i>
                         </a>
                     </div>
@@ -87,14 +89,20 @@
                     <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>{{ number_format($loss, 0, ',', '.') }}</h3>
-                            <p>Kerugian</p>
+                            <h3>
+                                @if ($loss < 0)
+                                    <span class="text-white">{{ (number_format(ltrim($loss, '-'), 0, ',', '.', )) }}</span>
+                                @else
+                                    <span class="text-white">0</span>
+                                @endif
+                            </h3>
+                            <p class="text-white">Kerugian</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="{{ url('/income') }}" class="small-box-footer">Cek Pengeluaran <i
-                                class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{ url('/spending') }}" class="small-box-footer"><span class="text-white">Cek Pengeluaran</span> <i
+                                class="fas fa-arrow-circle-right text-white"></i></a>
                     </div>
                 </div>
             </div>

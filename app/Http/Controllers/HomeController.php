@@ -17,6 +17,10 @@ class HomeController extends Controller
     {
         $date = Carbon::now();
         $customers = User::where('role', 'Customer')->get();
+        $incomePerMonth = 0;
+        $incomePerYear = 0;
+        $spendingPerMonth = 0;
+        $spendingPerYear = 0;
 
         $getMonth = date('m', strToTime($date));
         $getYear = date('Y', strToTime($date));
@@ -27,15 +31,10 @@ class HomeController extends Controller
         $spendingsMonth = Spending::where('bulan', $getMonth)->where('tahun', $getYear)->get();
         $spendingsYear = Spending::where('tahun', $getYear)->get();
 
-        $incomePerMonth = 0;
-        $incomePerYear = 0;
-
-        $spendingPerMonth = 0;
-        $spendingPerYear = 0;
-
         foreach ($incomesMonth as $income) {
             $incomePerMonth += $income->total_pendapatan;
         }
+
         foreach ($incomesYear as $income) {
             $incomePerYear += $income->total_pendapatan;
         }
@@ -43,6 +42,7 @@ class HomeController extends Controller
         foreach ($spendingsMonth as $spending) {
             $spendingPerMonth += $spending->total_pengeluaran;
         }
+        
         foreach ($spendingsYear as $spending) {
             $spendingPerYear += $spending->total_pengeluaran;
         }

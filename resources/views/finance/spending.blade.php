@@ -14,6 +14,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item active">Keuangan</li>
                         <li class="breadcrumb-item active">Pengeluaran</li>
                     </ol>
                 </div><!-- /.col -->
@@ -38,11 +39,10 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
-                                    <form action="{{ route('spending.filter') }}" method="POST">
-                                        @csrf
+                                    <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <select name="month" class="form-control float-right">
-                                                <option value="All">Bulan</option>
+                                            <select name="spending_filter_month" class="form-control float-right">
+                                                <option value="All" hidden>Bulan</option>
                                                 <option value="01">Januari</option>
                                                 <option value="02">Februari</option>
                                                 <option value="03">Maret</option>
@@ -56,8 +56,8 @@
                                                 <option value="11">November</option>
                                                 <option value="12">Desember</option>
                                             </select>
-                                            <select name="year" class="form-control float-right">
-                                                <option value="All">Tahun</option>
+                                            <select name="spending_filter_year" class="form-control float-right">
+                                                <option value="All" hidden>Tahun</option>
                                                 <option value="2020">2020</option>
                                                 <option value="2021">2021</option>
                                                 <option value="2022">2022</option>
@@ -71,7 +71,7 @@
                                                 <option value="2030">2030</option>
                                             </select>
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
+                                                <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -90,7 +90,7 @@
                                             <th>Bulan</th>
                                             <th>Tahun</th>
                                             <th>Keterangan</th>
-                                            <th class="text-start">Aksi</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -99,8 +99,8 @@
                                                 <td>{{ $index + $datas->firstItem() }}</td>
                                                 <td>
                                                     <span class="text-danger fw-bold">Rp.
-                                                    {{ number_format($data->total_pengeluaran, '0', ',', '.') }}
-                                                    --</span>
+                                                        {{ number_format($data->total_pengeluaran, '0', ',', '.') }}
+                                                        --</span>
                                                 </td>
                                                 <td>{{ $data->hari }}</td>
                                                 <td>
@@ -132,13 +132,13 @@
                                                 </td>
                                                 <td>{{ $data->tahun }}</td>
                                                 <td>{{ $data->keterangan }}</td>
-                                                <td class="d-flex flex-wrap ">
+                                                <td>
                                                     <button type="button" class="btn btn-primary mx-1" data-toggle="modal"
-                                                        data-target="#edit-pengeluaran{{ $data->id }}">
+                                                        data-target="#edit-pengeluaran{{ $data->id }}" title="Edit">
                                                         <i class="fas fa-pen"></i>
                                                     </button>
                                                     <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                        data-target="#hapus-pengeluaran{{ $data->id }}">
+                                                        data-target="#hapus-pengeluaran{{ $data->id }}" title="Hapus">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
@@ -162,8 +162,7 @@
                                                                     <label for="edit-total-pengeluaran">Total
                                                                         Pengeluaran</label>
                                                                     <input type="number" class="form-control"
-                                                                        id="edit-total-pengeluaran"
-                                                                        name="total_pengeluaran"
+                                                                        id="edit-total-pengeluaran" name="total_pengeluaran"
                                                                         value="{{ $data->total_pengeluaran }}" autofocus
                                                                         required>
                                                                 </div>
@@ -220,7 +219,7 @@
                             <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
                                 {{ $datas->total() }} data</p>
                         @endif
-                        
+
                         @if ($datas->total() > 10)
                             <nav aria-label="...">
                                 <ul class="pagination">
@@ -279,7 +278,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Pengeluaran</h4>
+                    <h4 class="modal-title">Form Tambah Pengeluaran</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

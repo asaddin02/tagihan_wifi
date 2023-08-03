@@ -37,13 +37,12 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
-                                    <form action="{{ route('customer.search') }}" method="POST">
-                                        @csrf
+                                    <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="customer_search" class="form-control float-right"
+                                            <input type="text" name="customer_filter_name" class="form-control float-right"
                                                 placeholder="Cari Id / Nama">
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
+                                                <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -77,7 +76,7 @@
                                                 <td>{{ $data->alamat_pemasangan }}</td>
                                                 <td>
                                                     <a href="{{ url('/customer/invoice/' . $data->id) }}"
-                                                        class="btn btn-success">Tagihan</a>
+                                                        class="btn btn-success" title="Cek Tagihan"><i class="fa fa-receipt"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -140,7 +139,7 @@
                 Tidak ada data yang bisa ditampilkan!
                 <br>
                 Note : Silahkan ke halaman <a href="{{ url('installation') }}"
-                    class="text-decoration-none text-black">instalasi</a> untuk menambahkan customer
+                    class="text-black">instalasi</a> untuk menambahkan customer
             </div>
             <a href="{{ url('/customer') }}" class="btn btn-primary">Kembali</a>
         </div>
@@ -188,7 +187,7 @@
                         <input type="hidden" name="status_tagihan" value="Belum Dibayar" required>
                     </div>
                     <div class="modal-footer justify-content-end">
-                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Tambah</button>
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</button>
                     </div>
                 </form>
             </div>
