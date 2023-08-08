@@ -108,17 +108,13 @@
                         </div>
                     </div>
                 @endif
-            </div>
-            <!-- /.row -->
-            <!-- Main row -->
-            <div class="row">
-                <section class="col-lg-12 connectedSortable">
+                <section class="col-lg-12">
                     @if (Auth::user()->role == 'Admin')
                         <div class="card">
                             <div class="card-header">
                                 <h3 class="card-title">
-                                    <i class="fas fa-chart-pie mr-1"></i>
-                                    Kecepatan internet
+                                    <i class="fas fa-chart-bar mr-1"></i>
+                                    Pendapatan Dan Pengeluaran
                                 </h3>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -129,9 +125,17 @@
                                         <canvas id="barChart"></canvas>
                                     </div>
                                 </div>
+                                <span>Tahun : {{ $getYear }}</span>
                             </div><!-- /.card-body -->
                         </div>
                     @endif
+                </section>
+            </div>
+            <!-- /.row -->
+            <!-- Main row -->
+            <div class="row">
+                <section class="col-lg-6 connectedSortable">
+                    
                 </section>
                 <section class="col-lg-6 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
@@ -163,7 +167,8 @@
                                                     <td>{{ $data->installation->user->name }}</td>
                                                     <td>Rp. {{ number_format($data->total_tagihan, 0, ',', '.') }}</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-success" data-toggle="modal"
+                                                        <button type="button" class="btn btn-success"
+                                                            data-toggle="modal"
                                                             data-target="#whatsapp-customer{{ $data->id }}"
                                                             title="Whatsapp">
                                                             <i class="fa fa-phone"></i>
@@ -173,7 +178,8 @@
                                                 <div class="modal fade" id="whatsapp-customer{{ $data->id }}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form action="{{ route('whatsapp.customer') }}" method="POST">
+                                                            <form action="{{ route('whatsapp.customer') }}"
+                                                                method="POST">
                                                                 @csrf
                                                                 <div class="modal-body">
                                                                     <h4 class="modal-title">Ini akan mengarahkan ke
