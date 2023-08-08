@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class SpendingController extends Controller
 {
-    // Baca data dari tabel
+    // Menampilkan data dari tabel spending
     public function index()
     {
         $month = request('spending_filter_month');
@@ -34,7 +34,7 @@ class SpendingController extends Controller
         return view('finance.spending', compact('datas', 'carbon'));
     }
 
-    // Menambahkan data ke tabel
+    // Menambahkan data ke tabel spending
     public function store(Request $request)
     {
         $create = Spending::create($request->all());
@@ -50,7 +50,7 @@ class SpendingController extends Controller
         return redirect('spending')->with($status, $message);
     }
 
-    // Update data tabel
+    // Update data dari tabel spending
     public function update(Request $request, string $id)
     {
         $spending = Spending::find($id);
@@ -71,7 +71,7 @@ class SpendingController extends Controller
         return redirect('spending')->with($status, $message);
     }
 
-    // Hapus data tabel
+    // Hapus data dari tabel spending
     public function destroy(string $id)
     {
         $spending = Spending::find($id);

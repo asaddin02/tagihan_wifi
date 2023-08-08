@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    // Baca data dari tabel
+    // Menampilkan data dari tabel instalasi
     public function index()
     {
         $name = request('customer_filter_name');
@@ -24,6 +24,8 @@ class CustomerController extends Controller
             });
         }
 
+        $query->where('status_pemasangan', 'Terpasang');
+
         $datas = $query->paginate(10);
 
         return view('customer.table', compact('datas', 'carbon'));
@@ -33,7 +35,7 @@ class CustomerController extends Controller
     public function detail($id)
     {
         $installation = Installation::find($id);
-        $invoices = Invoice::where('installation_id', $id)->where('status_tagihan', 'Belum Dibayar')->get();
+        $invoices = Invoice::where('installation_id', $id)->where('status_tagihan', 'Belum Dibayar')->paginate(10);
         return view('customer.detail', compact('installation', 'invoices'));
     }
 
@@ -75,5 +77,29 @@ class CustomerController extends Controller
         $whatsappURL = 'https://wa.me/' . $country . $phone_number . '?text=' . $message;
 
         return redirect()->away($whatsappURL);
+    }
+
+    // Menghapus data dari tabel instalasi
+    public function deleteCustomer(Request $request, $id)
+    {
+        $installation = Installation::find($id);
+        $user = User::find($request->user_id);
+        $invoices = Invoice::where('installation_id', $id)->get();
+
+        foreach($invoices as $invoice) {
+            $invoice->delete();
+        }
+        $delete = $installation->delete();
+        $user->delete();
+        
+        if ($delete) {
+            $status = 'success';
+            $message = 'Instalasi berhasil dihapus!';
+        } else {
+            $status = 'error';
+            $message = 'Instalasi gagal dihapus!';
+        }
+
+        return redirect('customer')->with($status, $message);
     }
 }

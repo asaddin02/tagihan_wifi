@@ -47,7 +47,7 @@
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed" onload="getIncome()">
     <div class="wrapper">
 
         <!-- Preloader -->
@@ -95,7 +95,8 @@
     <script src="{{ asset('template/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- ChartJS -->
-    <script src="{{ asset('template/plugins/chart.js/Chart.min.js') }}"></script>
+    {{-- <script src="{{ asset('template/plugins/chart.js/Chart.min.js') }}"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Sparkline -->
     <script src="{{ asset('template/plugins/sparklines/sparkline.js') }}"></script>
@@ -170,53 +171,92 @@
     {{-- Alert Form --}}
     <script>
         $(document).ready(function() {
-            let addPhoneNumber = $("#tambah-nomor-teknisi");
-            let addPhoneNumberAlert = $("#tambah-nomor-teknisi-alert");
+            let inputNumber = $("input[type='number']");
+            let inputText = $("input[type='text']");
+            let inputTel = $("input[type='tel']");
+            let inputTextArea = $(".text-area");
 
-            let editPhoneNumber = $("#edit-nomor-teknisi");
-            let editPhoneNumberAlert = $("#edit-nomor-teknisi-alert");
+            inputNumber.each(function(index, element) {
+                $(element).on("input", function() {
+                    let inputNumberValue = $(this).val().toString();
+                    if (inputNumberValue.length > 4) {
+                        $('.input-number-alert').removeClass('d-none');
+                    } else {
+                        $('.input-number-alert').addClass('d-none');
+                    }
+                });
+            });
 
-            let addUserId = $("#tambah-id-user");
-            let addUserIdAlert = $("#tambah-id-user-alert");
+            inputText.each(function(index, element) {
+                $(element).on("input", function() {
+                    let inputTextValue = $(this).val().toString();
+                    if (inputTextValue.length < 3 && inputTextValue.length != 0) {
+                        $('.input-text-alert').removeClass('d-none');
+                    } else {
+                        $('.input-text-alert').addClass('d-none');
+                    }
+                });
+            });
 
-            let addUserPhone = $("#tambah-nomor-user");
-            let addUserPhoneAlert = $("#tambah-nomor-user-alert");
+            inputTel.each(function(index, element) {
+                $(element).on("input", function() {
+                    let inputTelValue = $(this).val().toString();
+                    if (inputTelValue.length > 12) {
+                        $('.input-tel-alert').removeClass('d-none');
+                    } else {
+                        $('.input-tel-alert').addClass('d-none');
+                    }
+                });
+            });
 
-            addPhoneNumber.on("input", function() {
-                let addPhoneNumberValue = addPhoneNumber.val().toString();
-                if (addPhoneNumberValue.length > 12) {
-                    addPhoneNumberAlert.removeClass("d-none");
+            inputTextArea.on("input", function() {
+                let inputTextValue = $(this).val().toString();
+                if (inputTextValue.length < 3 && inputTextValue.length != 0) {
+                    $('.input-text-area-alert').removeClass('d-none');
                 } else {
-                    addPhoneNumberAlert.addClass("d-none");
+                    $('.input-text-area-alert').addClass('d-none');
+                }
+            });
+        });
+
+        function getIncome() {
+            $.ajaxSetup({
+                header : {
+                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content');
                 }
             });
 
-            editPhoneNumber.on("input", function() {
-                let editPhoneNumberValue = editPhoneNumber.val().toString();
-                if (editPhoneNumberValue.length > 12) {
-                    editPhoneNumberAlert.removeClass("d-none");
-                } else {
-                    editPhoneNumberAlert.addClass("d-none");
+            $.ajax({
+                type: "GET",
+                url: "/",
+                data: {
+                    functionName : 'getIncome'
+                },
+                success: function (response) {
+                    console.log('berhasil');
                 }
             });
+        }
 
-            addUserId.on("input", function() {
-                let addUserIdValue = addUserId.val().toString();
-                if (addUserIdValue.length > 4) {
-                    addUserIdAlert.removeClass("d-none");
-                } else {
-                    addUserIdAlert.addClass("d-none");
-                }
-            });
+        const ctx = document.getElementById('myChart');
 
-            addUserPhone.on("input", function() {
-                let addUserPhoneValue = addUserPhone.val().toString();
-                if (addUserPhoneValue.length > 12) {
-                    addUserPhoneAlert.removeClass("d-none");
-                } else {
-                    addUserPhoneAlert.addClass("d-none");
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
-            });
+            }
         });
     </script>
 </body>

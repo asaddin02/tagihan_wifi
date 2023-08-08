@@ -3,20 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Income;
+use App\Models\Installation;
+use App\Models\Invoice;
 use App\Models\Spending;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan data dari tabel
     public function index()
     {
+        dd($_GET);
+        // $income = $_GET['functionName'];
+
+        // if ($income == 'getIncome') {
+        //     $incomeChart = []; 
+        //     $incomes = Income::all();
+
+        //     foreach ($incomes as $income) {
+        //         $incomeChart[] = $income;
+        //     }
+
+        //     echo json_encode($incomeChart);
+        // }
+
         $date = Carbon::now();
-        $customers = User::where('role', 'Customer')->get();
+        $customers = Installation::where('status_pemasangan', 'Terpasang')->get();
         $incomePerMonth = 0;
         $incomePerYear = 0;
         $spendingPerMonth = 0;
@@ -30,6 +43,8 @@ class HomeController extends Controller
 
         $spendingsMonth = Spending::where('bulan', $getMonth)->where('tahun', $getYear)->get();
         $spendingsYear = Spending::where('tahun', $getYear)->get();
+
+        $invoices = Invoice::where('status_tagihan', 'Belum Dibayar')->paginate(10);
 
         foreach ($incomesMonth as $income) {
             $incomePerMonth += $income->total_pendapatan;
@@ -49,54 +64,6 @@ class HomeController extends Controller
 
         $loss = $incomePerMonth - $spendingPerMonth;
 
-        return view('homepage', compact('customers', 'incomePerMonth', 'incomePerYear', 'spendingPerMonth', 'spendingPerYear', 'loss'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('homepage', compact('customers', 'incomePerMonth', 'incomePerYear', 'spendingPerMonth', 'spendingPerYear', 'loss', 'invoices'));
     }
 }

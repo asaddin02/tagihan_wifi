@@ -39,8 +39,8 @@
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="package_filter_name" class="form-control float-right"
-                                                placeholder="Cari Nama Paket">
+                                            <input type="text" name="package_filter_name"
+                                                class="form-control float-right" placeholder="Cari Nama Paket">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
@@ -87,46 +87,59 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Edit Data</h4>
-                                                            <button type="button" class="close"
-                                                                data-dismiss="modal" aria-label="Close">
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <form action="{{ route('package.update', $data->id) }}"
-                                                            method="POST">
+                                                            method="POST" autocomplete="off">
                                                             <div class="modal-body">
                                                                 @csrf
                                                                 @method('PUT')
-                                                                <div class="form-group">
-                                                                    <label for="edit-jenis-paket">Jenis Paket</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="edit-jenis-paket" placeholder="ex: paket_1"
-                                                                        name="jenis_paket"
-                                                                        value="{{ $data->jenis_paket }}" autofocus
-                                                                        required>
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label">Jenis
+                                                                        Paket</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="ex : paket_1" name="jenis_paket"
+                                                                            value="{{ $data->jenis_paket }}" autofocus
+                                                                            required>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="edit-keunggulan-paket">Keunggulan</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="edit-keunggulan-paket"
-                                                                        placeholder="Input Keunggulan Paket"
-                                                                        name="keunggulan"
-                                                                        value="{{ $data->keunggulan }}" required>
+                                                                <div class="form-group row">
+                                                                    <label
+                                                                        class="col-sm-4 col-form-label">Keunggulan</label>
+                                                                    <div class="col-sm-8">
+                                                                        <textarea name="keunggulan" class="form-control text-area" cols="1" rows="1"
+                                                                            placeholder="Input keunggulan paket" minlength="3" required>{{ $data->keunggulan }}</textarea>
+                                                                    </div>
+                                                                    <p
+                                                                        class="text-danger mt-1 ms-3 d-none input-text-area-alert">
+                                                                        Keunggulan minimal 3 karakter.
+                                                                    </p>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="edit-harga-paket">Harga Paket</label>
-                                                                    <input type="number" class="form-control"
-                                                                        id="edit-harga-paket" name="harga_paket"
-                                                                        value="{{ $data->harga_paket }}" required>
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label">Harga
+                                                                        Paket</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="number" class="form-control"
+                                                                            name="harga_paket"
+                                                                            value="{{ $data->harga_paket }}"
+                                                                            placeholder="min : 50.000 max : 10.000.000"
+                                                                            min="50000" max="10000000" required>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-group">
-                                                                    <label for="edit-harga-pemasangan">Harga
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label">Harga
                                                                         Pemasangan</label>
-                                                                    <input type="number" class="form-control"
-                                                                        id="edit-harga-pemasangan"
-                                                                        name="harga_pemasangan"
-                                                                        value="{{ $data->harga_pemasangan }}"
-                                                                        required>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="number" class="form-control"
+                                                                            name="harga_pemasangan"
+                                                                            value="{{ $data->harga_pemasangan }}"
+                                                                            placeholder="min : 50.000 max : 10.000.000"
+                                                                            min="50000" max="10000000" required>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
@@ -149,7 +162,8 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <div class="modal-body">
-                                                                <h4 class="modal-title">Yakin mau hapus {{ $data->jenis_paket }} ?</h4>
+                                                                <h4 class="modal-title">Yakin mau hapus
+                                                                    {{ $data->jenis_paket }} ?</h4>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-light"
@@ -174,7 +188,7 @@
                             <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
                                 {{ $datas->total() }} data</p>
                         @endif
-                        
+
                         @if ($datas->total() > 10)
                             <nav aria-label="...">
                                 <ul class="pagination">
@@ -241,25 +255,39 @@
                 <form action="{{ route('package.store') }}" method="POST">
                     <div class="modal-body">
                         @csrf
-                        <div class="form-group">
-                            <label for="tambah-jenis-paket">Jenis Paket</label>
-                            <input type="text" class="form-control" id="tambah-jenis-paket" placeholder="ex : paket_1"
-                                name="jenis_paket" autofocus required>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Jenis
+                                Paket</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" placeholder="ex : paket_1" name="jenis_paket"
+                                    autofocus required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="tambah-keunggulan-paket">Keunggulan</label>
-                            <input type="text" class="form-control" id="tambah-keunggulan-paket"
-                                placeholder="Input Keunggulan Paket" name="keunggulan" required>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Keunggulan</label>
+                            <div class="col-sm-8">
+                                <textarea name="keunggulan" class="form-control text-area" cols="1" rows="1"
+                                    placeholder="Input keunggulan paket" minlength="3" required></textarea>
+                                <p class="text-danger mt-1 ms-3 d-none input-text-area-alert">
+                                    Keunggulan minimal 3 karakter.
+                                </p>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="tambah-harga-paket">Harga Paket</label>
-                            <input type="number" class="form-control" id="tambah-harga-paket" placeholder="ex : 100000"
-                                name="harga_paket" required>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Harga
+                                Paket</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" name="harga_paket"
+                                    placeholder="min : 50.000 max : 10.000.000" min="50000" max="10000000" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="tambah-harga-pemasangan">Harga Pemasangan</label>
-                            <input type="number" class="form-control" id="tambah-harga-pemasangan" placeholder="ex : 100000"
-                                name="harga_pemasangan" required>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Harga
+                                Pemasangan</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" name="harga_pemasangan"
+                                    placeholder="min : 50.000 max : 10.000.000" min="50000" max="10000000" required>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">

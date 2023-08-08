@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class PackageController extends Controller
 {
-    // Baca data dari tabel
+    // Menampilkan data dari tabel paket
     public function index()
     {
         $name = request('package_filter_name');
@@ -23,7 +23,7 @@ class PackageController extends Controller
         return view('package.table', compact('datas'));
     }
 
-    // Menambahkan data ke tabel
+    // Menambahkan data ke tabel paket
     public function store(Request $request)
     {
         $check = Package::where('jenis_paket', $request->jenis_paket)->first();
@@ -45,7 +45,7 @@ class PackageController extends Controller
         return redirect('package')->with($status, $message);
     }
 
-    // Update data dari tabel
+    // Update data dari tabel paket
     public function update(Request $request, $id)
     {
         $package = Package::find($id);
@@ -71,7 +71,7 @@ class PackageController extends Controller
         return redirect('package')->with($status, $message);
     }
 
-    // Hapus data dari tabel
+    // Hapus data dari tabel paket
     public function destroy($id)
     {
         $package = Package::find($id);

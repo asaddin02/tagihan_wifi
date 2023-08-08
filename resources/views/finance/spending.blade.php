@@ -154,24 +154,30 @@
                                                             </button>
                                                         </div>
                                                         <form action="{{ route('spending.update', $data->id) }}"
-                                                            method="POST">
+                                                            method="POST" autocomplete="off">
                                                             <div class="modal-body">
                                                                 @csrf
                                                                 @method('PUT')
-                                                                <div class="form-group">
-                                                                    <label for="edit-total-pengeluaran">Total
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label">Total
                                                                         Pengeluaran</label>
-                                                                    <input type="number" class="form-control"
-                                                                        id="edit-total-pengeluaran" name="total_pengeluaran"
-                                                                        value="{{ $data->total_pengeluaran }}" autofocus
-                                                                        required>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="number" class="form-control"
+                                                                            name="total_pengeluaran" value="{{ $data->total_pengeluaran }}" min="1"
+                                                                            max="100000000" placeholder="max : 100.000.000"
+                                                                            autofocus required>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="form-group">
+                                                                <div class="form-group row">
                                                                     <label
-                                                                        for="edit-keterangan-pengeluaran">Keterangan</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="edit-keterangan-pengeluaran" name="keterangan"
-                                                                        value="{{ $data->keterangan }}" required>
+                                                                        class="col-sm-4 col-form-label">Keterangan</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                            id="edit-keterangan-pengeluaran"
+                                                                            name="keterangan" value="{{ $data->keterangan }}"
+                                                                            placeholder="min : 10 karakter" minlength="10"
+                                                                            required>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
@@ -283,7 +289,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('spending.store') }}" method="POST">
+                <form action="{{ route('spending.store') }}" method="POST" autocomplete="off">
                     <div class="modal-body">
                         @csrf
                         <div class="form-group row">
@@ -313,15 +319,19 @@
                         <input type="hidden" name="hari" value="{{ date('d', strToTime($carbon)) }}" required>
                         <input type="hidden" name="bulan" value="{{ date('m', strToTime($carbon)) }}" required>
                         <input type="hidden" name="tahun" value="{{ date('Y', strToTime($carbon)) }}" required>
-                        <div class="form-group">
-                            <label for="edit-total-pengeluaran">Total Pengeluaran</label>
-                            <input type="number" class="form-control" id="edit-total-pengeluaran"
-                                name="total_pengeluaran" autofocus required>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Total Pengeluaran</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" name="total_pengeluaran" min="1"
+                                    max="100000000" placeholder="max : 100.000.000" autofocus required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="edit-keterangan-pengeluaran">Keterangan</label>
-                            <input type="text" class="form-control" id="edit-keterangan-pengeluaran"
-                                name="keterangan" required>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Keterangan</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="edit-keterangan-pengeluaran"
+                                    name="keterangan" placeholder="min : 10 karakter" minlength="10" required>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">

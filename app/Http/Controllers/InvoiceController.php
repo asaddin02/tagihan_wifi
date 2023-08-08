@@ -19,17 +19,19 @@ class InvoiceController extends Controller
             ->where('tahun', $request->tahun)->first();
 
         if (isset($invoice)) {
-            return back()->with('error', 'Tagihan bulan ini sudah ada!');
+            return redirect('customer')->with('error', 'Tagihan bulan ini sudah ada!');
         } else {
             foreach ($installations as $installation) {
-                $create = Invoice::create([
-                    'installation_id' => $installation->id,
-                    'hari' => $request->hari,
-                    'bulan' => $request->bulan,
-                    'tahun' => $request->tahun,
-                    'total_tagihan' => $installation->package->harga_paket,
-                    'status_tagihan' => $request->status_tagihan,
-                ]);
+                if ($installation->status_pemasangan == 'Terpasang') {
+                    $create = Invoice::create([
+                        'installation_id' => $installation->id,
+                        'hari' => $request->hari,
+                        'bulan' => $request->bulan,
+                        'tahun' => $request->tahun,
+                        'total_tagihan' => $installation->package->harga_paket,
+                        'status_tagihan' => $request->status_tagihan,
+                    ]);
+                }
             }
         }
 

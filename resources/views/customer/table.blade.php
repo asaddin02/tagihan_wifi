@@ -28,19 +28,32 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        <div class="alert alert-info text-start" role="alert">
+                            <p>Note :</p>
+                            <ul>
+                                <li>
+                                    <span>Customer diambil dari instalasi yang berstatus terpasang.</span>
+                                </li>
+                                <li>
+                                    <span>Customer mendapatkan tagihan bulanan ketika instalasi yang berstatus terpasang.</span>
+                                </li>
+                            </ul>
+                        </div>
                         <div class="mb-2">
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#tambah-tagihan-customer">
-                                <i class="fas fa-plus"></i> Tambah Tagihan Customer
-                            </button>
+                            @if (Auth::user()->role == 'Customer Service')
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#tambah-tagihan-customer">
+                                    <i class="fas fa-plus"></i> Tambah Tagihan Customer
+                                </button>
+                            @endif
                         </div>
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="customer_filter_name" class="form-control float-right"
-                                                placeholder="Cari Id / Nama">
+                                            <input type="text" name="customer_filter_name"
+                                                class="form-control float-right" placeholder="Cari Id / Nama">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
@@ -76,7 +89,8 @@
                                                 <td>{{ $data->alamat_pemasangan }}</td>
                                                 <td>
                                                     <a href="{{ url('/customer/invoice/' . $data->id) }}"
-                                                        class="btn btn-success" title="Cek Tagihan"><i class="fa fa-receipt"></i></a>
+                                                        class="btn btn-success" title="Cek Tagihan"><i
+                                                            class="fa fa-receipt"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -90,7 +104,7 @@
                             <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
                                 {{ $datas->total() }} data</p>
                         @endif
-                        
+
                         @if ($datas->total() > 10)
                             <nav aria-label="...">
                                 <ul class="pagination">
@@ -138,8 +152,21 @@
             <div class="alert alert-warning" role="alert">
                 Tidak ada data yang bisa ditampilkan!
                 <br>
-                Note : Silahkan ke halaman <a href="{{ url('installation') }}"
-                    class="text-black">instalasi</a> untuk menambahkan customer
+                @if (Auth::user()->role == 'Customer Service')
+                    Note : Silahkan ke halaman <a href="{{ url('installation') }}" class="text-black">instalasi</a> untuk
+                    menambahkan customer
+                @endif
+            </div>
+            <div class="alert alert-info text-start" role="alert">
+                <p>Note :</p>
+                <ul>
+                    <li>
+                        <span>Customer diambil dari instalasi yang berstatus terpasang.</span>
+                    </li>
+                    <li>
+                        <span>Customer mendapatkan tagihan bulanan ketika instalasi yang berstatus terpasang.</span>
+                    </li>
+                </ul>
             </div>
             <a href="{{ url('/customer') }}" class="btn btn-primary">Kembali</a>
         </div>

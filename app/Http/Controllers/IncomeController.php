@@ -6,7 +6,7 @@ use App\Models\Income;
 
 class IncomeController extends Controller
 {
-    // Baca data dari tabel
+    // Menampilkan data dari tabel income
     public function index()
     {
         $month = request('income_filter_month');
@@ -30,7 +30,7 @@ class IncomeController extends Controller
         return view('finance.income', compact('datas'));
     }
 
-    // Hapus data dari tabel
+    // Hapus data dari tabel income
     public function destroy(string $id)
     {
         $income = Income::find($id);

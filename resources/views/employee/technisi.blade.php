@@ -28,18 +28,20 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-2">
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#tambah-teknisi">
-                                <i class="fas fa-plus"></i> Tambah Teknisi
-                            </button>
+                            @if (Auth::user()->role == 'Admin')
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#tambah-teknisi">
+                                    <i class="fas fa-plus"></i> Tambah Teknisi
+                                </button>
+                            @endif
                         </div>
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="technisian_filter_name" class="form-control float-right"
-                                                placeholder="Cari Nama">
+                                            <input type="text" name="technisian_filter_name"
+                                                class="form-control float-right" placeholder="Cari Nama">
                                             <div class="input-group-append">
                                                 <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
@@ -69,14 +71,16 @@
                                                 <td>{{ $data->alamat }}</td>
                                                 <td>{{ $data->no_telepon }}</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                        data-target="#edit-teknisi{{ $data->id }}" title="Edit">
-                                                        <i class="fas fa-pen"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                        data-target="#hapus-teknisi{{ $data->id }}" title="Hapus">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                    @if (Auth::user()->role == 'Admin')
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#edit-teknisi{{ $data->id }}" title="Edit">
+                                                            <i class="fas fa-pen"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                            data-target="#hapus-teknisi{{ $data->id }}" title="Hapus">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    @endif
                                                     <button type="button" class="btn btn-success" data-toggle="modal"
                                                         data-target="#whatsapp-teknisi{{ $data->id }}" title="Whatsapp">
                                                         <i class="fas fa-phone"></i>
@@ -94,41 +98,49 @@
                                                             </button>
                                                         </div>
                                                         <form class="form-horizontal"
-                                                            action="{{ route('edit.teknisi', $data->id) }}" method="post">
+                                                            action="{{ route('edit.teknisi', $data->id) }}" method="post"
+                                                            autocomplete="off">
                                                             @csrf
                                                             <div class="modal-body">
                                                                 <div class="form-group row">
-                                                                    <label for="edit-nama-teknisi"
-                                                                        class="col-sm-4 col-form-label">Nama
+                                                                    <label class="col-sm-4 col-form-label">Nama
                                                                         Teknisi</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="text" name="nama_teknisi"
-                                                                            class="form-control" id="edit-nama-teknisi"
-                                                                            value="{{ $data->nama_teknisi }}" autofocus required>
+                                                                            class="form-control"
+                                                                            value="{{ $data->nama_teknisi }}"
+                                                                            placeholder="ex : Nama" minlength="3"
+                                                                            maxlength="15" autofocus required>
+                                                                        <p
+                                                                            class="text-danger mt-1 ms-3 d-none input-text-alert">
+                                                                            Nama minimal 3 karakter.
+                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
-                                                                    <label for="edit-alamat-teknisi"
-                                                                        class="col-sm-4 col-form-label">Alamat
+                                                                    <label class="col-sm-4 col-form-label">Alamat
                                                                         Teknisi</label>
                                                                     <div class="col-sm-8">
-                                                                        <input type="text" name="alamat"
-                                                                            class="form-control" id="edit-alamat-teknisi"
-                                                                            value="{{ $data->alamat }}" required>
+                                                                        <textarea name="alamat" class="form-control text-area" cols="1" rows="1" placeholder="alamat lengkap"
+                                                                            minlength="3" required>{{ $data->alamat }}</textarea>
+                                                                        <p
+                                                                            class="text-danger mt-1 ms-3 d-none input-text-area-alert">
+                                                                            Alamat minimal 3 karakter.
+                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
-                                                                    <label for="edit-nomor-teknisi"
-                                                                        class="col-sm-4 col-form-label">Nomor
+                                                                    <label class="col-sm-4 col-form-label">Nomor
                                                                         Telepon</label>
                                                                     <div class="col-sm-8">
-                                                                        <input type="number" name="no_telepon"
-                                                                            class="form-control" id="edit-nomor-teknisi"
+                                                                        <input type="tel" name="no_telepon"
+                                                                            class="form-control"
                                                                             value="{{ $data->no_telepon }}"
-                                                                            max="99999999999" required>
-                                                                        <p class="text-danger mt-1 ms-3 d-none"
-                                                                            id="edit-nomor-teknisi-alert">Nomor hp
-                                                                            maksimal
+                                                                            placeholder="ex : 08**********"
+                                                                            pattern="(0)8[1-9][0-9]{6,9}$" required>
+                                                                        <p
+                                                                            class="text-danger mt-1 ms-3 d-none input-tel-alert">
+                                                                            Nomor hp maksimal
                                                                             12 karakter</p>
                                                                     </div>
                                                                 </div>
@@ -172,16 +184,17 @@
                                                         <form action="{{ route('whatsapp.teknisi') }}" method="POST">
                                                             @csrf
                                                             <div class="modal-body">
-                                                                <h4 class="modal-title">Ini akan mengarahkan ke Whatsapp <br>
-                                                                    {{ $data->nama_teknisi }}</h4>
+                                                                <h4 class="modal-title">Ini akan mengarahkan ke Whatsapp
+                                                                    <br>
+                                                                    {{ $data->nama_teknisi }}
+                                                                </h4>
                                                                 <input type="hidden" name="no_telepon"
                                                                     value="{{ $data->no_telepon }}">
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-danger"
                                                                     data-dismiss="modal">Batal</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Ya</button>
+                                                                <button type="submit" class="btn btn-primary">Ya</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -249,9 +262,11 @@
                 Tidak ada data yang bisa ditampilkan!
             </div>
             <a href="{{ url('technic') }}" class="btn btn-primary">Kembali</a>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-teknisi">
-                <i class="fas fa-plus"></i> Tambah Teknisi
-            </button>
+            @if (Auth::user()->role == 'Admin')
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-teknisi">
+                    <i class="fas fa-plus"></i> Tambah Teknisi
+                </button>
+            @endif
         </div>
     @endif
 
@@ -264,32 +279,39 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="form-horizontal" action="{{ route('create.teknisi') }}" method="POST">
+                <form class="form-horizontal" action="{{ route('create.teknisi') }}" method="POST" autocomplete="off">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label for="tambah-nama-teknisi" class="col-sm-4 col-form-label">Nama
+                            <label class="col-sm-4 col-form-label">Nama
                                 Teknisi</label>
                             <div class="col-sm-8">
-                                <input type="text" name="nama_teknisi" class="form-control" id="tambah-nama-teknisi"
-                                    placeholder="ex : Nama Teknisi" autofocus required>
+                                <input type="text" name="nama_teknisi" class="form-control" placeholder="ex : Nama"
+                                    minlength="3" maxlength="15" autofocus required>
+                                <p class="text-danger mt-1 ms-3 d-none input-text-alert">
+                                    Nama minimal 3 karakter.
+                                </p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-alamat-teknisi" class="col-sm-4 col-form-label">Alamat
+                            <label class="col-sm-4 col-form-label">Alamat
                                 Teknisi</label>
                             <div class="col-sm-8">
-                                <input type="text" name="alamat" class="form-control" id="tambah-alamat-teknisi"
-                                    placeholder="Alamat detail" required>
+                                <textarea name="alamat" class="form-control text-area" cols="1" rows="1" placeholder="alamat lengkap"
+                                    minlength="3" required></textarea>
+                                <p class="text-danger mt-1 ms-3 d-none input-text-area-alert">
+                                    Alamat minimal 3 karakter.
+                                </p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-nomor-teknisi" class="col-sm-4 col-form-label">Nomor
+                            <label class="col-sm-4 col-form-label">Nomor
                                 Telepon</label>
                             <div class="col-sm-8">
-                                <input type="number" name="no_telepon" class="form-control" id="tambah-nomor-teknisi"
-                                    placeholder="ex : 08**********" max="99999999999" required>
-                                <p class="text-danger mt-1 ms-3 d-none" id="tambah-nomor-teknisi-alert">Nomor hp maksimal
+                                <input type="tel" name="no_telepon" class="form-control"
+                                    placeholder="ex : 08**********" pattern="(0)8[1-9][0-9]{6,9}$" required>
+                                <p class="text-danger mt-1 ms-3 d-none input-tel-alert">
+                                    Nomor hp maksimal
                                     12 karakter</p>
                             </div>
                         </div>

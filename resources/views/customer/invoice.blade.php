@@ -145,7 +145,7 @@
                                                     </td>
                                                 @endif
                                                 <td>
-                                                    @if ($data->status_tagihan != 'Lunas')
+                                                    @if ($data->status_tagihan != 'Lunas' && Auth::user()->role == 'Customer Service')
                                                         <button type="button" class="btn btn-success" data-toggle="modal"
                                                             data-target="#bayar-tagihan-customer{{ $data->id }}"
                                                             title="Bayar Cash">

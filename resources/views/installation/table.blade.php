@@ -29,9 +29,12 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-2">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-user">
-                                <i class="fas fa-plus"></i> Tambah User
-                            </button>
+                            @if (Auth::user()->role == 'Customer Service')
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#tambah-user">
+                                    <i class="fas fa-plus"></i> Tambah User
+                                </button>
+                            @endif
                         </div>
                         <div class="card">
                             <div class="card-header">
@@ -65,14 +68,16 @@
                                         <tr class="text-center">
                                             <th>No</th>
                                             <th>Jenis Paket</th>
-                                            <th>Nama User</th>
+                                            <th>Nama Customer</th>
                                             <th>Nama Teknisi</th>
                                             <th>Tanggal Pemasangan</th>
                                             <th>Alamat</th>
                                             <th>Status</th>
                                             <th>Harga Paket</th>
                                             <th>Harga Pemasangan</th>
-                                            <th>Aksi</th>
+                                            @if (Auth::user()->role != 'Admin')
+                                                <th>Aksi</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -82,7 +87,7 @@
                                                 <td>{{ $data->package->jenis_paket }}</td>
                                                 <td>{{ $data->user->name }}</td>
                                                 <td>{{ $data->technisian->nama_teknisi }}</td>
-                                                <td>{{ date('d M Y', strToTime($data->tanggal_pemasangan)) }}</td>
+                                                <td>{{ date('d m Y', strToTime($data->tanggal_pemasangan)) }}</td>
                                                 <td>{{ $data->alamat_pemasangan }}</td>
                                                 <td>
                                                     @if ($data->status_pemasangan == 'Belum Terpasang')
@@ -103,23 +108,41 @@
                                                     {{ number_format($data->package->harga_pemasangan, 0, ',', '.') }}
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                        data-target="#edit-alamat-instalasi{{ $data->id }}"
-                                                        title="Edit Alamat Instalasi">
-                                                        <i class="fas fa-pen"></i>
-                                                    </button>
-                                                    @if ($data->status_pemasangan == 'Belum Terpasang')
-                                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                                            data-target="#instalasi-dalam-proses{{ $data->id }}"
-                                                            title="Ubah Status">
-                                                            <i class="fa fa-box-open"></i>
+                                                    @if (Auth::user()->role == 'Customer Service')
+                                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            data-target="#edit-alamat-instalasi{{ $data->id }}"
+                                                            title="Edit Alamat Instalasi">
+                                                            <i class="fas fa-pen"></i>
                                                         </button>
-                                                    @elseif ($data->status_pemasangan == 'Dalam Proses')
-                                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                                            data-target="#instalasi-terpasang{{ $data->id }}"
-                                                            title="Ubah Status">
-                                                            <i class="fa fa-check"></i>
-                                                        </button>
+                                                        @if ($data->status_pemasangan == 'Belum Terpasang')
+                                                            <button type="button" class="btn btn-success"
+                                                                data-toggle="modal"
+                                                                data-target="#instalasi-dalam-proses{{ $data->id }}"
+                                                                title="Ubah Status">
+                                                                <i class="fa fa-box-open"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-danger"
+                                                                data-toggle="modal"
+                                                                data-target="#hapus-instalasi-belum-terpasang{{ $data->id }}"
+                                                                title="Hapus">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        @elseif ($data->status_pemasangan == 'Dalam Proses')
+                                                            <button type="button" class="btn btn-success"
+                                                                data-toggle="modal"
+                                                                data-target="#instalasi-terpasang{{ $data->id }}"
+                                                                title="Ubah Status">
+                                                                <i class="fa fa-check"></i>
+                                                            </button>
+                                                        @endif
+                                                        @if ($data->status_pemasangan == 'Terpasang')
+                                                            <button type="button" class="btn btn-danger"
+                                                                data-toggle="modal"
+                                                                data-target="#hapus-instalasi-sudah-terpasang{{ $data->id }}"
+                                                                title="Hapus">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>
@@ -136,16 +159,19 @@
                                                             </button>
                                                         </div>
                                                         <form action="{{ route('edit.alamat', $data->id) }}"
-                                                            method="POST">
+                                                            method="POST" autocomplete="off">
                                                             <div class="modal-body">
                                                                 @csrf
-                                                                <div class="form-group">
-                                                                    <label for="edit-alamat-pemasangan">Alamat
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label">Alamat
                                                                         Instalasi</label>
-                                                                    <input type="text" class="form-control"
-                                                                        id="edit-alamat-pemasangan" name="alamat_pemasangan"
-                                                                        value="{{ $data->alamat_pemasangan }}" autofocus
-                                                                        required>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" class="form-control"
+                                                                            id="edit-alamat-pemasangan"
+                                                                            name="alamat_pemasangan"
+                                                                            value="{{ $data->alamat_pemasangan }}"
+                                                                            autofocus required>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
@@ -194,6 +220,8 @@
                                                                     menjadi <br> Terpasang ?</h4>
                                                                 <input type="hidden" name="package_id"
                                                                     value="{{ $data->package_id }}" required>
+                                                                <input type="hidden" name="customer_name"
+                                                                    value="{{ $data->user->name }}" required>
                                                                 <input type="hidden" name="status_pemasangan"
                                                                     value="Terpasang" required>
                                                             </div>
@@ -205,6 +233,64 @@
                                                         </form>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="modal fade"
+                                                id="hapus-instalasi-belum-terpasang{{ $data->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content bg-danger">
+                                                        <form action="{{ route('hapus.pemasangan', $data->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <h4 class="modal-title">Yakin mau hapus
+                                                                    instalasi ?</h4>
+                                                                <input type="hidden" name="user_id"
+                                                                    value="{{ $data->user_id }}" required>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-light"
+                                                                    data-dismiss="modal">Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-light">Hapus</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <div class="modal fade"
+                                                id="hapus-instalasi-sudah-terpasang{{ $data->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content bg-danger">
+                                                        <form action="{{ route('hapus.pemasangan', $data->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <h4 class="modal-title mb-2">Yakin mau hapus
+                                                                    instalasi ?</h4>
+                                                                <div class="alert alert-danger text-start" role="alert">
+                                                                    <p>Note :</p>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <span>Ini akan menghapus customer juga.</span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                                <input type="hidden" name="user_id"
+                                                                    value="{{ $data->user_id }}" required>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-light"
+                                                                    data-dismiss="modal">Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-light">Hapus</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
                                             </div>
                                         @endforeach
                                     </tbody>
@@ -266,9 +352,11 @@
                 Tidak ada data yang bisa ditampilkan!
             </div>
             <a href="{{ url('installation') }}" class="btn btn-primary">Kembali</a>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-user">
-                <i class="fas fa-plus"></i> Tambah User
-            </button>
+            @if (Auth::user()->role == 'Customer Service')
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-user">
+                    <i class="fas fa-plus"></i> Tambah User
+                </button>
+            @endif
         </div>
     @endif
 
@@ -281,55 +369,59 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="form-horizontal" action="{{ route('user.store') }}" method="post">
+                <form class="form-horizontal" action="{{ route('user.store') }}" method="post" autocomplete="off">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label for="tambah-id-user" class="col-sm-4 col-form-label">ID User</label>
+                            <label class="col-sm-4 col-form-label">ID User</label>
                             <div class="col-sm-8">
-                                <input type="number" name="user_id" class="form-control" id="tambah-id-user"
-                                    placeholder="ex : 0000" required autofocus max="9999">
-                                <p class="text-danger mt-1 ms-3 d-none" id="tambah-id-user-alert">Nomor maksimal
-                                    4 karakter</p>
+                                <input type="number" name="user_id" class="form-control" placeholder="ex : 0000"
+                                    min="1" max="9999" autofocus required>
+                                <p class="text-danger mt-1 ms-3 d-none input-number-alert">Nomor Id maksimal 4
+                                    karakter.</p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-nama-user" class="col-sm-4 col-form-label">Nama Lengkap</label>
+                            <label class="col-sm-4 col-form-label">Nama Lengkap</label>
                             <div class="col-sm-8">
-                                <input type="text" name="name" class="form-control" id="tambah-nama-user"
-                                    placeholder="ex : Nama User" required>
+                                <input type="text" name="name" class="form-control" placeholder="ex : Nama"
+                                    minlength="3" maxlength="15" required>
+                                <p class="text-danger mt-1 ms-3 d-none input-text-alert">Nama minimal 3 karakter.
+                                </p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-nomor-user" class="col-sm-4 col-form-label">No Telepon</label>
+                            <label class="col-sm-4 col-form-label">Email</label>
                             <div class="col-sm-8">
-                                <input type="number" name="no_telepon" class="form-control" id="tambah-nomor-user"
-                                    placeholder="ex : 08**********" required max="99999999999">
-                                <p class="text-danger mt-1 ms-3 d-none" id="tambah-nomor-user-alert">Nomor hp maksimal
-                                    12 karakter</p>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="tambah-email-user" class="col-sm-4 col-form-label">Email</label>
-                            <div class="col-sm-8">
-                                <input type="email" name="email" class="form-control" id="tambah-email-user"
+                                <input type="email" name="email" class="form-control"
                                     placeholder="ex : example@gmail.com" required>
                             </div>
                         </div>
-                        <input type="hidden" name="password" value="user1234">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">No Telepon</label>
+                            <div class="col-sm-8">
+                                <input type="tel" name="no_telepon" class="form-control"
+                                    placeholder="ex : 08**********" pattern="(0)8[1-9][0-9]{9,9}$" required>
+                                <p class="text-danger mt-1 ms-3 d-none input-tel-alert">Nomor hp maksimal
+                                    12 karakter</p>
+                            </div>
+                        </div>
+                        <input type="hidden" name="password" value="user123">
                         <input type="hidden" name="role" value="Customer">
-                        <p class="mb-2">Note :</p>
-                        <ul>
-                            <li>
-                                <p class="mb-2">Tambahkan user terlebih dahulu sebelum melakukan instalasi.</p>
-                            </li>
-                            <li>
-                                <p class="mb-2">Pastikan data yang di inputkan benar.</p>
-                            </li>
-                        </ul>
+                        <div class="alert alert-primary" role="alert">
+                            <p class="mb-2">Note :</p>
+                            <ul>
+                                <li>
+                                    <p class="mb-2">Tambahkan user terlebih dahulu sebelum melakukan instalasi.</p>
+                                </li>
+                                <li>
+                                    <p class="mb-2">Pastikan data yang di inputkan benar.</p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-end">
-                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Simpan</button>
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Lanjut</button>
                     </div>
                 </form>
             </div>
@@ -342,13 +434,14 @@
                 <div class="modal-header">
                     <h4 class="modal-title">Form Instalasi</h4>
                 </div>
-                <form class="form-horizontal" action="{{ route('create.pemasangan') }}" method="post">
+                <form class="form-horizontal" action="{{ route('create.pemasangan') }}" method="post"
+                    autocomplete="off">
                     <div class="modal-body">
                         @csrf
                         <div class="form-group row">
-                            <label for="tambah-paket-id" class="col-sm-4 col-form-label">Paket WiFi</label>
+                            <label class="col-sm-4 col-form-label">Paket WiFi</label>
                             <div class="col-sm-8">
-                                <select name="package_id" class="form-control" id="tambah-paket-id">
+                                <select name="package_id" class="form-control">
                                     @foreach ($packages as $package)
                                         <option value="{{ $package->id }}">{{ $package->jenis_paket }}</option>
                                     @endforeach
@@ -356,9 +449,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-teknisi-id" class="col-sm-4 col-form-label">Teknisi</label>
+                            <label class="col-sm-4 col-form-label">Teknisi</label>
                             <div class="col-sm-8">
-                                <select name="technision_id" class="form-control" id="tambah-teknisi-id">
+                                <select name="technision_id" class="form-control">
                                     @foreach ($technisians as $teknisi)
                                         <option value="{{ $teknisi->id }}">{{ $teknisi->nama_teknisi }}</option>
                                     @endforeach
@@ -366,28 +459,30 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-tanggal-pemasangan" class="col-sm-4 col-form-label">Tanggal
+                            <label class="col-sm-4 col-form-label">Tanggal
                                 Pemasangan</label>
                             <div class="col-sm-8">
-                                <span>{{ date('d m Y', strToTime($date)) }}</span>
+                                <p>: {{ date('d m Y', strToTime($date)) }}</p>
                                 <input type="hidden" name="tanggal_pemasangan" class="form-control"
-                                    id="tambah-tanggal-pemasangan" value="{{ $date }}" readonly>
+                                    value="{{ $date }}" readonly>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-alamat-pemasangan" class="col-sm-4 col-form-label">Alamat
+                            <label class="col-sm-4 col-form-label">Alamat
                                 Pemasangan</label>
                             <div class="col-sm-8">
                                 <input type="text" name="alamat_pemasangan" class="form-control"
-                                    id="tambah-alamat-pemasangan" placeholder="Masukkan alamat">
+                                    placeholder="Masukkan alamat">
                             </div>
                         </div>
-                        <p class="mb-2">Note :</p>
-                        <ul>
-                            <li>
-                                <p class="mb-2">Pastikan data alamat yang di inputkan benar.</p>
-                            </li>
-                        </ul>
+                        <div class="alert alert-primary" role="alert">
+                            <p class="mb-2">Note :</p>
+                            <ul>
+                                <li>
+                                    <p class="mb-2">Pastikan data alamat yang di inputkan benar.</p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-end">
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Simpan

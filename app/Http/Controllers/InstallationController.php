@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Income;
 use App\Models\Installation;
+use App\Models\Invoice;
 use App\Models\Package;
 use App\Models\Technisian;
 use App\Models\User;
@@ -12,7 +13,7 @@ use Illuminate\Http\Request;
 
 class InstallationController extends Controller
 {
-    // Menunjukkan data installation
+    // Menunjukkan data dari tabel installation
     public function getInstallation()
     {
         $status = request('installation_filter_status');
@@ -29,8 +30,8 @@ class InstallationController extends Controller
             } else {
                 $query->where('status_pemasangan', $status);
             }
-        } 
-        
+        }
+
         if ($name != '') {
             $query->whereHas('user', function ($query) use ($name) {
                 $query->where('name', 'LIKE', '%' . $name . '%');
@@ -87,7 +88,7 @@ class InstallationController extends Controller
                 'hari' => date('d', strToTime($date)),
                 'bulan' => date('m', strToTime($date)),
                 'tahun' => date('Y', strToTime($date)),
-                'keterangan' => 'Pembayaran instalasi',
+                'keterangan' => 'Pembayaran instalasi untuk customer bernama' . ' ' . $request->customer_name,
             ]);
         }
 
@@ -110,7 +111,31 @@ class InstallationController extends Controller
             $status = 'error';
             $message = 'Alamat instalasi gagal diupdate!';
         }
-        
+
+        return redirect('installation')->with($status, $message);
+    }
+
+    // Menghapus data dari tabel instalasi
+    public function deleteInstallation(Request $request, $id)
+    {
+        $installation = Installation::find($id);
+        $user = User::find($request->user_id);
+        $invoices = Invoice::where('installation_id', $id)->get();
+
+        foreach($invoices as $invoice) {
+            $invoice->delete();
+        }
+        $delete = $installation->delete();
+        $user->delete();
+
+        if ($delete) {
+            $status = 'success';
+            $message = 'Instalasi berhasil dihapus!';
+        } else {
+            $status = 'error';
+            $message = 'Instalasi gagal dihapus!';
+        }
+
         return redirect('installation')->with($status, $message);
     }
 }

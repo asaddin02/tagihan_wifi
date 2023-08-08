@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Technisian;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class TechnisianController extends Controller
+class CustomerserviceController extends Controller
 {
-    // Menampilkan data dari tabel teknisi
+    // Menampilkan data dari tabel user
     public function index()
     {
-        $name = request('technisian_filter_name');
+        $name = request('cs_filter_name');
 
-        $query = Technisian::query();
+        $query = User::query();
 
         if ($name != '') {
-            $query->where('nama_teknisi', 'LIKE', '%' . $name  . '%');
+            $query->where('name', 'LIKE', '%' . $name  . '%');
         }
+
+        $query->where('role', 'Customer Service');
 
         $datas = $query->paginate(10);
 
-        return view('employee.technisi', compact('datas'));
+        return view('employee.customerservice', compact('datas'));
     }
 
     // Link ke whatsapp
@@ -33,10 +35,10 @@ class TechnisianController extends Controller
         return redirect()->away($whatsappURL);
     }
 
-    // Menambah data ke tabel teknisi
-    public function create(Request $request)
+    // Menambahkan data ke tabel user
+    public function store(Request $request)
     {
-        $create = Technisian::create($request->all());
+        $create = User::create($request->all());
 
         if ($create) {
             $status = 'success';
@@ -46,14 +48,14 @@ class TechnisianController extends Controller
             $message = 'Data gagal ditambahkan';
         }
 
-        return redirect('technic')->with($status, $message);
+        return redirect('cs')->with($status, $message);
     }
 
-    // Edit data dari tabel teknisi
-    public function edit(Request $request, $id)
+    // Update data dari tabel user
+    public function update(Request $request, string $id)
     {
-        $technisian = Technisian::find($id);
-        $update = $technisian->update($request->all());
+        $cs = User::find($id);
+        $update = $cs->update($request->all());
 
         if ($update) {
             $status = 'success';
@@ -63,15 +65,15 @@ class TechnisianController extends Controller
             $message = 'Data gagal diupdate';
         }
 
-        return redirect('technic')->with($status, $message);
+        return redirect('cs')->with($status, $message);
     }
 
-    // Menghapus data dari tabel teknisi
-    public function delete($id)
+    // Hapus data dari tabel user
+    public function destroy(string $id)
     {
-        $technisian = Technisian::find($id);
+        $cs = User::find($id);
 
-        $delete = $technisian->delete();
+        $delete = $cs->delete();
 
         if ($delete) {
             $status = 'success';
@@ -81,6 +83,6 @@ class TechnisianController extends Controller
             $message = 'Data gagal dihapus';
         }
         
-        return redirect('technic')->with($status, $message);
+        return redirect('cs')->with($status, $message);
     }
 }
