@@ -112,7 +112,27 @@
             <!-- /.row -->
             <!-- Main row -->
             <div class="row">
-                <!-- Left col -->
+                <section class="col-lg-12 connectedSortable">
+                    @if (Auth::user()->role == 'Admin')
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-chart-pie mr-1"></i>
+                                    Kecepatan internet
+                                </h3>
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content p-0">
+                                    <!-- Morris chart - Sales -->
+                                    <div class="chart tab-pane active" id="revenue-chart"
+                                        style="position: relative; height: 300px;">
+                                        <canvas id="barChart"></canvas>
+                                    </div>
+                                </div>
+                            </div><!-- /.card-body -->
+                        </div>
+                    @endif
+                </section>
                 <section class="col-lg-6 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
                     @if (Auth::user()->role == 'Customer Service')
@@ -210,7 +230,6 @@
                                                             href="{{ $invoices->previousPageUrl() }}">Previous</a>
                                                     </li>
                                                 @endif
-
                                                 @foreach ($invoices->getUrlRange(1, $invoices->lastPage()) as $page => $url)
                                                     @if ($page == $invoices->currentPage())
                                                         <li class="page-item active" aria-current="page">
@@ -223,7 +242,6 @@
                                                         </li>
                                                     @endif
                                                 @endforeach
-
                                                 @if ($invoices->hasMorePages())
                                                     <li class="page-item">
                                                         <a class="page-link"
@@ -261,34 +279,82 @@
                         </div>
                     @endif
                 </section>
-                <!-- /.Left col -->
-                <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                <section class="col-lg-6 connectedSortable">
-                    @if (Auth::user()->role == 'Admin')
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-chart-pie mr-1"></i>
-                                Kecepatan internet
-                            </h3>
-                        </div><!-- /.card-header -->
-                        <div class="card-body">
-                            <div class="tab-content p-0">
-                                <!-- Morris chart - Sales -->
-                                <div class="chart tab-pane active" id="revenue-chart"
-                                    style="position: relative; height: 300px;">
-                                    <canvas id="myChart"></canvas>
-                                </div>
-                            </div>
-                        </div><!-- /.card-body -->
-                    </div>
-                    @endif
-                </section>
-                <!-- right col -->
             </div>
             <!-- /.row (main row) -->
         </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
 
+@endsection
+
+@section('script')
+    <script>
+        var areaChartData = {
+            labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober',
+                'November', 'Desember'
+            ],
+            datasets: [{
+                    label: 'Pendapatan',
+                    backgroundColor: '#198754',
+                    borderColor: '#198754',
+                    pointRadius: false,
+                    pointColor: '#198754',
+                    pointStrokeColor: '#198754',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: '#198754',
+                    data: {!! json_encode($incomeChartResult) !!}
+                },
+                {
+                    label: 'Pengeluaran',
+                    backgroundColor: '#DC3545',
+                    borderColor: '#DC3545',
+                    pointRadius: false,
+                    pointColor: '#DC3545',
+                    pointStrokeColor: '#c1c7d1',
+                    pointHighlightFill: '#fff',
+                    pointHighlightStroke: '#DC3545',
+                    data: {!! json_encode($spendingChartResult) !!}
+                },
+            ]
+        }
+
+        var areaChartOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: false,
+                    }
+                }],
+                yAxes: [{
+                    gridLines: {
+                        display: false,
+                    }
+                }]
+            }
+        }
+
+        var barChartCanvas = $('#barChart').get(0).getContext('2d')
+        var barChartData = $.extend(true, {}, areaChartData)
+        var temp0 = areaChartData.datasets[0]
+        var temp1 = areaChartData.datasets[1]
+        barChartData.datasets[0] = temp1
+        barChartData.datasets[1] = temp0
+
+        var barChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            datasetFill: false
+        }
+
+        new Chart(barChartCanvas, {
+            type: 'bar',
+            data: barChartData,
+            options: barChartOptions
+        })
+    </script>
 @endsection

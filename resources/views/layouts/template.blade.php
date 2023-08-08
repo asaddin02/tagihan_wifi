@@ -95,8 +95,8 @@
     <script src="{{ asset('template/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- ChartJS -->
-    {{-- <script src="{{ asset('template/plugins/chart.js/Chart.min.js') }}"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('template/plugins/chart.js/Chart.min.js') }}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 
     <!-- Sparkline -->
     <script src="{{ asset('template/plugins/sparklines/sparkline.js') }}"></script>
@@ -123,9 +123,6 @@
 
     <!-- AdminLTE App -->
     <script src="{{ asset('template/dist/js/adminlte.js') }}"></script>
-
-    <!-- AdminLTE for demo purposes -->
-    {{-- <script src="{{ asset('template/dist/js/demo.js') }}"></script> --}}
 
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('template/dist/js/pages/dashboard.js') }}"></script>
@@ -218,47 +215,9 @@
                 }
             });
         });
-
-        function getIncome() {
-            $.ajaxSetup({
-                header : {
-                    'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content');
-                }
-            });
-
-            $.ajax({
-                type: "GET",
-                url: "/",
-                data: {
-                    functionName : 'getIncome'
-                },
-                success: function (response) {
-                    console.log('berhasil');
-                }
-            });
-        }
-
-        const ctx = document.getElementById('myChart');
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
     </script>
+
+    @yield('script')
 </body>
 
 </html>

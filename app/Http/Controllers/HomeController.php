@@ -14,20 +14,6 @@ class HomeController extends Controller
     // Menampilkan data dari tabel
     public function index()
     {
-        dd($_GET);
-        // $income = $_GET['functionName'];
-
-        // if ($income == 'getIncome') {
-        //     $incomeChart = []; 
-        //     $incomes = Income::all();
-
-        //     foreach ($incomes as $income) {
-        //         $incomeChart[] = $income;
-        //     }
-
-        //     echo json_encode($incomeChart);
-        // }
-
         $date = Carbon::now();
         $customers = Installation::where('status_pemasangan', 'Terpasang')->get();
         $incomePerMonth = 0;
@@ -45,6 +31,17 @@ class HomeController extends Controller
         $spendingsYear = Spending::where('tahun', $getYear)->get();
 
         $invoices = Invoice::where('status_tagihan', 'Belum Dibayar')->paginate(10);
+
+        $incomeChartResult = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        $spendingChartResult = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+        foreach ($incomesYear as $data) {
+            $incomeChartResult[intval($data->bulan) - 1] = $data->total_pendapatan;
+        }
+
+        foreach ($spendingsYear as $data) {
+            $spendingChartResult[intval($data->bulan) - 1] = $data->total_pengeluaran;
+        }
 
         foreach ($incomesMonth as $income) {
             $incomePerMonth += $income->total_pendapatan;
@@ -64,6 +61,6 @@ class HomeController extends Controller
 
         $loss = $incomePerMonth - $spendingPerMonth;
 
-        return view('homepage', compact('customers', 'incomePerMonth', 'incomePerYear', 'spendingPerMonth', 'spendingPerYear', 'loss', 'invoices'));
+        return view('homepage', compact('customers', 'incomePerMonth', 'incomePerYear', 'spendingPerMonth', 'spendingPerYear', 'loss', 'invoices', 'incomeChartResult', 'spendingChartResult'));
     }
 }
