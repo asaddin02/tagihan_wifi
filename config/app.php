@@ -163,10 +163,12 @@ return [
         /*
          * Application Service Providers...
          */
+        RouterOS\Laravel\ServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\RouterosApiServiceProvider::class,
     ])->toArray(),
 
     /*
