@@ -22,9 +22,9 @@
         <!-- SidebarSearch Form -->
         <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Cari" aria-label="Search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="cari menu" aria-label="Search">
                 <div class="input-group-append">
-                    <button class="btn btn-sidebar">
+                    <button class="btn btn-sidebar" title="cari">
                         <i class="fas fa-search fa-fw"></i>
                     </button>
                 </div>
@@ -40,10 +40,34 @@
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dasbor
-                            <span class="right badge badge-danger">New</span>
                         </p>
                     </a>
                 </li>
+                @if (Auth::user()->role == 'Admin')
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                Keuangan
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ url('income') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pendapatan</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('spending') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pengeluaran</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-table"></i>
@@ -59,21 +83,25 @@
                                 <p>Teknisi</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="pages/tables/data.html" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Customer Service</p>
-                            </a>
-                        </li>
+                        @if (Auth::user()->role == 'Admin')
+                            <li class="nav-item">
+                                <a href="{{ url('cs') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Customer Service</p>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ url('/package') }}" class="nav-link">
-                        <p>
-                            Paket Wifi
-                        </p>
-                    </a>
-                </li>
+                @if (Auth::user()->role == 'Admin')
+                    <li class="nav-item">
+                        <a href="{{ url('/package') }}" class="nav-link">
+                            <p>
+                                Paket Wifi
+                            </p>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item">
                     <a href="{{ url('/installation') }}" class="nav-link">
                         <p>

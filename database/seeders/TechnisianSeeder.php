@@ -17,7 +17,7 @@ class TechnisianSeeder extends Seeder
         Technisian::create([
             'nama_teknisi' => 'Atok Farmfenzy',
             'alamat' => 'Kav. Baru Jl. Soekarno No. 69',
-            'no_telepon' => '069756578576',
+            'no_telepon' => '087876705654',
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);

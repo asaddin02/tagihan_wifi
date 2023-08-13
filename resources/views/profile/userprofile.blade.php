@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'User Profile')
+@section('title', 'Profil User')
 
 @section('main')
 
@@ -9,12 +9,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Profile</h1>
+                    <h1 class="m-0">Profil</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">User Profile</li>
+                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item active">Profile User</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -36,18 +36,18 @@
                             </div>
                             <h3 class="profile-username text-center">{{ Str::title(Str::limit($user->name, 20, '.')) }}
                             </h3>
-                            <p class="text-muted text-center">{{ $user->user_id }}</p>
+                            <p class="text-muted text-center">User Id {{ $user->user_id }}</p>
                             <ul class="list-group list-group-unbordered mb-3">
                                 @if (Auth::user()->role == 'Admin')
                                     <li class="list-group-item">
-                                        <b>Role</b> <a class="float-right">{{ $user->role }}</a>
+                                        <b>Role</b> <a class="float-right text-decoration-none">{{ $user->role }}</a>
                                     </li>
                                 @endif
                                 <li class="list-group-item">
-                                    <b>Email</b> <a class="float-right">{{ $user->email }}</a>
+                                    <b>Email</b> <a class="float-right text-decoration-none">{{ $user->email }}</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>NO HP</b> <a class="float-right">{{ $user->no_telepon }}</a>
+                                    <b>NO HP</b> <a class="float-right text-decoration-none">{{ $user->no_telepon }}</a>
                                 </li>
                             </ul>
                             <a href="{{ url('logout') }}" class="btn btn-danger btn-block"><b>Log Out</b></a>

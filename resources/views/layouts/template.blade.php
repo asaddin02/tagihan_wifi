@@ -44,9 +44,10 @@
 
     {{-- BS5 --}}
     <link rel="stylesheet" href="{{ asset('template/bs/css/bootstrap.min.css') }}">
+
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed" onload="getIncome()">
     <div class="wrapper">
 
         <!-- Preloader -->
@@ -95,6 +96,7 @@
 
     <!-- ChartJS -->
     <script src="{{ asset('template/plugins/chart.js/Chart.min.js') }}"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 
     <!-- Sparkline -->
     <script src="{{ asset('template/plugins/sparklines/sparkline.js') }}"></script>
@@ -121,9 +123,6 @@
 
     <!-- AdminLTE App -->
     <script src="{{ asset('template/dist/js/adminlte.js') }}"></script>
-
-    <!-- AdminLTE for demo purposes -->
-    {{-- <script src="{{ asset('template/dist/js/demo.js') }}"></script> --}}
 
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('template/dist/js/pages/dashboard.js') }}"></script>
@@ -169,55 +168,57 @@
     {{-- Alert Form --}}
     <script>
         $(document).ready(function() {
-            let addPhoneNumber = $("#tambah-nomor-teknisi");
-            let addPhoneNumberAlert = $("#tambah-nomor-teknisi-alert");
+            let inputNumber = $("input[type='number']");
+            let inputText = $("input[type='text']");
+            let inputTel = $("input[type='tel']");
+            let inputTextArea = $(".text-area");
 
-            let editPhoneNumber = $("#edit-nomor-teknisi");
-            let editPhoneNumberAlert = $("#edit-nomor-teknisi-alert");
-
-            let addUserId = $("#tambah-id-user");
-            let addUserIdAlert = $("#tambah-id-user-alert");
-
-            let addUserPhone = $("#tambah-nomor-user");
-            let addUserPhoneAlert = $("#tambah-nomor-user-alert");
-
-            addPhoneNumber.on("input", function() {
-                let addPhoneNumberValue = addPhoneNumber.val().toString();
-                if (addPhoneNumberValue.length > 12) {
-                    addPhoneNumberAlert.removeClass("d-none");
-                } else {
-                    addPhoneNumberAlert.addClass("d-none");
-                }
+            inputNumber.each(function(index, element) {
+                $(element).on("input", function() {
+                    let inputNumberValue = $(this).val().toString();
+                    if (inputNumberValue.length > 4) {
+                        $('.input-number-alert').removeClass('d-none');
+                    } else {
+                        $('.input-number-alert').addClass('d-none');
+                    }
+                });
             });
 
-            editPhoneNumber.on("input", function() {
-                let editPhoneNumberValue = editPhoneNumber.val().toString();
-                if (editPhoneNumberValue.length > 12) {
-                    editPhoneNumberAlert.removeClass("d-none");
-                } else {
-                    editPhoneNumberAlert.addClass("d-none");
-                }
+            inputText.each(function(index, element) {
+                $(element).on("input", function() {
+                    let inputTextValue = $(this).val().toString();
+                    if (inputTextValue.length < 3 && inputTextValue.length != 0) {
+                        $('.input-text-alert').removeClass('d-none');
+                    } else {
+                        $('.input-text-alert').addClass('d-none');
+                    }
+                });
             });
 
-            addUserId.on("input", function() {
-                let addUserIdValue = addUserId.val().toString();
-                if (addUserIdValue.length > 4) {
-                    addUserIdAlert.removeClass("d-none");
-                } else {
-                    addUserIdAlert.addClass("d-none");
-                }
+            inputTel.each(function(index, element) {
+                $(element).on("input", function() {
+                    let inputTelValue = $(this).val().toString();
+                    if (inputTelValue.length > 12) {
+                        $('.input-tel-alert').removeClass('d-none');
+                    } else {
+                        $('.input-tel-alert').addClass('d-none');
+                    }
+                });
             });
 
-            addUserPhone.on("input", function() {
-                let addUserPhoneValue = addUserPhone.val().toString();
-                if (addUserPhoneValue.length > 12) {
-                    addUserPhoneAlert.removeClass("d-none");
+            inputTextArea.on("input", function() {
+                let inputTextValue = $(this).val().toString();
+                if (inputTextValue.length < 3 && inputTextValue.length != 0) {
+                    $('.input-text-area-alert').removeClass('d-none');
                 } else {
-                    addUserPhoneAlert.addClass("d-none");
+                    $('.input-text-area-alert').addClass('d-none');
                 }
             });
         });
     </script>
+
+    @yield('script')
+    
 </body>
 
 </html>

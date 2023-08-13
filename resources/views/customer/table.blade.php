@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Customer Table')
+@section('title', 'Tabel Customer')
 
 @section('main')
 
@@ -28,15 +28,34 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        <div class="alert alert-info text-start" role="alert">
+                            <p>Note :</p>
+                            <ul>
+                                <li>
+                                    <span>Customer diambil dari instalasi yang berstatus terpasang.</span>
+                                </li>
+                                <li>
+                                    <span>Customer mendapatkan tagihan bulanan ketika instalasi yang berstatus terpasang.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mb-2">
+                            @if (Auth::user()->role == 'Customer Service')
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#tambah-tagihan-customer">
+                                    <i class="fas fa-plus"></i> Tambah Tagihan Customer
+                                </button>
+                            @endif
+                        </div>
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="customer_search" class="form-control float-right"
-                                                placeholder="Cari Id / Nama">
+                                            <input type="text" name="customer_filter_name"
+                                                class="form-control float-right" placeholder="Cari Id / Nama">
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
+                                                <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -58,64 +77,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($datas as $data)
+                                        @foreach ($datas as $index => $data)
                                             <tr class="text-center">
-                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $index + $datas->firstItem() }}</td>
                                                 <td>{{ $data->user->user_id }}</td>
                                                 <td>
-                                                    <a href=""
+                                                    <a href="{{ url('customer/detail/' . $data->id) }}"
                                                         class="text-decoration-none">{{ $data->user->name }}</a>
                                                 </td>
                                                 <td>{{ $data->package->jenis_paket }}</td>
                                                 <td>{{ $data->alamat_pemasangan }}</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                        data-target="#edit-alamat-customer{{ $data->id }}" title="Edit">
-                                                        <i class="fas fa-pen"></i>
-                                                    </button>
-                                                    <div class="modal fade" id="edit-alamat-customer{{ $data->id }}">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h4 class="modal-title">Edit Data</h4>
-                                                                    <button type="button" class="close"
-                                                                        data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <form class="form-horizontal"
-                                                                    action="{{ route('customer.update', $data->id) }}"
-                                                                    method="post">
-                                                                    @csrf
-                                                                    @method('PUT')
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group row">
-                                                                            <label for="form-edit-alamat-customer"
-                                                                                class="col-sm-4 col-form-label">Alamat
-                                                                                Pemasangan</label>
-                                                                            <div class="col-sm-8">
-                                                                                <input type="text"
-                                                                                    name="alamat_pemasangan"
-                                                                                    class="form-control"
-                                                                                    id="form-edit-alamat-customer"
-                                                                                    value="{{ $data->alamat_pemasangan }}">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer justify-content-between">
-                                                                        <button type="button" class="btn btn-danger"
-                                                                            data-dismiss="modal">Tutup</button>
-                                                                        <button type="submit"
-                                                                            class="btn btn-primary">Simpan</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <!-- /.modal-content -->
-                                                        </div>
-                                                        <!-- /.modal-dialog -->
-                                                    </div>
                                                     <a href="{{ url('/customer/invoice/' . $data->id) }}"
-                                                        class="btn btn-success">Tagihan</a>
+                                                        class="btn btn-success" title="Cek Tagihan"><i
+                                                            class="fa fa-receipt"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -125,6 +100,48 @@
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
+                        @if ($datas->firstItem() != $datas->lastItem())
+                            <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
+                                {{ $datas->total() }} data</p>
+                        @endif
+
+                        @if ($datas->total() > 10)
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    @if ($datas->onFirstPage())
+                                        <li class="page-item disabled">
+                                            <a class="page-link">Previous</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $datas->previousPageUrl() }}">Previous</a>
+                                        </li>
+                                    @endif
+
+                                    @foreach ($datas->getUrlRange(1, $datas->lastPage()) as $page => $url)
+                                        @if ($page == $datas->currentPage())
+                                            <li class="page-item active" aria-current="page">
+                                                <a class="page-link">{{ $page }}</a>
+                                            </li>
+                                        @else
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+
+                                    @if ($datas->hasMorePages())
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $datas->nextPageUrl() }}">Next</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item disabled">
+                                            <a class="page-link">Next</a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </nav>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -134,9 +151,74 @@
         <div class="text-center">
             <div class="alert alert-warning" role="alert">
                 Tidak ada data yang bisa ditampilkan!
+                <br>
+                @if (Auth::user()->role == 'Customer Service')
+                    Note : Silahkan ke halaman <a href="{{ url('installation') }}" class="text-black">instalasi</a> untuk
+                    menambahkan customer
+                @endif
+            </div>
+            <div class="alert alert-info text-start" role="alert">
+                <p>Note :</p>
+                <ul>
+                    <li>
+                        <span>Customer diambil dari instalasi yang berstatus terpasang.</span>
+                    </li>
+                    <li>
+                        <span>Customer mendapatkan tagihan bulanan ketika instalasi yang berstatus terpasang.</span>
+                    </li>
+                </ul>
             </div>
             <a href="{{ url('/customer') }}" class="btn btn-primary">Kembali</a>
         </div>
     @endif
+
+    <div class="modal fade" id="tambah-tagihan-customer">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Tambah Tagihan</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form class="form-horizontal" action="{{ route('invoice.store') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <p class="fw-bold">Tagihan Bulan</p>
+                            </div>
+                            <div class="col-sm-8">
+                                <p>: {{ date('m', strToTime($carbon)) }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <p class="fw-bold">Tagihan Tahun</p>
+                            </div>
+                            <div class="col-sm-8">
+                                <p>: {{ date('Y', strToTime($carbon)) }}</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <p class="fw-bold">Keterangan</p>
+                            </div>
+                            <div class="col-sm-8">
+                                <p>: Tagihan ini untuk semua customer</p>
+                            </div>
+                        </div>
+                        <input type="hidden" name="hari" value="{{ date('d', strToTime($carbon)) }}">
+                        <input type="hidden" name="bulan" value="{{ date('m', strToTime($carbon)) }}">
+                        <input type="hidden" name="tahun" value="{{ date('Y', strToTime($carbon)) }}">
+                        <input type="hidden" name="status_tagihan" value="Belum Dibayar" required>
+                    </div>
+                    <div class="modal-footer justify-content-end">
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 @endsection

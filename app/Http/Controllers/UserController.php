@@ -12,44 +12,49 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    /**
-     * Menampilkan informasi tentang user yang login
-     */
+    // Membaca data tabel
     public function index()
     {
         $user = User::find(Auth::user()->id);
         return view('profile.userprofile', compact('user'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Menambah data Customer Service
-     */
+    // Menambahkan data tabel
     public function store(Request $request)
     {
-        $validate = $request->validate([
-            'user_id' => ['required'],
-            'name' => ['required'],
-            'no_telepon' => ['required', 'numeric'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required'],
-            'role' => ['required'],
-        ]);
-        $hash = Hash::make($validate['password']);
-        $validate['password'] = $hash;
-        $alert = User::create($validate);
-        if ($alert) {
-            return redirect()->back()->with('user_created', true);
+        $checkId = User::where('user_id', $request->user_id)->first();
+        $checkEmail = User::where('email', $request->email)->first();
+
+        if (isset($checkId)) {
+            $status = 'error';
+            $message = 'User id tersebut sudah ada!';
+        } elseif (isset($checkEmail)) {
+            $status = 'error';
+            $message = 'Email tersebut sudah ada!';
         } else {
-            return redirect()->back()->with('error', 'Isi data user dengan benar!');
+            $validate = $request->validate([
+                'user_id' => ['required'],
+                'name' => ['required'],
+                'no_telepon' => ['required', 'numeric'],
+                'email' => ['required', 'email', 'unique:users'],
+                'password' => ['required'],
+                'role' => ['required'],
+            ]);
+
+            $hash = Hash::make($validate['password']);
+            $validate['password'] = $hash;
+            $create = User::create($validate);
+
+            if ($create) {
+                $status = 'user_created';
+                $message = true;
+            } else {
+                $status = 'error';
+                $message = 'Isi data user dengan benar!';
+            }
         }
+
+        return redirect('installation')->with($status, $message);
     }
 
     /**
@@ -86,7 +91,7 @@ class UserController extends Controller
             $user['photo_profile']->update($gambar);
         } elseif ($request->input('password')) {
             // Update password
-            $validate = Validator::make($request->all(),[
+            $validate = Validator::make($request->all(), [
                 'password' => ['required', 'confirmed'],
             ]);
             if ($validate->fails()) {

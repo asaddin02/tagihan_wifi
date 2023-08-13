@@ -23,12 +23,12 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ asset('template/index2.html') }}"><b>Admin</b>LTE</a>
+            <span><b>Admin</b>LTE</span>
         </div>
 
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
+                <p class="login-box-msg">Sign In untuk memulai sesi kamu.</p>
                 <form action="{{ route('user.login') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">

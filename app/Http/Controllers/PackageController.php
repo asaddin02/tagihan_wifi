@@ -7,98 +7,85 @@ use Illuminate\Http\Request;
 
 class PackageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan data dari tabel paket
     public function index()
     {
-        if (isset($_GET['package_search'])) {
-            if ($_GET['package_search'] == '') {
-                $datas = [];
-            } else {
-                $datas = Package::where('jenis_paket', 'LIKE', '%' . $_GET['package_search'] . '%')->get();
-            }
-        } else {
-            $datas = Package::all();
+        $name = request('package_filter_name');
+
+        $query = Package::query();
+
+        if ($name != '') {
+            $query->where('jenis_paket', 'LIKE', '%' . $name . '%');
         }
+
+        $datas = $query->paginate(10);
+
         return view('package.table', compact('datas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Menambahkan data ke tabel paket
     public function store(Request $request)
     {
         $check = Package::where('jenis_paket', $request->jenis_paket)->first();
+
         if ($check) {
-            return back()->with('error', 'Nama paket tidak boleh sama!');
+            return redirect('package')->with('error', 'Nama paket tidak boleh sama!');
         } else {
-            $alert = Package::create($request->all());
+            $create = Package::create($request->all());
         }
-        if ($alert) {
-            return back()->with('success', 'Paket baru telah ditambahkan!');
+
+        if ($create) {
+            $status = 'success';
+            $message = 'Data berhasil ditambahkan';
         } else {
-            return back()->with('error', 'Paket baru gagal ditambahkan!');
+            $status = 'error';
+            $message = 'Data gagal ditambahkan';
         }
+
+        return redirect('package')->with($status, $message);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
+    // Update data dari tabel paket
     public function update(Request $request, $id)
     {
         $package = Package::find($id);
         $check_1 = Package::where('jenis_paket', $request->jenis_paket)->where('id', $id)->first();
         $check_2 = Package::where('jenis_paket', $request->jenis_paket)->first();
+
         if (isset($check_1)) {
-            $alert = $package->update($request->all());
+            $update = $package->update($request->all());
         } elseif ($check_2) {
-            return back()->with('error', 'Nama tidak boleh sama!');
+            return redirect('package')->with('error', 'Nama tidak boleh sama!');
         } else {
-            $alert = $package->update($request->all());
+            $update = $package->update($request->all());
         }
-        if ($alert) {
-            return back()->with('success', 'Paket telah diupdate!');
+
+        if ($update) {
+            $status = 'success';
+            $message = 'Data berhasil diupdate!';
         } else {
-            return back()->with('error', 'Paket gagal diupdate!');
+            $status = 'error';
+            $message = 'Data gagal diupdate!';
         }
+
+        return redirect('package')->with($status, $message);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Hapus data dari tabel paket
     public function destroy($id)
     {
         $package = Package::find($id);
-        $alert = $package->delete();
-        if ($alert) {
-            return back()->with('success', 'Paket telah dihapus!');
+
+        $delete = $package->delete();
+
+        if ($delete) {
+            $status = 'success';
+            $message = 'Data berhasil dihapus!';
         } else {
-            return back()->with('error', 'Paket gagal dihapus!');
+            $status = 'error';
+            $message = 'Data gagal dihapus!';
         }
+        
+        return redirect('package')->with($status, $message);
     }
 }

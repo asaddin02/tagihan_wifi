@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Technisian Table')
+@section('title', 'Tabel Teknisi')
 
 @section('main')
 
@@ -21,27 +21,29 @@
         </div><!-- /.container-fluid -->
     </section>
 
-    @if (count($technisians) > 0)
+    @if (count($datas) > 0)
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-2">
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#tambah-teknisi">
-                                <i class="fas fa-plus"></i> Tambah Data
-                            </button>
+                            @if (Auth::user()->role == 'Admin')
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#tambah-teknisi">
+                                    <i class="fas fa-plus"></i> Tambah Teknisi
+                                </button>
+                            @endif
                         </div>
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-tools">
                                     <form action="" method="GET">
                                         <div class="input-group input-group-sm" style="width: 150px;">
-                                            <input type="text" name="technisian_search" class="form-control float-right"
-                                                placeholder="Cari Nama">
+                                            <input type="text" name="technisian_filter_name"
+                                                class="form-control float-right" placeholder="Cari Nama">
                                             <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
+                                                <button type="submit" class="btn btn-default" title="Cari">
                                                     <i class="fas fa-search"></i>
                                                 </button>
                                             </div>
@@ -51,7 +53,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap">
+                                <table class="table table-hover text-nowrap text-center">
                                     <thead>
                                         <tr class="text-center">
                                             <th>No</th>
@@ -62,120 +64,193 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @isset($technisians)
-                                            @foreach ($technisians as $technisi)
-                                                <tr class="text-center">
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $technisi->nama_teknisi }}</td>
-                                                    <td>{{ $technisi->alamat }}</td>
-                                                    <td>{{ $technisi->no_telepon }}</td>
-                                                    <td>
+                                        @foreach ($datas as $index => $data)
+                                            <tr class="text-center">
+                                                <td>{{ $index + $datas->firstItem() }}</td>
+                                                <td>{{ $data->nama_teknisi }}</td>
+                                                <td>{{ $data->alamat }}</td>
+                                                <td>{{ $data->no_telepon }}</td>
+                                                <td>
+                                                    @if (Auth::user()->role == 'Admin')
                                                         <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                            data-target="#edit-teknisi{{ $technisi->id }}" title="Edit">
+                                                            data-target="#edit-teknisi{{ $data->id }}" title="Edit">
                                                             <i class="fas fa-pen"></i>
                                                         </button>
-                                                        <div class="modal fade" id="edit-teknisi{{ $technisi->id }}">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h4 class="modal-title">Edit Data</h4>
-                                                                        <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <form class="form-horizontal"
-                                                                        action="{{ route('edit.teknisi', $technisi->id) }}"
-                                                                        method="post">
-                                                                        @csrf
-                                                                        <div class="modal-body">
-                                                                            <div class="form-group row">
-                                                                                <label for="edit-nama-teknisi"
-                                                                                    class="col-sm-4 col-form-label">Nama
-                                                                                    Teknisi</label>
-                                                                                <div class="col-sm-8">
-                                                                                    <input type="text" name="nama_teknisi"
-                                                                                        class="form-control"
-                                                                                        id="edit-nama-teknisi"
-                                                                                        value="{{ $technisi->nama_teknisi }}">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="form-group row">
-                                                                                <label for="edit-alamat-teknisi"
-                                                                                    class="col-sm-4 col-form-label">Alamat
-                                                                                    Teknisi</label>
-                                                                                <div class="col-sm-8">
-                                                                                    <input type="text" name="alamat"
-                                                                                        class="form-control"
-                                                                                        id="edit-alamat-teknisi"
-                                                                                        value="{{ $technisi->alamat }}">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="form-group row">
-                                                                                <label for="edit-nomor-teknisi"
-                                                                                    class="col-sm-4 col-form-label">Nomor
-                                                                                    Telepon</label>
-                                                                                <div class="col-sm-8">
-                                                                                    <input type="number" name="no_telepon"
-                                                                                        class="form-control"
-                                                                                        id="edit-nomor-teknisi"
-                                                                                        value="{{ $technisi->no_telepon }}"
-                                                                                        max="99999999999">
-                                                                                    <p class="text-danger mt-1 ms-3 d-none"
-                                                                                        id="edit-nomor-teknisi-alert">Nomor hp
-                                                                                        maksimal
-                                                                                        12 karakter</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer justify-content-between">
-                                                                            <button type="button" class="btn btn-danger"
-                                                                                data-dismiss="modal">Tutup</button>
-                                                                            <button type="submit"
-                                                                                class="btn btn-primary">Simpan</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                                <!-- /.modal-content -->
-                                                            </div>
-                                                            <!-- /.modal-dialog -->
-                                                        </div>
                                                         <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                            data-target="#hapus-teknisi{{ $technisi->id }}" title="Hapus">
+                                                            data-target="#hapus-teknisi{{ $data->id }}" title="Hapus">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
-                                                        <div class="modal fade" id="hapus-teknisi{{ $technisi->id }}">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content bg-danger">
-                                                                    <form
-                                                                        action="{{ route('delete.teknisi', $technisi->id) }}">
-                                                                        @csrf
-                                                                        <div class="modal-body">
-                                                                            <h4 class="modal-title">Yakin mau hapus?
-                                                                                {{ $technisi->nama_teknisi }}</h4>
-                                                                        </div>
-                                                                        <div class="modal-footer justify-content-between">
-                                                                            <button type="button" class="btn btn-light"
-                                                                                data-dismiss="modal">Batal</button>
-                                                                            <button type="submit"
-                                                                                class="btn btn-light">Hapus</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                                <!-- /.modal-content -->
-                                                            </div>
-                                                            <!-- /.modal-dialog -->
+                                                    @endif
+                                                    <button type="button" class="btn btn-success" data-toggle="modal"
+                                                        data-target="#whatsapp-teknisi{{ $data->id }}" title="Whatsapp">
+                                                        <i class="fas fa-phone"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <div class="modal fade" id="edit-teknisi{{ $data->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Edit Data</h4>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endisset
+                                                        <form class="form-horizontal"
+                                                            action="{{ route('edit.teknisi', $data->id) }}" method="post"
+                                                            autocomplete="off">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label">Nama
+                                                                        Teknisi</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="text" name="nama_teknisi"
+                                                                            class="form-control"
+                                                                            value="{{ $data->nama_teknisi }}"
+                                                                            placeholder="ex : Nama" minlength="3"
+                                                                            maxlength="15" autofocus required>
+                                                                        <p
+                                                                            class="text-danger mt-1 ms-3 d-none input-text-alert">
+                                                                            Nama minimal 3 karakter.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label">Alamat
+                                                                        Teknisi</label>
+                                                                    <div class="col-sm-8">
+                                                                        <textarea name="alamat" class="form-control text-area" cols="1" rows="1" placeholder="alamat lengkap"
+                                                                            minlength="3" required>{{ $data->alamat }}</textarea>
+                                                                        <p
+                                                                            class="text-danger mt-1 ms-3 d-none input-text-area-alert">
+                                                                            Alamat minimal 3 karakter.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row">
+                                                                    <label class="col-sm-4 col-form-label">Nomor
+                                                                        Telepon</label>
+                                                                    <div class="col-sm-8">
+                                                                        <input type="tel" name="no_telepon"
+                                                                            class="form-control"
+                                                                            value="{{ $data->no_telepon }}"
+                                                                            placeholder="ex : 08**********"
+                                                                            pattern="(0)8[1-9][0-9]{6,9}$" required>
+                                                                        <p
+                                                                            class="text-danger mt-1 ms-3 d-none input-tel-alert">
+                                                                            Nomor hp maksimal
+                                                                            12 karakter</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Tutup</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Simpan</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <div class="modal fade" id="hapus-teknisi{{ $data->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content bg-danger">
+                                                        <form action="{{ route('delete.teknisi', $data->id) }}">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <h4 class="modal-title">Yakin mau hapus?
+                                                                    {{ $data->nama_teknisi }}</h4>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-light"
+                                                                    data-dismiss="modal">Batal</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-light">Hapus</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <div class="modal fade" id="whatsapp-teknisi{{ $data->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="{{ route('whatsapp.teknisi') }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <h4 class="modal-title">Ini akan mengarahkan ke Whatsapp
+                                                                    <br>
+                                                                    {{ $data->nama_teknisi }}
+                                                                </h4>
+                                                                <input type="hidden" name="no_telepon"
+                                                                    value="{{ $data->no_telepon }}">
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-primary">Ya</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
+                        @if ($datas->firstItem() != $datas->lastItem())
+                            <p>Menampilkan {{ $datas->firstItem() }} sampai {{ $datas->lastItem() }} dari
+                                {{ $datas->total() }} data</p>
+                        @endif
+
+                        @if ($datas->total() > 10)
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    @if ($datas->onFirstPage())
+                                        <li class="page-item disabled">
+                                            <a class="page-link">Previous</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $datas->previousPageUrl() }}">Previous</a>
+                                        </li>
+                                    @endif
+
+                                    @foreach ($datas->getUrlRange(1, $datas->lastPage()) as $page => $url)
+                                        @if ($page == $datas->currentPage())
+                                            <li class="page-item active" aria-current="page">
+                                                <a class="page-link">{{ $page }}</a>
+                                            </li>
+                                        @else
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+
+                                    @if ($datas->hasMorePages())
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $datas->nextPageUrl() }}">Next</a>
+                                        </li>
+                                    @else
+                                        <li class="page-item disabled">
+                                            <a class="page-link">Next</a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </nav>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -187,9 +262,11 @@
                 Tidak ada data yang bisa ditampilkan!
             </div>
             <a href="{{ url('technic') }}" class="btn btn-primary">Kembali</a>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-teknisi">
-                <i class="fas fa-plus"></i> Tambah Data
-            </button>
+            @if (Auth::user()->role == 'Admin')
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambah-teknisi">
+                    <i class="fas fa-plus"></i> Tambah Teknisi
+                </button>
+            @endif
         </div>
     @endif
 
@@ -197,37 +274,44 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Tambah Data</h4>
+                    <h4 class="modal-title">Form Tambah Teknisi</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form class="form-horizontal" action="{{ route('create.teknisi') }}" method="post">
+                <form class="form-horizontal" action="{{ route('create.teknisi') }}" method="POST" autocomplete="off">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label for="tambah-nama-teknisi" class="col-sm-4 col-form-label">Nama
+                            <label class="col-sm-4 col-form-label">Nama
                                 Teknisi</label>
                             <div class="col-sm-8">
-                                <input type="text" name="nama_teknisi" class="form-control" id="tambah-nama-teknisi"
-                                    placeholder="ex : Nama Teknisi">
+                                <input type="text" name="nama_teknisi" class="form-control" placeholder="ex : Nama"
+                                    minlength="3" maxlength="15" autofocus required>
+                                <p class="text-danger mt-1 ms-3 d-none input-text-alert">
+                                    Nama minimal 3 karakter.
+                                </p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-alamat-teknisi" class="col-sm-4 col-form-label">Alamat
+                            <label class="col-sm-4 col-form-label">Alamat
                                 Teknisi</label>
                             <div class="col-sm-8">
-                                <input type="text" name="alamat" class="form-control" id="tambah-alamat-teknisi"
-                                    placeholder="Alamat detail">
+                                <textarea name="alamat" class="form-control text-area" cols="1" rows="1" placeholder="alamat lengkap"
+                                    minlength="3" required></textarea>
+                                <p class="text-danger mt-1 ms-3 d-none input-text-area-alert">
+                                    Alamat minimal 3 karakter.
+                                </p>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="tambah-nomor-teknisi" class="col-sm-4 col-form-label">Nomor
+                            <label class="col-sm-4 col-form-label">Nomor
                                 Telepon</label>
                             <div class="col-sm-8">
-                                <input type="number" name="no_telepon" class="form-control" id="tambah-nomor-teknisi"
-                                    placeholder="ex : 08**********" max="99999999999">
-                                <p class="text-danger mt-1 ms-3 d-none" id="tambah-nomor-teknisi-alert">Nomor hp maksimal
+                                <input type="tel" name="no_telepon" class="form-control"
+                                    placeholder="ex : 08**********" pattern="(0)8[1-9][0-9]{6,9}$" required>
+                                <p class="text-danger mt-1 ms-3 d-none input-tel-alert">
+                                    Nomor hp maksimal
                                     12 karakter</p>
                             </div>
                         </div>
