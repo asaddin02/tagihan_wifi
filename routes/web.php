@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\InstallationController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\MikrotikController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\SpendingController;
 use App\Http\Controllers\TechnisianController;
@@ -91,3 +92,5 @@ Route::middleware(['auth'])->group(function () {
     // Route Invoice
     Route::resource('invoice', InvoiceController::class)->middleware('cs');
 });
+
+Route::get('mikrotik',[MikrotikController::class,'index']);
