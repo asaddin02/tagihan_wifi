@@ -75,6 +75,7 @@
                                             <th>Status</th>
                                             <th>Harga Paket</th>
                                             <th>Harga Pemasangan</th>
+                                            <th>Tipe Tagihan</th>
                                             @if (Auth::user()->role != 'Admin')
                                                 <th>Aksi</th>
                                             @endif
@@ -107,6 +108,7 @@
                                                 <td>Rp.
                                                     {{ number_format($data->package->harga_pemasangan, 0, ',', '.') }}
                                                 </td>
+                                                <td>{{ $data->tipe_tagihan }}</td>
                                                 <td>
                                                     @if (Auth::user()->role == 'Customer Service')
                                                         <button type="button" class="btn btn-primary" data-toggle="modal"
@@ -465,6 +467,17 @@
                                 <p>: {{ date('d m Y', strToTime($date)) }}</p>
                                 <input type="hidden" name="tanggal_pemasangan" class="form-control"
                                     value="{{ $date }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Tipe Tagihan</label>
+                            <div class="col-sm-4">
+                                <input type="checkbox" name="tipe_tagihan" value="Bulanan" checked>
+                                <span>Bulanan</span>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="checkbox" name="tipe_tagihan" value="Tahunan">
+                                <span>Tahunan</span>
                             </div>
                         </div>
                         <div class="form-group row">

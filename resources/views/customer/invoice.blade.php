@@ -146,16 +146,28 @@
                                                 @endif
                                                 <td>
                                                     @if ($data->status_tagihan != 'Lunas' && Auth::user()->role == 'Customer Service')
-                                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                                            data-target="#bayar-tagihan-customer{{ $data->id }}"
-                                                            title="Bayar Cash">
-                                                            <i class="fa fa-money-bill"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-success" data-toggle="modal"
-                                                            data-target="#whatsapp-customer{{ $data->id }}"
-                                                            title="Whatsapp">
-                                                            <i class="fa fa-phone"></i>
-                                                        </button>
+                                                        @if (isset($invoiceCheck))
+                                                            @if ($invoiceCheck->bulan == $data->bulan && $invoiceCheck->tahun == $data->tahun)
+                                                                <button type="button" class="btn btn-success"
+                                                                    data-toggle="modal"
+                                                                    data-target="#bayar-tagihan-customer{{ $data->id }}"
+                                                                    title="Bayar Cash">
+                                                                    <i class="fa fa-money-bill"></i>
+                                                                </button>
+                                                                <button type="button" class="btn btn-success"
+                                                                    data-toggle="modal"
+                                                                    data-target="#whatsapp-customer{{ $data->id }}"
+                                                                    title="Whatsapp">
+                                                                    <i class="fa fa-phone"></i>
+                                                                </button>
+                                                            @endif
+                                                        @else
+                                                            <button type="button" class="btn btn-info" data-toggle="modal"
+                                                                data-target="#info-tagihan-customer{{ $data->id }}"
+                                                                title="Info">
+                                                                <i class="fa fa-info-circle text-white"></i>
+                                                            </button>
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>
@@ -182,6 +194,8 @@
                                                                     <div class="col-sm-8">
                                                                         <p>: {{ $data->installation_id }}</p>
                                                                     </div>
+                                                                    <input type="hidden" name="installation_id"
+                                                                        value="{{ $data->installation_id }}" required>
                                                                 </div>
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-4">
@@ -193,7 +207,7 @@
                                                                 </div>
                                                                 <div class="form-group row">
                                                                     <div class="col-sm-4">
-                                                                        <p class="fw-bold">Pembayaran Bulan</p>
+                                                                        <p class="fw-bold">Bulan</p>
                                                                     </div>
                                                                     <div class="col-sm-8">
                                                                         <p>: {{ date('m', strToTime($carbon)) }}</p>
@@ -209,12 +223,79 @@
                                                                             {{ number_format($data->installation->package->harga_paket, 0, ',', '.') }}
                                                                         </p>
                                                                     </div>
-                                                                    <input type="hidden" name="total_pendapatan"
+                                                                    <input type="hidden" name="tagihan"
                                                                         value="{{ $data->installation->package->harga_paket }}"
                                                                         required>
                                                                 </div>
-                                                                <input type="hidden" name="status_tagihan"
-                                                                    value="Lunas" required>
+                                                                @if (isset($invoiceCheck))
+                                                                    @if ($month == $invoiceCheck->bulan && $year == $invoiceCheck->tahun)
+                                                                        <div class="form-group row">
+                                                                            <div class="col-sm-4">
+                                                                                <p class="fw-bold">Double
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="col-sm-8">
+                                                                                <input type="checkbox" name=""
+                                                                                    id="">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <div class="col-sm-4">
+                                                                                <p class="fw-bold">Sampai Bulan
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="col-sm-8">
+                                                                                <select name="sampai_bulan" id=""
+                                                                                    class="form-control">
+                                                                                    <option value="null" hidden>-- Pilih
+                                                                                        Bulan --
+                                                                                    </option>
+                                                                                    <option value="01">Januari</option>
+                                                                                    <option value="02">Februari
+                                                                                    </option>
+                                                                                    <option value="03">Maret</option>
+                                                                                    <option value="04">April</option>
+                                                                                    <option value="05">Mei</option>
+                                                                                    <option value="06">Juni</option>
+                                                                                    <option value="07">Juli</option>
+                                                                                    <option value="08">Agustus</option>
+                                                                                    <option value="09">September
+                                                                                    </option>
+                                                                                    <option value="10">Oktober</option>
+                                                                                    <option value="11">November
+                                                                                    </option>
+                                                                                    <option value="12">Desember
+                                                                                    </option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <div class="col-sm-4">
+                                                                                <p class="fw-bold">Sampai Tahun
+                                                                                </p>
+                                                                            </div>
+                                                                            <div class="col-sm-8">
+                                                                                <select name="sampai_tahun" id=""
+                                                                                    class="form-control">
+                                                                                    <option value="null" hidden>-- PIlih
+                                                                                        Tahun --
+                                                                                    </option>
+                                                                                    <option value="2020">2020</option>
+                                                                                    <option value="2021">2021</option>
+                                                                                    <option value="2022">2022</option>
+                                                                                    <option value="2023">2023</option>
+                                                                                    <option value="2024">2024</option>
+                                                                                    <option value="2025">2025</option>
+                                                                                    <option value="2026">2026</option>
+                                                                                    <option value="2027">2027</option>
+                                                                                    <option value="2028">2028</option>
+                                                                                    <option value="2029">2029</option>
+                                                                                    <option value="2030">2030</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                @endif
                                                             </div>
                                                             <div class="modal-footer justify-content-end">
                                                                 <button type="submit"
@@ -243,6 +324,26 @@
                                                                 <button type="submit" class="btn btn-primary">Ya</button>
                                                             </div>
                                                         </form>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <div class="modal fade" id="info-tagihan-customer{{ $data->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-info">
+                                                                <p class="text-center">
+                                                                    <i class="fa fa-info-circle text-black"></i>
+                                                                    <span class="fw-bold">Informasi</span>
+                                                                </p>
+                                                                <p class="text-center">Customer harus membayar tunggakan
+                                                                    <br> di <span class="fw-bold">bulan sebelumnya</span>
+                                                                    terlebih dahulu.
+                                                                </p>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>

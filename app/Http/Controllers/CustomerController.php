@@ -42,19 +42,24 @@ class CustomerController extends Controller
     // Detail invoice
     public function invoice($id)
     {
-        $month = request('invoice_filter_month');
-        $year = request('invoice_filter_year');
+        $reqMonth = request('invoice_filter_month');
+        $reqYear = request('invoice_filter_year');
         $status = request('invoice_filter_status');
 
         $query = Invoice::query();
         $carbon = Carbon::now();
+        $month = date('m', strtotime($carbon));
+        $year = date('Y', strtotime($carbon));
+        $installation = Installation::find($id);
 
-        if ($month != '' && $month != 'All') {
-            $query->where('bulan', $month);
+        $invoiceCheck = Invoice::where('status_tagihan', 'Belum Dibayar')->first();
+
+        if ($reqMonth != '' && $reqMonth != 'All') {
+            $query->where('bulan', $reqMonth);
         }
 
-        if ($year != '' && $year != 'All') {
-            $query->where('tahun', $year);
+        if ($reqYear != '' && $reqYear != 'All') {
+            $query->where('tahun', $reqYear);
         }
 
         if ($status != '' && $status != 'All') {
@@ -65,7 +70,7 @@ class CustomerController extends Controller
 
         $datas = $query->paginate(10);
 
-        return view('customer.invoice', compact('datas', 'carbon'));
+        return view('customer.invoice', compact('datas', 'carbon', 'month', 'year', 'installation', 'invoiceCheck'));
     }
 
     // Whatsapp

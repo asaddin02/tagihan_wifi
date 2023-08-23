@@ -118,14 +118,21 @@
                                 </h3>
                             </div><!-- /.card-header -->
                             <div class="card-body">
-                                <div class="tab-content p-0">
-                                    <!-- Morris chart - Sales -->
-                                    <div class="chart tab-pane active" id="revenue-chart"
-                                        style="position: relative; height: 300px;">
-                                        <canvas id="barChart"></canvas>
+                                @if (count($incomesYear) > 0 || count($spendingsYear) > 0)
+                                    <div class="tab-content p-0">
+                                        <!-- Morris chart - Sales -->
+                                        <div class="chart tab-pane active" id="revenue-chart"
+                                            style="position: relative; height: 300px;">
+                                            <canvas id="barChart"></canvas>
+                                        </div>
                                     </div>
-                                </div>
-                                <span>Tahun : {{ $getYear }}</span>
+                                    <span class="fw-bold">Tahun : {{ $getYear }}</span>
+                                @else
+                                    <div class="alert alert-info" role="alert">
+                                        <span class="mx-2"><i class="fa fa-info"></i></span>
+                                        <span>Grafik akan muncul ketika ada data di tabel Pendapatan atau Pengeluaran</span>
+                                    </div>
+                                @endif
                             </div><!-- /.card-body -->
                         </div>
                     @endif
@@ -135,7 +142,7 @@
             <!-- Main row -->
             <div class="row">
                 <section class="col-lg-6 connectedSortable">
-                    
+
                 </section>
                 <section class="col-lg-6 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
@@ -167,8 +174,7 @@
                                                     <td>{{ $data->installation->user->name }}</td>
                                                     <td>Rp. {{ number_format($data->total_tagihan, 0, ',', '.') }}</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-success"
-                                                            data-toggle="modal"
+                                                        <button type="button" class="btn btn-success" data-toggle="modal"
                                                             data-target="#whatsapp-customer{{ $data->id }}"
                                                             title="Whatsapp">
                                                             <i class="fa fa-phone"></i>
@@ -178,8 +184,7 @@
                                                 <div class="modal fade" id="whatsapp-customer{{ $data->id }}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form action="{{ route('whatsapp.customer') }}"
-                                                                method="POST">
+                                                            <form action="{{ route('whatsapp.customer') }}" method="POST">
                                                                 @csrf
                                                                 <div class="modal-body">
                                                                     <h4 class="modal-title">Ini akan mengarahkan ke

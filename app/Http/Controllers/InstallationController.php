@@ -55,6 +55,7 @@ class InstallationController extends Controller
             'tanggal_pemasangan' => $request->tanggal_pemasangan,
             'alamat_pemasangan' => $request->alamat_pemasangan,
             'status_pemasangan' => 'Belum Terpasang',
+            'tipe_tagihan' => $request->tipe_tagihan,   
         ]);
 
         if ($create) {

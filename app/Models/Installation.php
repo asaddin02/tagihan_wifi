@@ -30,4 +30,9 @@ class Installation extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public function invoicenote()
+    {
+        return $this->hasMany(Invoicenote::class);
+    }
 }

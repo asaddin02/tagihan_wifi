@@ -37,7 +37,7 @@ class HomeController extends Controller
 
         foreach ($incomesYear as $income) {
             $incomePerYear += $income->total_pendapatan;
-            $incomeChartResult[intval($income->bulan) - 1] = $income->total_pendapatan;
+            $incomeChartResult[intval($income->bulan) - 1] = $incomePerMonth;
         }
 
         // Spending Dan Chart Spending
@@ -54,7 +54,7 @@ class HomeController extends Controller
         
         foreach ($spendingsYear as $spending) {
             $spendingPerYear += $spending->total_pengeluaran;
-            $spendingChartResult[intval($spending->bulan) - 1] = $spending->total_pengeluaran;
+            $spendingChartResult[intval($spending->bulan) - 1] = $spendingPerMonth;
         }
 
         // Invoice
@@ -63,6 +63,6 @@ class HomeController extends Controller
         // Kerugian
         $loss = $incomePerMonth - $spendingPerMonth;
 
-        return view('homepage', compact('customers', 'incomePerMonth', 'incomePerYear', 'spendingPerMonth', 'spendingPerYear', 'loss', 'invoices', 'incomeChartResult', 'spendingChartResult', 'getYear'));
+        return view('homepage', compact('customers', 'incomePerMonth', 'incomePerYear', 'spendingPerMonth', 'spendingPerYear', 'loss', 'invoices', 'incomeChartResult', 'spendingChartResult', 'getYear', 'incomesYear', 'spendingsYear'));
     }
 }

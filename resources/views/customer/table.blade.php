@@ -72,6 +72,7 @@
                                             <th>Id Customer</th>
                                             <th>Nama</th>
                                             <th>Jenis Paket</th>
+                                            <th>Tipe Tagihan</th>
                                             <th>Alamat</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -86,6 +87,7 @@
                                                         class="text-decoration-none">{{ $data->user->name }}</a>
                                                 </td>
                                                 <td>{{ $data->package->jenis_paket }}</td>
+                                                <td>{{ $data->tipe_tagihan }}</td>
                                                 <td>{{ $data->alamat_pemasangan }}</td>
                                                 <td>
                                                     <a href="{{ url('/customer/invoice/' . $data->id) }}"
@@ -211,7 +213,6 @@
                         <input type="hidden" name="hari" value="{{ date('d', strToTime($carbon)) }}">
                         <input type="hidden" name="bulan" value="{{ date('m', strToTime($carbon)) }}">
                         <input type="hidden" name="tahun" value="{{ date('Y', strToTime($carbon)) }}">
-                        <input type="hidden" name="status_tagihan" value="Belum Dibayar" required>
                     </div>
                     <div class="modal-footer justify-content-end">
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</button>
