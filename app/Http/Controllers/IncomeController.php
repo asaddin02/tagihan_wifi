@@ -9,6 +9,8 @@ class IncomeController extends Controller
     // Menampilkan data dari tabel income
     public function index()
     {
+        $title = 'Pendapatan';
+
         $month = request('income_filter_month');
         $year = request('income_filter_year');
         
@@ -27,7 +29,7 @@ class IncomeController extends Controller
         }
 
         $datas = $query->paginate(10);
-        return view('finance.income', compact('datas'));
+        return view('finance.income', compact('title', 'datas'));
     }
 
     // Hapus data dari tabel income

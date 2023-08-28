@@ -7,30 +7,29 @@ use App\Models\Installation;
 use App\Models\Invoice;
 use App\Models\Spending;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    // Menampilkan data dari tabel
+    // Read data
     public function index()
     {
+        $title = 'Home';
+
         // Tanggal
         $date = Carbon::now();
-
         $getMonth = date('m', strToTime($date));
         $getYear = date('Y', strToTime($date));
 
-        // Customer
+        // Get customer
         $customers = Installation::where('status_pemasangan', 'Terpasang')->get();
 
-        // Income Dan Chart Income
+        // Pendapatan
         $incomePerMonth = 0;
         $incomePerYear = 0;
         $incomeChartResult = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
         $incomesMonth = Income::where('bulan', $getMonth)->where('tahun', $getYear)->get();
         $incomesYear = Income::where('tahun', $getYear)->get();
-
         foreach ($incomesMonth as $income) {
             $incomePerMonth += $income->total_pendapatan;
         }
@@ -40,7 +39,7 @@ class HomeController extends Controller
             $incomeChartResult[intval($income->bulan) - 1] = $incomePerMonth;
         }
 
-        // Spending Dan Chart Spending
+        // Pengeluaran
         $spendingPerMonth = 0;
         $spendingPerYear = 0;
         $spendingChartResult = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -51,18 +50,18 @@ class HomeController extends Controller
         foreach ($spendingsMonth as $spending) {
             $spendingPerMonth += $spending->total_pengeluaran;
         }
-        
+
         foreach ($spendingsYear as $spending) {
             $spendingPerYear += $spending->total_pengeluaran;
             $spendingChartResult[intval($spending->bulan) - 1] = $spendingPerMonth;
         }
 
-        // Invoice
+        // Tagihan
         $invoices = Invoice::where('status_tagihan', 'Belum Dibayar')->paginate(10);
 
         // Kerugian
         $loss = $incomePerMonth - $spendingPerMonth;
 
-        return view('homepage', compact('customers', 'incomePerMonth', 'incomePerYear', 'spendingPerMonth', 'spendingPerYear', 'loss', 'invoices', 'incomeChartResult', 'spendingChartResult', 'getYear', 'incomesYear', 'spendingsYear'));
+        return view('homepage', compact('title', 'getYear', 'customers', 'incomesYear', 'spendingsYear', 'incomePerMonth', 'incomePerYear', 'spendingPerMonth', 'spendingPerYear', 'incomeChartResult', 'spendingChartResult', 'invoices', 'loss'));
     }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Log In</title>
+    <title>Sign In</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -18,6 +18,13 @@
 
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="{{ asset('template/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
+    <style>
+        #eye_slash:hover,
+        #eye:hover {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body class="hold-transition login-page">
@@ -31,22 +38,36 @@
                 <p class="login-box-msg">Sign In untuk memulai sesi kamu.</p>
                 <form action="{{ route('user.login') }}" method="post">
                     @csrf
-                    <div class="input-group mb-3">
-                        <input type="email" name="email" value="{{ old('email') }}" class="form-control"
-                            placeholder="Email" required autofocus>
+                    <div class="input-group mb-1">
+                        <input type="email" name="email" value="{{ old('email') }}"
+                            class="form-control @error('email') is-invalid @enderror" placeholder="Email" required
+                            autofocus>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
                             </div>
                         </div>
                     </div>
-                    <div class="input-group mb-5">
-                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <div class="input-group mb-2">
+                        @error('email')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="input-group">
+                        <input type="password" name="password" id="signin_password"
+                            class="form-control @error('password') is-invalid @enderror" placeholder="Password"
+                            required>
                         <div class="input-group-append">
                             <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
+                                <span class="fas fa-eye-slash" id="eye_slash"></span>
+                                <span class="fas fa-eye d-none" id="eye"></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="input-group mb-5">
+                        @error('password')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="row">
                         <div class="col-12">
@@ -72,6 +93,20 @@
             position: 'top',
             showConfirmButton: false,
             timer: 4000
+        });
+
+        $('#eye_slash').click(function(e) {
+            e.preventDefault();
+            $('#eye').toggleClass('d-none');
+            $('#eye_slash').toggleClass('d-none');
+            $('#signin_password').attr('type', 'text');
+        });
+
+        $('#eye').click(function(e) {
+            e.preventDefault();
+            $('#eye_slash').toggleClass('d-none');
+            $('#eye').toggleClass('d-none');
+            $('#signin_password').attr('type', 'password');
         });
     </script>
 

@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Tabel Paket')
+@section('title', $title)
 
 @section('main')
 
@@ -144,9 +144,10 @@
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Tutup</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Simpan</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-primary"
+                                                                    title="Simpan"><i class="fa fa-save"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -167,9 +168,10 @@
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-light"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-light">Hapus</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-light"
+                                                                    title="Hapus"><i class="fa fa-trash"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -291,8 +293,10 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" title="Batal"><i
+                                class="fa fa-times"></i></button>
+                        <button type="submit" class="btn btn-primary" title="Simpan"><i
+                                class="fa fa-save"></i></button>
                     </div>
                 </form>
             </div>

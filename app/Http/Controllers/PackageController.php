@@ -10,6 +10,8 @@ class PackageController extends Controller
     // Menampilkan data dari tabel paket
     public function index()
     {
+        $title = 'Paket';
+        
         $name = request('package_filter_name');
 
         $query = Package::query();
@@ -20,7 +22,7 @@ class PackageController extends Controller
 
         $datas = $query->paginate(10);
 
-        return view('package.table', compact('datas'));
+        return view('package.table', compact('title', 'datas'));
     }
 
     // Menambahkan data ke tabel paket

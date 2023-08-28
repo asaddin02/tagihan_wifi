@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 
 class InstallationController extends Controller
 {
-    // Menunjukkan data dari tabel installation
+    // Read data
     public function getInstallation()
     {
+        $title = 'Instalasi';
+
         $status = request('installation_filter_status');
         $name = request('installation_filter_name');
 
@@ -40,7 +42,7 @@ class InstallationController extends Controller
 
         $datas = $query->paginate(10);
 
-        return view('installation.table', compact('datas', 'packages', 'technisians', 'date'));
+        return view('installation.table', compact('title' ,'datas', 'packages', 'technisians', 'date'));
     }
 
     // Menambah proses installasi
@@ -51,7 +53,7 @@ class InstallationController extends Controller
         $create = Installation::create([
             'package_id' => $request->package_id,
             'user_id' => $latestUser->id,
-            'teknisi_id' => $request->technision_id,
+            'teknisi_id' => $request->teknisi_id,
             'tanggal_pemasangan' => $request->tanggal_pemasangan,
             'alamat_pemasangan' => $request->alamat_pemasangan,
             'status_pemasangan' => 'Belum Terpasang',
@@ -96,21 +98,19 @@ class InstallationController extends Controller
         return back()->with('success', 'Status berhasil di ubah!');
     }
 
-    // Mengubah alamat instalasi
-    public function updateInstallationAddress(Request $request, $id)
+    // Update data instalasi
+    public function updateInstallationData(Request $request, $id)
     {
         $installation = Installation::find($id);
 
-        $update = $installation->update([
-            'alamat_pemasangan' => $request->alamat_pemasangan,
-        ]);
+        $update = $installation->update($request->all());
 
         if ($update) {
             $status = 'success';
-            $message = 'Alamat instalasi berhasil diupdate!';
+            $message = 'Data instalasi berhasil diupdate!';
         } else {
             $status = 'error';
-            $message = 'Alamat instalasi gagal diupdate!';
+            $message = 'Data instalasi gagal diupdate!';
         }
 
         return redirect('installation')->with($status, $message);

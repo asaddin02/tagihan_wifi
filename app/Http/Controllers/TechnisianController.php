@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Installation;
 use App\Models\Technisian;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,8 @@ class TechnisianController extends Controller
     // Menampilkan data dari tabel teknisi
     public function index()
     {
+        $title = 'Teknisi';
+
         $name = request('technisian_filter_name');
 
         $query = Technisian::query();
@@ -20,11 +23,11 @@ class TechnisianController extends Controller
 
         $datas = $query->paginate(10);
 
-        return view('employee.technisi', compact('datas'));
+        return view('employee.technisi', compact('title', 'datas'));
     }
 
     // Link ke whatsapp
-    public function whatsapp(Request $request) 
+    public function whatsapp(Request $request)
     {
         $country = '62';
         $phone_number = ltrim($request->no_telepon, '0');
@@ -36,7 +39,21 @@ class TechnisianController extends Controller
     // Menambah data ke tabel teknisi
     public function create(Request $request)
     {
-        $create = Technisian::create($request->all());
+        $validate = $request->validate(
+            [
+                'nama_teknisi' => ['required', 'string', 'min:5', 'max:20'],
+                'alamat' => ['required', 'string', 'min:5', 'max:50'],
+                'no_telepon' => ['required', 'numeric'],
+            ],
+            [
+                'nama_teknisi.min' => 'Nama minimal :min karakter.',
+                'nama_teknisi.max' => 'Nama maksimal :max karakter.',
+                'alamat.min' => 'Alamat minimal :min karakter.',
+                'alamat.max' => 'Alamat maksimal :max karakter.',
+            ]
+        );
+
+        $create = Technisian::create($validate);
 
         if ($create) {
             $status = 'success';
@@ -69,7 +86,10 @@ class TechnisianController extends Controller
     // Menghapus data dari tabel teknisi
     public function delete($id)
     {
+        $checkTechnisian = Installation::where('teknisi_id', $id)->first();
         $technisian = Technisian::find($id);
+
+        if (isset($checkTechnisian)) return redirect('technic')->with('error', 'Teknisi masih berhubungan dengan instalasi!');
 
         $delete = $technisian->delete();
 
@@ -80,7 +100,7 @@ class TechnisianController extends Controller
             $status = 'error';
             $message = 'Data gagal dihapus';
         }
-        
+
         return redirect('technic')->with($status, $message);
     }
 }

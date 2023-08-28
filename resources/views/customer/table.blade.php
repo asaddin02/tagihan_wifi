@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Tabel Customer')
+@section('title', $title)
 
 @section('main')
 
@@ -35,7 +35,8 @@
                                     <span>Customer diambil dari instalasi yang berstatus terpasang.</span>
                                 </li>
                                 <li>
-                                    <span>Customer mendapatkan tagihan bulanan ketika instalasi yang berstatus terpasang.</span>
+                                    <span>Customer mendapatkan tagihan bulanan ketika instalasi yang berstatus
+                                        terpasang.</span>
                                 </li>
                             </ul>
                         </div>
@@ -72,7 +73,6 @@
                                             <th>Id Customer</th>
                                             <th>Nama</th>
                                             <th>Jenis Paket</th>
-                                            <th>Tipe Tagihan</th>
                                             <th>Alamat</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -87,7 +87,6 @@
                                                         class="text-decoration-none">{{ $data->user->name }}</a>
                                                 </td>
                                                 <td>{{ $data->package->jenis_paket }}</td>
-                                                <td>{{ $data->tipe_tagihan }}</td>
                                                 <td>{{ $data->alamat_pemasangan }}</td>
                                                 <td>
                                                     <a href="{{ url('/customer/invoice/' . $data->id) }}"
@@ -202,17 +201,14 @@
                                 <p>: {{ date('Y', strToTime($carbon)) }}</p>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-4">
-                                <p class="fw-bold">Keterangan</p>
-                            </div>
-                            <div class="col-sm-8">
-                                <p>: Tagihan ini untuk semua customer</p>
-                            </div>
+                        <div class="alert alert-info text-start" role="alert">
+                            <p>Note :</p>
+                            <ul>
+                                <li>
+                                    <span>Tagihan ini untuk semua customer yang tanggal pemasangannya sudah 1 bulan.</span>
+                                </li>
+                            </ul>
                         </div>
-                        <input type="hidden" name="hari" value="{{ date('d', strToTime($carbon)) }}">
-                        <input type="hidden" name="bulan" value="{{ date('m', strToTime($carbon)) }}">
-                        <input type="hidden" name="tahun" value="{{ date('Y', strToTime($carbon)) }}">
                     </div>
                     <div class="modal-footer justify-content-end">
                         <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Tambah</button>

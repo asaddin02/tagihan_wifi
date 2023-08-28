@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Tabel Pengeluaran')
+@section('title', $title)
 
 @section('main')
 
@@ -162,10 +162,17 @@
                                                                     <label class="col-sm-4 col-form-label">Total
                                                                         Pengeluaran</label>
                                                                     <div class="col-sm-8">
-                                                                        <input type="number" class="form-control"
-                                                                            name="total_pengeluaran" value="{{ $data->total_pengeluaran }}" min="1"
-                                                                            max="100000000" placeholder="max : 100.000.000"
-                                                                            autofocus required>
+                                                                        <input type="number"
+                                                                            class="form-control @error('total_pengeluaran') is-invalid @enderror"
+                                                                            name="total_pengeluaran"
+                                                                            value="{{ $data->total_pengeluaran }}"
+                                                                            min="1" max="100000000"
+                                                                            placeholder="max : 100.000.000" autofocus
+                                                                            required>
+                                                                        @error('total_pengeluaran')
+                                                                            <span
+                                                                                class="text-danger ms-2">{{ $message }}</span>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
@@ -174,17 +181,19 @@
                                                                     <div class="col-sm-8">
                                                                         <input type="text" class="form-control"
                                                                             id="edit-keterangan-pengeluaran"
-                                                                            name="keterangan" value="{{ $data->keterangan }}"
+                                                                            name="keterangan"
+                                                                            value="{{ $data->keterangan }}"
                                                                             placeholder="min : 10 karakter" minlength="10"
-                                                                            required>
+                                                                            maxlength="50" required>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Tutup</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Simpan</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-primary"
+                                                                    title="Simpan"><i class="fa fa-save"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -204,9 +213,10 @@
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-light"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-light">Hapus</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-light"
+                                                                    title="Hapus"><i class="fa fa-trash"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -322,21 +332,29 @@
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Total Pengeluaran</label>
                             <div class="col-sm-8">
-                                <input type="number" class="form-control" name="total_pengeluaran" min="1"
-                                    max="100000000" placeholder="max : 100.000.000" autofocus required>
+                                <input type="number"
+                                    class="form-control @error('total_pengeluaran') is-invalid @enderror"
+                                    name="total_pengeluaran" min="1" max="100000000"
+                                    placeholder="max : 100.000.000" autofocus required>
+                                @error('total_pengeluaran')
+                                    <span class="text-danger ms-2">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Keterangan</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control" id="edit-keterangan-pengeluaran"
-                                    name="keterangan" placeholder="min : 10 karakter" minlength="10" required>
+                                    name="keterangan" placeholder="min : 10 karakter" minlength="10" maxlength="50"
+                                    required>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" title="Batal"><i
+                                class="fa fa-times"></i></button>
+                        <button type="submit" class="btn btn-primary" title="Simpan"><i
+                                class="fa fa-save"></i></button>
                     </div>
                 </form>
             </div>

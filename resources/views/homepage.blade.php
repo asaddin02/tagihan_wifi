@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Homepage')
+@section('title', $title)
 
 @section('main')
 
@@ -13,7 +13,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-decoration-none">Home</a></li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -142,9 +142,6 @@
             <!-- Main row -->
             <div class="row">
                 <section class="col-lg-6 connectedSortable">
-
-                </section>
-                <section class="col-lg-6 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
                     @if (Auth::user()->role == 'Customer Service')
                         <div class="card">
@@ -184,7 +181,8 @@
                                                 <div class="modal fade" id="whatsapp-customer{{ $data->id }}">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
-                                                            <form action="{{ route('whatsapp.customer') }}" method="POST">
+                                                            <form action="{{ route('whatsapp.customer') }}"
+                                                                method="POST">
                                                                 @csrf
                                                                 <div class="modal-body">
                                                                     <h4 class="modal-title">Ini akan mengarahkan ke
@@ -290,6 +288,8 @@
                         </div>
                     @endif
                 </section>
+                <section class="col-lg-6 connectedSortable">
+                </section>
             </div>
             <!-- /.row (main row) -->
         </div><!-- /.container-fluid -->
@@ -298,74 +298,76 @@
 
 @endsection
 
-@section('script')
-    <script>
-        var areaChartData = {
-            labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober',
-                'November', 'Desember'
-            ],
-            datasets: [{
-                    label: 'Pendapatan',
-                    backgroundColor: '#198754',
-                    borderColor: '#198754',
-                    pointRadius: false,
-                    pointColor: '#198754',
-                    pointStrokeColor: '#198754',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: '#198754',
-                    data: {!! json_encode($incomeChartResult) !!}
-                },
-                {
-                    label: 'Pengeluaran',
-                    backgroundColor: '#DC3545',
-                    borderColor: '#DC3545',
-                    pointRadius: false,
-                    pointColor: '#DC3545',
-                    pointStrokeColor: '#c1c7d1',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: '#DC3545',
-                    data: {!! json_encode($spendingChartResult) !!}
-                },
-            ]
-        }
-
-        var areaChartOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
-            legend: {
-                display: false
-            },
-            scales: {
-                xAxes: [{
-                    gridLines: {
-                        display: false,
-                    }
-                }],
-                yAxes: [{
-                    gridLines: {
-                        display: false,
-                    }
-                }]
+@if (Auth::user()->role == 'Admin')
+    @section('script')
+        <script>
+            var areaChartData = {
+                labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober',
+                    'November', 'Desember'
+                ],
+                datasets: [{
+                        label: 'Pendapatan',
+                        backgroundColor: '#198754',
+                        borderColor: '#198754',
+                        pointRadius: false,
+                        pointColor: '#198754',
+                        pointStrokeColor: '#198754',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: '#198754',
+                        data: {!! json_encode($incomeChartResult) !!}
+                    },
+                    {
+                        label: 'Pengeluaran',
+                        backgroundColor: '#DC3545',
+                        borderColor: '#DC3545',
+                        pointRadius: false,
+                        pointColor: '#DC3545',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: '#DC3545',
+                        data: {!! json_encode($spendingChartResult) !!}
+                    },
+                ]
             }
-        }
 
-        var barChartCanvas = $('#barChart').get(0).getContext('2d')
-        var barChartData = $.extend(true, {}, areaChartData)
-        var temp0 = areaChartData.datasets[0]
-        var temp1 = areaChartData.datasets[1]
-        barChartData.datasets[0] = temp1
-        barChartData.datasets[1] = temp0
+            var areaChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }]
+                }
+            }
 
-        var barChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            datasetFill: false
-        }
+            var barChartCanvas = $('#barChart').get(0).getContext('2d')
+            var barChartData = $.extend(true, {}, areaChartData)
+            var temp0 = areaChartData.datasets[0]
+            var temp1 = areaChartData.datasets[1]
+            barChartData.datasets[0] = temp1
+            barChartData.datasets[1] = temp0
 
-        new Chart(barChartCanvas, {
-            type: 'bar',
-            data: barChartData,
-            options: barChartOptions
-        })
-    </script>
-@endsection
+            var barChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+        </script>
+    @endsection
+@endif

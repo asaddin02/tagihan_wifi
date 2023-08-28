@@ -13,6 +13,8 @@ class CustomerController extends Controller
     // Menampilkan data dari tabel instalasi
     public function index()
     {
+        $title = 'Customer';
+
         $name = request('customer_filter_name');
 
         $query = Installation::query();
@@ -28,7 +30,7 @@ class CustomerController extends Controller
 
         $datas = $query->paginate(10);
 
-        return view('customer.table', compact('datas', 'carbon'));
+        return view('customer.table', compact('title', 'datas', 'carbon'));
     }
 
     // Detail customer
@@ -42,16 +44,19 @@ class CustomerController extends Controller
     // Detail invoice
     public function invoice($id)
     {
+        $title = 'Tagihan';
+        
         $reqMonth = request('invoice_filter_month');
         $reqYear = request('invoice_filter_year');
         $status = request('invoice_filter_status');
 
         $query = Invoice::query();
+        
         $carbon = Carbon::now();
         $month = date('m', strtotime($carbon));
         $year = date('Y', strtotime($carbon));
-        $installation = Installation::find($id);
 
+        $installation = Installation::find($id);
         $invoiceCheck = Invoice::where('status_tagihan', 'Belum Dibayar')->first();
 
         if ($reqMonth != '' && $reqMonth != 'All') {
@@ -70,7 +75,7 @@ class CustomerController extends Controller
 
         $datas = $query->paginate(10);
 
-        return view('customer.invoice', compact('datas', 'carbon', 'month', 'year', 'installation', 'invoiceCheck'));
+        return view('customer.invoice', compact('title', 'datas', 'carbon', 'month', 'year', 'installation', 'invoiceCheck'));
     }
 
     // Whatsapp

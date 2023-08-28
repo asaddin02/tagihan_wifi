@@ -11,6 +11,8 @@ class SpendingController extends Controller
     // Menampilkan data dari tabel spending
     public function index()
     {
+        $title = 'Pengeluaran';
+
         $month = request('spending_filter_month');
         $year = request('spending_filter_year');
         
@@ -31,12 +33,16 @@ class SpendingController extends Controller
 
         $datas = $query->paginate(10);
         
-        return view('finance.spending', compact('datas', 'carbon'));
+        return view('finance.spending', compact('title', 'datas', 'carbon'));
     }
 
     // Menambahkan data ke tabel spending
     public function store(Request $request)
     {
+        $request->validate([
+            'total_pengeluaran' => ['required', 'numeric'],
+        ]);
+
         $create = Spending::create($request->all());
 
         if ($create) {
@@ -53,6 +59,10 @@ class SpendingController extends Controller
     // Update data dari tabel spending
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'total_pengeluaran' => ['required', 'numeric'],
+        ]);
+
         $spending = Spending::find($id);
 
         $update = $spending->update([

@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Tabel Tagihan')
+@section('title', $title)
 
 @section('main')
 
@@ -160,13 +160,14 @@
                                                                     title="Whatsapp">
                                                                     <i class="fa fa-phone"></i>
                                                                 </button>
+                                                            @else
+                                                                <button type="button" class="btn btn-info"
+                                                                    data-toggle="modal"
+                                                                    data-target="#info-tagihan-customer{{ $data->id }}"
+                                                                    title="Info">
+                                                                    <i class="fa fa-info-circle text-white"></i>
+                                                                </button>
                                                             @endif
-                                                        @else
-                                                            <button type="button" class="btn btn-info" data-toggle="modal"
-                                                                data-target="#info-tagihan-customer{{ $data->id }}"
-                                                                title="Info">
-                                                                <i class="fa fa-info-circle text-white"></i>
-                                                            </button>
                                                         @endif
                                                     @endif
                                                 </td>
@@ -230,13 +231,9 @@
                                                                 @if (isset($invoiceCheck))
                                                                     @if ($month == $invoiceCheck->bulan && $year == $invoiceCheck->tahun)
                                                                         <div class="form-group row">
-                                                                            <div class="col-sm-4">
-                                                                                <p class="fw-bold">Double
+                                                                            <div class="col-sm-5">
+                                                                                <p class="fw-bold">Pembayaran Double
                                                                                 </p>
-                                                                            </div>
-                                                                            <div class="col-sm-8">
-                                                                                <input type="checkbox" name=""
-                                                                                    id="">
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group row">
@@ -245,7 +242,7 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div class="col-sm-8">
-                                                                                <select name="sampai_bulan" id=""
+                                                                                <select name="sampai_bulan"
                                                                                     class="form-control">
                                                                                     <option value="null" hidden>-- Pilih
                                                                                         Bulan --
@@ -275,14 +272,11 @@
                                                                                 </p>
                                                                             </div>
                                                                             <div class="col-sm-8">
-                                                                                <select name="sampai_tahun" id=""
+                                                                                <select name="sampai_tahun"
                                                                                     class="form-control">
                                                                                     <option value="null" hidden>-- PIlih
                                                                                         Tahun --
                                                                                     </option>
-                                                                                    <option value="2020">2020</option>
-                                                                                    <option value="2021">2021</option>
-                                                                                    <option value="2022">2022</option>
                                                                                     <option value="2023">2023</option>
                                                                                     <option value="2024">2024</option>
                                                                                     <option value="2025">2025</option>
@@ -293,6 +287,17 @@
                                                                                     <option value="2030">2030</option>
                                                                                 </select>
                                                                             </div>
+                                                                        </div>
+                                                                        <div class="alert alert-info text-start" role="alert">
+                                                                            <p>Note :</p>
+                                                                            <ul>
+                                                                                <li>
+                                                                                    <span>Jika tidak ada pembayaran double maka lewati dan klik tombol bayar.</span>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <span>Pastikan ketika ada pembayaran double (Sampai Bulan) dan (Sampai Tahun) harus diisi.</span>
+                                                                                </li>
+                                                                            </ul>
                                                                         </div>
                                                                     @endif
                                                                 @endif

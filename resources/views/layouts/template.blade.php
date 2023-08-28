@@ -187,7 +187,7 @@
             inputText.each(function(index, element) {
                 $(element).on("input", function() {
                     let inputTextValue = $(this).val().toString();
-                    if (inputTextValue.length < 3 && inputTextValue.length != 0) {
+                    if (inputTextValue.length < 5 && inputTextValue.length != 0) {
                         $('.input-text-alert').removeClass('d-none');
                     } else {
                         $('.input-text-alert').addClass('d-none');
@@ -208,7 +208,7 @@
 
             inputTextArea.on("input", function() {
                 let inputTextValue = $(this).val().toString();
-                if (inputTextValue.length < 3 && inputTextValue.length != 0) {
+                if (inputTextValue.length < 5 && inputTextValue.length != 0) {
                     $('.input-text-area-alert').removeClass('d-none');
                 } else {
                     $('.input-text-area-alert').addClass('d-none');

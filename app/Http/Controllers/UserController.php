@@ -12,138 +12,182 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    // Membaca data tabel
+    // Read data
     public function index()
     {
+        $title = 'Profile';
+
         $user = User::find(Auth::user()->id);
-        return view('profile.userprofile', compact('user'));
+
+        return view('profile.userprofile', compact('title', 'user'));
     }
 
-    // Menambahkan data tabel
+    // Create data tabel
     public function store(Request $request)
     {
         $checkId = User::where('user_id', $request->user_id)->first();
         $checkEmail = User::where('email', $request->email)->first();
 
-        if (isset($checkId)) {
-            $status = 'error';
-            $message = 'User id tersebut sudah ada!';
-        } elseif (isset($checkEmail)) {
-            $status = 'error';
-            $message = 'Email tersebut sudah ada!';
-        } else {
-            $validate = $request->validate([
-                'user_id' => ['required'],
-                'name' => ['required'],
+        if (isset($checkId) && isset($checkEmail)) return redirect('installation')->with('error', 'User Id atau Email sudah ada!');
+
+        $validate = $request->validate(
+            [
+                'user_id' => ['required', 'numeric', 'unique:users'],
+                'name' => ['required', 'string', 'min:5', 'max:20'],
                 'no_telepon' => ['required', 'numeric'],
                 'email' => ['required', 'email', 'unique:users'],
                 'password' => ['required'],
                 'role' => ['required'],
-            ]);
+            ],
+            [
+                'user_id.numeric' => 'Inputan harus berupa angka.',
+                'user_id.unique' => 'User Id tersebut sudah ada.',
+                'name.min' => 'Nama minimal :min karakter.',
+                'email.unique' => 'Email tersebut sudah ada.',
+            ]
+        );
 
-            $hash = Hash::make($validate['password']);
-            $validate['password'] = $hash;
-            $create = User::create($validate);
+        $hash = Hash::make($validate['password']);
+        $validate['password'] = $hash;
+        $create = User::create($validate);
 
-            if ($create) {
-                $status = 'user_created';
-                $message = true;
-            } else {
-                $status = 'error';
-                $message = 'Isi data user dengan benar!';
-            }
+        if ($create) {
+            $status = 'user_created';
+            $message = true;
+        } else {
+            $status = 'error';
+            $message = 'Isi data dengan benar!';
         }
 
         return redirect('installation')->with($status, $message);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Update foto
+    public function photoUpdate(Request $request, $id)
     {
-    }
+        $validate = $request->validate(
+            [
+                'photo_profile' => ['required', 'image', 'file', 'max:5000'],
+            ],
+            [
+                'photo_profile.max' => 'File maksimal 5 MB.',
+            ]
+        );
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update data user yang login
-     */
-    public function update(Request $request, string $id)
-    {
         $user = User::find($id);
-        if ($request->file('photo_profile')) {
-            // Update gambar
-            $gambar = $request->validate([
-                'file' => 'required|mimes:jpg,png,jpeg|max:5120'
-            ], [
-                'file.required' => 'tidak ada foto yang diunggah',
-                'file.mimes' => 'format foto harus jpg,png atau jpeg',
-                'file.max' => 'ukuran maksimal 5MB'
-            ]);
-            $user['photo_profile'] = Storage::put('photo_profile', $gambar);
-            $user['photo_profile']->update($gambar);
-        } elseif ($request->input('password')) {
-            // Update password
-            $validate = Validator::make($request->all(), [
-                'password' => ['required', 'confirmed'],
-            ]);
-            if ($validate->fails()) {
-                dd($validate);
-                return redirect()->back();
-            }
-            $user->update([
-                'password' => Hash::make($request->input('password'))
-            ]);
-            session()->flush();
-            return redirect('login');
-        } else {
-            // Update data normal
-            $validate = Validator::make($request->all(), [
-                'name' => ['required', 'string'],
-                'email' => ['required', 'string', 'email', 'unique:users'],
-                'no_telepon' => ['required', 'numeric'],
-            ]);
-            if ($validate->fails()) {
-                return redirect()->back();
-            }
-            $user->update($request->all());
-            return redirect()->back();
+
+        $check = $user->photo_profile;
+
+        if ($check != null && Storage::exists($check)) {
+            Storage::delete($check);
         }
+
+        $validate['photo_profile'] = $request->file('photo_profile')->store('profile');
+        $update = $user->update($validate);
+
+        if ($update) {
+            $status = 'success';
+            $message = 'Foto berhasil diupload!';
+        } else {
+            $status = 'error';
+            $message = 'Foto gagal diupload!';
+        }
+
+        return back()->with($status, $message);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    // Update profil
+    public function profileUpdate(Request $request, $id)
     {
-        //
+        $validate = $request->validate(
+            [
+                'name' => ['required', 'string', 'min:10'],
+                'email' => ['required', 'email'],
+                'no_telepon' => ['required', 'min:8'],
+            ],
+            [
+                'name.min' => 'Nama minimal :min karakter.',
+                'email.email' => 'Masukkan email dengan benar.',
+                'no_telepon.min' => 'Nomor minimal :min karakter.',
+            ]
+        );
+
+        $user = User::find($id);
+        $checkEmailPhone = User::where('email', $request->email)->where('no_telepon', $request->no_telepon)->first();
+
+        if (isset($checkEmailPhone)) {
+            if ($id == $checkEmailPhone->id) {
+                $user->update($validate);
+                return back()->with('success', 'Data berhasil diupdate.');
+            }
+        }
+
+        return back()->with('error', 'Email atau Nomor sudah digunakan.');
     }
 
-    // Login User
+    // Update password
+    public function passwordUpdate(Request $request, $id)
+    {
+        $request->validate(
+            [
+                'old_password' => ['required'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+            ],
+            [
+                'password.min' => 'Password minimal :min karakter.',
+                'password.confirmed' => 'Password tidak cocok.',
+            ]
+        );
+
+        $user = User::find($id);
+        $checkOldPass = Hash::check($request->old_password, $user->password);
+
+        if ($checkOldPass == false) return back()->with('error', 'Password lama anda salah!');
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        Auth::logout();
+
+        request()->session()->invalidate();
+
+        request()->session()->regenerateToken();
+
+        return redirect('login')->with('success', 'Password berhasil diupdate, silahkan login kembali.');
+    }
+
+    // Login
     public function login(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->validate(
+            [
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ],
+            [
+                'email.email' => 'Masukkan email dengan benar.',
+            ]
+        );
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/')->with('success', 'Selamat datang');
+            return redirect()->intended('/')->with('success', 'Selamat datang.');
         }
+
         return back()->with('error', 'Pastikan email dan password benar');
     }
 
-    public function logout()
+    // Logout
+    public function logout(): RedirectResponse
     {
-        session()->flush();
-        return redirect('login');
+        Auth::logout();
+
+        request()->session()->invalidate();
+
+        request()->session()->regenerateToken();
+
+        return redirect('login')->with('success', 'Log Out berhasil.');
     }
 }

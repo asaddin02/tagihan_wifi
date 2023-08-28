@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Tabel Customer Service')
+@section('title', $title)
 
 @section('main')
 
@@ -58,7 +58,6 @@
                                             <th>Nama</th>
                                             <th>Email</th>
                                             <th>Nomor Telepon</th>
-                                            <th>Foto</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -70,7 +69,6 @@
                                                 <td>{{ $data->name }}</td>
                                                 <td>{{ $data->email }}</td>
                                                 <td>{{ $data->no_telepon }}</td>
-                                                <td>{{ $data->photo_profile }}</td>
                                                 <td>
                                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                                         data-target="#edit-cs{{ $data->id }}" title="Edit">
@@ -97,54 +95,67 @@
                                                             </button>
                                                         </div>
                                                         <form class="form-horizontal"
-                                                            action="{{ route('cs.update', $data->id) }}" method="post" autocomplete="off">
+                                                            action="{{ route('cs.update', $data->id) }}" method="post"
+                                                            autocomplete="off">
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="modal-body">
                                                                 <div class="form-group row">
-                                                                    <label class="col-sm-4 col-form-label">User Id</label>
+                                                                    <label class="col-sm-4 col-form-label">ID User</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="number" name="user_id"
-                                                                            class="form-control"
-                                                                            value="{{ $data->user_id }}"
-                                                                            placeholder="ex : 0000" min="1"
-                                                                            max="9999" autofocus required>
+                                                                            class="form-control @error('user_id') is-invalid @enderror"
+                                                                            placeholder="ex : 0000"
+                                                                            value="{{ $data->user_id }}" autofocus
+                                                                            required>
                                                                         <p
-                                                                            class="text-danger mt-1 ms-3 d-none input-number-alert">
-                                                                            Nomor Id
-                                                                            maksimal 4
+                                                                            class="text-danger mt-1 d-none input-number-alert">
+                                                                            User Id maksimal 4
                                                                             karakter.</p>
+                                                                        @error('user_id')
+                                                                            <span
+                                                                                class="text-danger mt-1">{{ $message }}</span>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
                                                                     <label class="col-sm-4 col-form-label">Nama
-                                                                        CS</label>
+                                                                        Lengkap</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="text" name="name"
-                                                                            class="form-control"
-                                                                            value="{{ $data->name }}"
-                                                                            placeholder="ex : Nama" minlength="3"
-                                                                            maxlength="15" required>
+                                                                            class="form-control @error('name') is-invalid @enderror"
+                                                                            placeholder="ex : Nama User"
+                                                                            value="{{ $data->name }}" minlength="5"
+                                                                            maxlength="20" required>
                                                                         <p
                                                                             class="text-danger mt-1 ms-3 d-none input-text-alert">
-                                                                            Nama minimal 3 karakter.
+                                                                            Nama minimal 5 karakter.
                                                                         </p>
+                                                                        @error('name')
+                                                                            <span
+                                                                                class="text-danger mt-1">{{ $message }}</span>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
                                                                     <label class="col-sm-4 col-form-label">Email</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="email" name="email"
-                                                                            class="form-control"
-                                                                            value="{{ $data->email }}" required>
+                                                                            class="form-control @error('email') is-invalid @enderror"
+                                                                            value="{{ $data->email }}"
+                                                                            placeholder="ex : example@gmail.com" required>
+                                                                        @error('email')
+                                                                            <span
+                                                                                class="text-danger mt-1">{{ $message }}</span>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
-                                                                    <label class="col-sm-4 col-form-label">Nomor
+                                                                    <label class="col-sm-4 col-form-label">No
                                                                         Telepon</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="tel" name="no_telepon"
-                                                                            class="form-control"
+                                                                            class="form-control @error('no_telepon') is-invalid @enderror"
                                                                             value="{{ $data->no_telepon }}"
                                                                             placeholder="ex : 08**********"
                                                                             pattern="(0)8[1-9][0-9]{6,9}$" required>
@@ -152,14 +163,19 @@
                                                                             class="text-danger mt-1 ms-3 d-none input-tel-alert">
                                                                             Nomor hp maksimal
                                                                             12 karakter</p>
+                                                                        @error('no_telepon')
+                                                                            <span
+                                                                                class="text-danger mt-1">{{ $message }}</span>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Tutup</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Simpan</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-primary"
+                                                                    title="Simpan"><i class="fa fa-save"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -180,9 +196,10 @@
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-light"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-light">Hapus</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-light"
+                                                                    title="Hapus"><i class="fa fa-trash"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -205,8 +222,11 @@
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-primary">Ya</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-primary"
+                                                                    title="Arahkan"><i
+                                                                        class="fa fa-long-arrow-alt-right"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -293,41 +313,58 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">User Id</label>
+                            <label class="col-sm-4 col-form-label">ID User</label>
                             <div class="col-sm-8">
-                                <input type="number" name="user_id" class="form-control" placeholder="ex : 0000"
-                                    min="1" max="9999" autofocus required>
-                                <p class="text-danger mt-1 ms-3 d-none input-number-alert">Nomor Id maksimal 4
+                                <input type="number" name="user_id"
+                                    class="form-control @error('user_id') is-invalid @enderror" placeholder="ex : 0000"
+                                    value="{{ old('user_id') }}" autofocus required>
+                                <p class="text-danger mt-1 d-none input-number-alert">User Id maksimal 4
                                     karakter.</p>
+                                @error('user_id')
+                                    <span class="text-danger mt-1">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Nama
-                                CS</label>
+                            <label class="col-sm-4 col-form-label">Nama Lengkap</label>
                             <div class="col-sm-8">
-                                <input type="text" name="name" class="form-control" placeholder="ex : Nama"
-                                    minlength="3" maxlength="15" required>
-                                <p class="text-danger mt-1 ms-3 d-none input-text-alert">Nama minimal 3 karakter.
+                                <input type="text" name="name"
+                                    class="form-control @error('name') is-invalid @enderror" placeholder="ex : Nama User"
+                                    value="{{ old('name') }}" minlength="5" maxlength="20" required>
+                                <p class="text-danger mt-1 ms-3 d-none input-text-alert">Nama minimal 5 karakter.
                                 </p>
+                                @error('name')
+                                    <span class="text-danger mt-1">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Email</label>
                             <div class="col-sm-8">
-                                <input type="email" name="email" class="form-control"
+                                <input type="email" name="email"
+                                    class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}"
                                     placeholder="ex : example@gmail.com" required>
+                                @error('email')
+                                    <span class="text-danger mt-1">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-4 col-form-label">Nomor
-                                Telepon</label>
+                            <label class="col-sm-4 col-form-label">No Telepon</label>
                             <div class="col-sm-8">
-                                <input type="tel" name="no_telepon" class="form-control"
-                                    placeholder="ex : 08**********" pattern="(0)8[1-9][0-9]{6,9}$" required>
+                                <input type="tel" name="no_telepon"
+                                    class="form-control @error('no_telepon') is-invalid @enderror"
+                                    value="{{ old('no_telepon') }}" placeholder="ex : 08**********"
+                                    pattern="(0)8[1-9][0-9]{6,9}$" required>
                                 <p class="text-danger mt-1 ms-3 d-none input-tel-alert">Nomor hp maksimal
                                     12 karakter</p>
+                                @error('no_telepon')
+                                    <span class="text-danger mt-1">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
+                        <input type="hidden" name="password" value="cs123" required>
+                        <input type="hidden" name="role" value="Customer Service" required>
                         <div class="alert alert-info text-start" role="alert">
                             <p>Note :</p>
                             <ul>
@@ -337,11 +374,11 @@
                             </ul>
                         </div>
                     </div>
-                    <input type="hidden" name="password" value="cs123" required>
-                    <input type="hidden" name="role" value="Customer Service" required>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" title="Batal"><i
+                                class="fa fa-times"></i></button>
+                        <button type="submit" class="btn btn-primary" title="Simpan"><i
+                                class="fa fa-save"></i></button>
                     </div>
                 </form>
             </div>

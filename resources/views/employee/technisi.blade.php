@@ -1,6 +1,6 @@
 @extends('layouts.template')
 
-@section('title', 'Tabel Teknisi')
+@section('title', $title)
 
 @section('main')
 
@@ -107,25 +107,29 @@
                                                                         Teknisi</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="text" name="nama_teknisi"
-                                                                            class="form-control"
+                                                                            class="form-control @error('nama_teknisi') is-invalid @enderror"
                                                                             value="{{ $data->nama_teknisi }}"
-                                                                            placeholder="ex : Nama" minlength="3"
-                                                                            maxlength="15" autofocus required>
+                                                                            placeholder="ex : Nama" minlength="5"
+                                                                            maxlength="20" autofocus required>
                                                                         <p
                                                                             class="text-danger mt-1 ms-3 d-none input-text-alert">
-                                                                            Nama minimal 3 karakter.
+                                                                            Nama minimal 5 karakter.
                                                                         </p>
+                                                                        @error('nama_teknisi')
+                                                                            <span
+                                                                                class="text-danger mt-1 ms-2">{{ $message }}</span>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group row">
                                                                     <label class="col-sm-4 col-form-label">Alamat
                                                                         Teknisi</label>
                                                                     <div class="col-sm-8">
-                                                                        <textarea name="alamat" class="form-control text-area" cols="1" rows="1" placeholder="alamat lengkap"
-                                                                            minlength="3" required>{{ $data->alamat }}</textarea>
+                                                                        <textarea name="alamat" class="form-control text-area @error('alamat') is-invalid @enderror" cols="1"
+                                                                            rows="1" placeholder="alamat lengkap" minlength="5" maxlength="50" required>{{ $data->alamat }}</textarea>
                                                                         <p
                                                                             class="text-danger mt-1 ms-3 d-none input-text-area-alert">
-                                                                            Alamat minimal 3 karakter.
+                                                                            Alamat minimal 5 karakter.
                                                                         </p>
                                                                     </div>
                                                                 </div>
@@ -134,7 +138,7 @@
                                                                         Telepon</label>
                                                                     <div class="col-sm-8">
                                                                         <input type="tel" name="no_telepon"
-                                                                            class="form-control"
+                                                                            class="form-control @error('no_telepon') is-invalid @enderror"
                                                                             value="{{ $data->no_telepon }}"
                                                                             placeholder="ex : 08**********"
                                                                             pattern="(0)8[1-9][0-9]{6,9}$" required>
@@ -142,14 +146,19 @@
                                                                             class="text-danger mt-1 ms-3 d-none input-tel-alert">
                                                                             Nomor hp maksimal
                                                                             12 karakter</p>
+                                                                        @error('no_telepon')
+                                                                            <span
+                                                                                class="text-danger mt-1 ms-2">{{ $message }}</span>
+                                                                        @enderror
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Tutup</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Simpan</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-primary"
+                                                                    title="Simpan"><i class="fa fa-save"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -165,12 +174,26 @@
                                                             <div class="modal-body">
                                                                 <h4 class="modal-title">Yakin mau hapus?
                                                                     {{ $data->nama_teknisi }}</h4>
+                                                                <div class="alert alert-info mt-2">
+                                                                    <p class="mb-2">Note :</p>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <p class="mb-2">Cek teknisi apakah ada yang
+                                                                                berhubungan dengan instalasi.</p>
+                                                                        </li>
+                                                                        <li>
+                                                                            <p class="mb-2">Jika ada maka ganti dulu
+                                                                                teknisi di instalasi.</p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-light"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-light">Hapus</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-light"
+                                                                    title="Hapus"><i class="fa fa-trash"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -193,8 +216,11 @@
                                                             </div>
                                                             <div class="modal-footer justify-content-between">
                                                                 <button type="button" class="btn btn-danger"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-primary">Ya</button>
+                                                                    data-dismiss="modal" title="Batal"><i
+                                                                        class="fa fa-times"></i></button>
+                                                                <button type="submit" class="btn btn-primary"
+                                                                    title="Arahkan"><i
+                                                                        class="fa fa-long-arrow-alt-right"></i></button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -286,39 +312,52 @@
                             <label class="col-sm-4 col-form-label">Nama
                                 Teknisi</label>
                             <div class="col-sm-8">
-                                <input type="text" name="nama_teknisi" class="form-control" placeholder="ex : Nama"
-                                    minlength="3" maxlength="15" autofocus required>
-                                <p class="text-danger mt-1 ms-3 d-none input-text-alert">
-                                    Nama minimal 3 karakter.
+                                <input type="text" name="nama_teknisi"
+                                    class="form-control @error('nama_teknisi') is-invalid @enderror"
+                                    placeholder="ex : Nama" minlength="5" maxlength="20" autofocus required>
+                                <p class="text-danger mt-1 ms-2 d-none input-text-alert">
+                                    Nama minimal 5 karakter.
                                 </p>
+                                @error('nama_teknisi')
+                                    <span class="text-danger mt-1 ms-2">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Alamat
                                 Teknisi</label>
                             <div class="col-sm-8">
-                                <textarea name="alamat" class="form-control text-area" cols="1" rows="1" placeholder="alamat lengkap"
-                                    minlength="3" required></textarea>
+                                <textarea name="alamat" class="form-control text-area @error('alamat') is-invalid @enderror" cols="1"
+                                    rows="1" placeholder="alamat lengkap" minlength="5" maxlength="50" required></textarea>
                                 <p class="text-danger mt-1 ms-3 d-none input-text-area-alert">
-                                    Alamat minimal 3 karakter.
+                                    Alamat minimal 5 karakter.
                                 </p>
+                                @error('alamat')
+                                    <span class="text-danger mt-1 ms-2">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-4 col-form-label">Nomor
                                 Telepon</label>
                             <div class="col-sm-8">
-                                <input type="tel" name="no_telepon" class="form-control"
+                                <input type="tel" name="no_telepon"
+                                    class="form-control @error('no_telepon') is-invalid @enderror"
                                     placeholder="ex : 08**********" pattern="(0)8[1-9][0-9]{6,9}$" required>
                                 <p class="text-danger mt-1 ms-3 d-none input-tel-alert">
                                     Nomor hp maksimal
                                     12 karakter</p>
+                                @error('no_telepon')
+                                    <span class="text-danger mt-1 ms-2">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" title="Batal"><i
+                                class="fa fa-times"></i></button>
+                        <button type="submit" class="btn btn-primary" title="Simpan"><i
+                                class="fa fa-save"></i></button>
                     </div>
                 </form>
             </div>

@@ -15,18 +15,21 @@ class InvoiceController extends Controller
     // Menambahkan data ke tabel
     public function store(Request $request)
     {
+        $carbon = Carbon::now();
+        $day = date('d', strtotime($carbon));
+        $month = date('m', strtotime($carbon));
+        $year = date('Y', strtotime($carbon));
+
         $installations = Installation::all();
-        $invoice = Invoice::where('bulan', $request->bulan)
-            ->where('tahun', $request->tahun)->first();
-        $date = Carbon::now();
-        $day = date('d', strtotime($date));
-        $month = date('m', strtotime($date));
-        $year = date('Y', strtotime($date));
+
+        $invoice = Invoice::where('bulan', $month)
+            ->where('tahun', $year)->first();
 
         if (isset($invoice)) return redirect('customer')->with('error', 'Tagihan bulan ini sudah ada!');
 
         foreach ($installations as $installation) {
             $invoiceNote = Invoicenote::where('installation_id', $installation->id)->first();
+
             if ($installation->status_pemasangan == 'Terpasang') {
                 if (date('m', strtotime($installation->tanggal_pemasangan)) != $month && date('Y', strtotime($installation->tanggal_pemasangan)) == $year) {
                     if (isset($invoiceNote)) {
@@ -71,30 +74,33 @@ class InvoiceController extends Controller
         $bill = intval($request->tagihan);
         $invoiceNote = Invoicenote::where('installation_id', $request->installation_id)->first();
 
-        if ($request->sampai_bulan != 'null' && $request->sampai_tahun != 'null') {
-            if ($untilYear - $year == 0) {
-                $totalBill = $bill * ($untilMonth - $month + 1);
-            } else if ($untilYear - $year == 1) {
-                $totalBill = $bill * (12 - $month + $untilMonth + 1);
-            } else if ($untilYear - $year > 1) {
-                $totalBill = $bill * (12 - $month + (12 * ($untilYear - $year - 1)) + $untilMonth + 1);
-            }
-            $bill = $totalBill;
-            if (isset($invoiceNote)) {
-                $invoiceNote->update([
-                    'mulai_bulan' => $month,
-                    'sampai_bulan' => $untilMonth,
-                    'mulai_tahun' => $year,
-                    'sampai_tahun' => $untilYear,
-                ]);
-            } else {
-                Invoicenote::create([
-                    'installation_id' => $request->installation_id,
-                    'mulai_bulan' => $month,
-                    'sampai_bulan' => $untilMonth,
-                    'mulai_tahun' => $year,
-                    'sampai_tahun' => $untilYear,
-                ]);
+        if (isset($request->sampai_bulan) && isset($request->sampai_tahun)) {
+            if ($untilMonth <= $month && $untilYear == $year) return back()->with('error', 'Pembayaran double harus lebih dari bulan ini.');
+            if ($request->sampai_bulan != 'null' && $request->sampai_tahun != 'null') {
+                if ($untilYear - $year == 0) {
+                    $totalBill = $bill * ($untilMonth - $month + 1);
+                } else if ($untilYear - $year == 1) {
+                    $totalBill = $bill * (12 - $month + $untilMonth + 1);
+                } else if ($untilYear - $year > 1) {
+                    $totalBill = $bill * (12 - $month + (12 * ($untilYear - $year - 1)) + $untilMonth + 1);
+                }
+                $bill = $totalBill;
+                if (isset($invoiceNote)) {
+                    $invoiceNote->update([
+                        'mulai_bulan' => $month,
+                        'sampai_bulan' => $untilMonth,
+                        'mulai_tahun' => $year,
+                        'sampai_tahun' => $untilYear,
+                    ]);
+                } else {
+                    Invoicenote::create([
+                        'installation_id' => $request->installation_id,
+                        'mulai_bulan' => $month,
+                        'sampai_bulan' => $untilMonth,
+                        'mulai_tahun' => $year,
+                        'sampai_tahun' => $untilYear,
+                    ]);
+                }
             }
         }
 

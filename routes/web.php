@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route User Authentiaction
 Route::get('login', function () {
-    if (Auth::user()) {
+    if (Auth::check()) {
         return back();
     } else {
         return view('authentication.login');
@@ -38,11 +38,17 @@ Route::get('login', function () {
 Route::post('login', [UserController::class, 'login'])->name('user.login');
 
 Route::middleware(['auth'])->group(function () {
-    // Route User
-    Route::resource('user', UserController::class);
-    Route::get('logout', [UserController::class, 'logout']);
+    // Logout
+    Route::post('logout', [UserController::class, 'logout'])->name('logout');
 
-    // Route view Dashboard
+    // Route Profile
+    Route::get('profile', [UserController::class, 'index']);
+    Route::post('user/add', [UserController::class, 'store'])->name('user.store');
+    Route::post('photo/update/{id}', [UserController::class, 'photoUpdate'])->name('photo.update');
+    Route::post('profile/update/{id}', [UserController::class, 'profileUpdate'])->name('profile.update');
+    Route::post('password/update/{id}', [UserController::class, 'passwordUpdate'])->name('password.update');
+
+    // Route Dashboard
     Route::get('/', [HomeController::class, 'index']);
 
     // Route Income
@@ -74,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['cs'])->group(function () {
         Route::post('installation/create', [InstallationController::class, 'createInstallation'])->name('create.pemasangan');
         Route::post('installation/status/{id}', [InstallationController::class, 'updateInstallation'])->name('edit.pemasangan');
-        Route::post('installation/address/{id}', [InstallationController::class, 'updateInstallationAddress'])->name('edit.alamat');
+        Route::post('installation/data/{id}', [InstallationController::class, 'updateInstallationData'])->name('edit.data.pemasangan');
         Route::post('installation/delete/{id}', [InstallationController::class, 'deleteInstallation'])->name('hapus.pemasangan');
     });
 
