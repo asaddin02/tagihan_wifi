@@ -169,6 +169,12 @@
                                                                 </button>
                                                             @endif
                                                         @endif
+                                                    @else
+                                                        <button type="button" class="btn btn-info" data-toggle="modal"
+                                                            data-target="#cetak-tagihan-customer{{ $data->id }}"
+                                                            title="Cetak PDF">
+                                                            <i class="fa fa-file-pdf text-white"></i>
+                                                        </button>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -288,14 +294,19 @@
                                                                                 </select>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="alert alert-info text-start" role="alert">
+                                                                        <div class="alert alert-info text-start"
+                                                                            role="alert">
                                                                             <p>Note :</p>
                                                                             <ul>
                                                                                 <li>
-                                                                                    <span>Jika tidak ada pembayaran double maka lewati dan klik tombol bayar.</span>
+                                                                                    <span>Jika tidak ada pembayaran double
+                                                                                        maka lewati dan klik tombol
+                                                                                        bayar.</span>
                                                                                 </li>
                                                                                 <li>
-                                                                                    <span>Pastikan ketika ada pembayaran double (Sampai Bulan) dan (Sampai Tahun) harus diisi.</span>
+                                                                                    <span>Pastikan ketika ada pembayaran
+                                                                                        double (Sampai Bulan) dan (Sampai
+                                                                                        Tahun) harus diisi.</span>
                                                                                 </li>
                                                                             </ul>
                                                                         </div>
@@ -349,6 +360,33 @@
                                                                 </p>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <div class="modal fade" id="cetak-tagihan-customer{{ $data->id }}">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="{{ route('export.pdf', $data->id) }}" method="post">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="alert alert-info">
+                                                                    <p class="text-center">
+                                                                        <i class="fa fa-info-circle text-black"></i>
+                                                                        <span class="fw-bold">Informasi</span>
+                                                                    </p>
+                                                                    <p class="text-center">Cetak tagihan customer dalam
+                                                                        bentuk <b>PDF</b> ?
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-primary">Ya</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                     <!-- /.modal-content -->
                                                 </div>

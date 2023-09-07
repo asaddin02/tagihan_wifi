@@ -11,7 +11,6 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\SpendingController;
 use App\Http\Controllers\TechnisianController;
 use App\Http\Controllers\UserController;
-use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +96,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Route Invoice
     Route::resource('invoice', InvoiceController::class)->middleware('cs');
+
+    // Route PDF
+    Route::post('invoice/export/pdf/{id}', [InvoiceController::class, 'exportPdf'])->name('export.pdf');
 });
 
 Route::get('mikrotik',[MikrotikController::class,'index']);

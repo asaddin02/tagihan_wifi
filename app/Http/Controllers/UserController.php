@@ -8,21 +8,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    // Read data
+    // Show Profile Page
     public function index()
     {
-        $title = 'Profile';
+        $title = 'Halaman Profil';
 
         $user = User::find(Auth::user()->id);
 
         return view('profile.userprofile', compact('title', 'user'));
     }
 
-    // Create data tabel
+    // Create User
     public function store(Request $request)
     {
         $checkId = User::where('user_id', $request->user_id)->first();
@@ -62,7 +61,7 @@ class UserController extends Controller
         return redirect('installation')->with($status, $message);
     }
 
-    // Update foto
+    // Update Photo
     public function photoUpdate(Request $request, $id)
     {
         $validate = $request->validate(
@@ -96,7 +95,7 @@ class UserController extends Controller
         return back()->with($status, $message);
     }
 
-    // Update profil
+    // Update Profile
     public function profileUpdate(Request $request, $id)
     {
         $validate = $request->validate(
@@ -125,7 +124,7 @@ class UserController extends Controller
         return back()->with('error', 'Email atau Nomor sudah digunakan.');
     }
 
-    // Update password
+    // Update Password
     public function passwordUpdate(Request $request, $id)
     {
         $request->validate(

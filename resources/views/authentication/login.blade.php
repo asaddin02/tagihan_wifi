@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign In</title>
+    <title>Login</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -32,10 +32,9 @@
         <div class="login-logo">
             <span><b>Admin</b>LTE</span>
         </div>
-
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign In untuk memulai sesi kamu.</p>
+                <p class="login-box-msg">Login untuk memulai sesi kamu.</p>
                 <form action="{{ route('user.login') }}" method="post">
                     @csrf
                     <div class="input-group mb-1">
@@ -50,11 +49,11 @@
                     </div>
                     <div class="input-group mb-2">
                         @error('email')
-                            <p class="text-danger">{{ $message }}</p>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="input-group">
-                        <input type="password" name="password" id="signin_password"
+                        <input type="password" name="password" id="login_password"
                             class="form-control @error('password') is-invalid @enderror" placeholder="Password"
                             required>
                         <div class="input-group-append">
@@ -66,12 +65,12 @@
                     </div>
                     <div class="input-group mb-5">
                         @error('password')
-                            <p class="text-danger">{{ $message }}</p>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
                         </div>
                     </div>
                 </form>
@@ -99,14 +98,14 @@
             e.preventDefault();
             $('#eye').toggleClass('d-none');
             $('#eye_slash').toggleClass('d-none');
-            $('#signin_password').attr('type', 'text');
+            $('#login_password').attr('type', 'text');
         });
 
         $('#eye').click(function(e) {
             e.preventDefault();
             $('#eye_slash').toggleClass('d-none');
             $('#eye').toggleClass('d-none');
-            $('#signin_password').attr('type', 'password');
+            $('#login_password').attr('type', 'password');
         });
     </script>
 

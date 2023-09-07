@@ -9,6 +9,7 @@ use App\Models\Invoicenote;
 use App\Models\Package;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class InvoiceController extends Controller
 {
@@ -125,5 +126,15 @@ class InvoiceController extends Controller
         }
 
         return back()->with($status, $message);
+    }
+
+    // Export PDF
+    public function exportPdf($id)
+    {
+        $data = Invoice::find($id);
+        Pdf::setOption(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+        $pdf = Pdf::loadView('customer.invoice-export-pdf', compact('data'));
+        return $pdf->download('invoice.pdf');
+        // return view('customer.invoice-export-pdf', compact('data'));
     }
 }
